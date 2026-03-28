@@ -31,8 +31,10 @@
       defaultSecretsMountPoint = "/run/user/1000/secrets.d";
   
       secrets."mail/password" = {
-        # sopsFile = ./secrets.yml.enc; # optionally define per-secret files
         path = "${config.sops.defaultSymlinkPath}/mail_password";
+      };
+      secrets."workspace" = {
+        path = "${config.sops.defaultSymlinkPath}/workspace";
       };
     };
 
@@ -207,7 +209,7 @@
         alot = "alot -n ~/.config/notmuch/default/config";
       };
       shellInitLast = ''
-        envsource ~/.config/env_secrets
+        envsource /run/user/1000/secrets/workspace
         set -gx SSH_AUTH_SOCK "/run/user/1000/ssh-agent"
       '';
     };
