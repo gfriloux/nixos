@@ -111,8 +111,6 @@
       scummvm
       ryubing
       transmission_4-qt6
-      discord
-      betterdiscordctl
       gparted
       ouch
       aria2
@@ -125,6 +123,7 @@
       #fido2-manage
       yubikey-manager
       yubikey-touch-detector
+      vesktop
       (writeShellScriptBin "rbw-wrapper" ''
         export RBW_EMAIL="$(cat ${config.sops.secrets."mail/address".path})"
         export RBW_SERVER="$(cat ${config.sops.secrets."rbw/server".path})"
