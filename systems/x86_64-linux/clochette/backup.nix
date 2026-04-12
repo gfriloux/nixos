@@ -1,4 +1,8 @@
 { system, lib, pkgs, config, ... }:
+
+# Using borg:
+# List backups:
+#   BORG_PASSPHRASE=$(cat /run/secrets/services/borg/passphrase) BORG_RSH="ssh -i /run/secrets/services/borg/key/private" borg list 'ssh://backup@friloux.me/~/clochette.friloux.me'
 {
   programs.ssh.knownHostsFiles = [
   	(pkgs.writeText "friloux.me" ''
