@@ -23,20 +23,26 @@
   nix-cli.hm.enable = true;
   nix-gui.hm.enable = true;
 
-    sops = {
-      #age.keyFile = "/home/<your username>/.config/sops/age/keys.txt"; # must have no password!
-      gnupg.home = "/home/kuri/.gnupg";
-      defaultSopsFile = ../../../secrets/kuri_exampleHost.yaml;
-      defaultSymlinkPath = "/run/user/1000/secrets";
-      defaultSecretsMountPoint = "/run/user/1000/secrets.d";
+  sops = {
+    #age.keyFile = "/home/<your username>/.config/sops/age/keys.txt"; # must have no password!
+    gnupg.home = "/home/kuri/.gnupg";
+    defaultSopsFile = ../../../secrets/kuri_exampleHost.yaml;
+    defaultSymlinkPath = "/run/user/1000/secrets";
+    defaultSecretsMountPoint = "/run/user/1000/secrets.d";
   
-      secrets."mail/password" = {
-        path = "${config.sops.defaultSymlinkPath}/mail_password";
-      };
-      secrets."workspace" = {
-        path = "${config.sops.defaultSymlinkPath}/workspace";
-      };
+    secrets."mail/password" = {
+      path = "${config.sops.defaultSymlinkPath}/mail_password";
     };
+    secrets."mail/address" = {
+      path = "${config.sops.defaultSymlinkPath}/mail_address";
+    };
+    secrets."rbw/server" = {
+      path = "${config.sops.defaultSymlinkPath}/rbw_server";
+    };
+    secrets."workspace" = {
+      path = "${config.sops.defaultSymlinkPath}/workspace";
+    };
+  };
 
   home = {
     stateVersion = "24.11";
@@ -81,10 +87,7 @@
       appstream-glib
       #rustdesk
       cargo-binstall
-      trunk-ng
-      dart-sass
       fastfetch
-      wlr-randr
       git-workspace
       kooha
       ghostty
@@ -95,7 +98,6 @@
       transmission_4-qt6
       discord
       betterdiscordctl
-      libreoffice
       gparted
       ouch
       aria2
@@ -103,13 +105,18 @@
       unzip
       cmatrix
       flameshot
-      pegasus-frontend
       nvd
       libfido2
       #fido2-manage
       yubikey-manager
       yubikey-touch-detector
-      itgmania
+      (writeShellScriptBin "rbw-wrapper" ''
+        export RBW_EMAIL="$(cat ${config.sops.secrets."mail/address".path})"
+        export RBW_SERVER="$(cat ${config.sops.secrets."rbw/server".path})"
+        rbw config set email "$RBW_EMAIL"
+        rbw config set base_url "$RBW_SERVER"
+        exec ${pkgs.rbw}/bin/rbw "$@"
+      '')
     ];
 
     file.".mailcap".source = ./mailcap;
@@ -207,6 +214,7 @@
       };
       shellAliases = {
         alot = "alot -n ~/.config/notmuch/default/config";
+        rbw = "rbw-wrapper";
       };
       shellInitLast = ''
         envsource /run/user/1000/secrets/workspace

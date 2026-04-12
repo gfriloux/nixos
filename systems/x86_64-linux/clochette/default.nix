@@ -4,7 +4,6 @@
   imports =
     [
       ./hardware-configuration.nix
-      #./znc.nix
       ./docker-traefik.nix
     ];
 
@@ -60,6 +59,7 @@
       description     = "Moi";
       useDefaultShell = true;
       openssh.authorizedKeys.keys = [
+        "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIETPEOCEETy3EHFswjsoEsMmu4i7TUPCXwPrhVsjH8rE guillaume+perso@friloux.me"
         "sk-ssh-ed25519@openssh.com AAAAGnNrLXNzaC1lZDI1NTE5QG9wZW5zc2guY29tAAAAIP69OQvGEPoEZU8pSCRKDprle3C9UGqbt/52t6NG5GWYAAAADnNzaDphcHB3ZWVjaGF0 weechat@irc.friloux.me"
       ];
       shell = pkgs.fish;
