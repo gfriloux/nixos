@@ -17,17 +17,30 @@ in
     volumes = [
       "/srv/docker/docs.friloux.me/data:/app/app-data"
     ];
+
+    labels = {
+      "traefik.enable" = "true";
+      "traefik.http.routers.papra.rule" = "Host(`docs.friloux.me`)";
+      "traefik.http.routers.papra.tls" = "true";
+      "traefik.http.routers.papra.tls.certresolver" = "lets-encrypt";
+      "traefik.docker.network" = "web";
+      "traefik.http.services.papra.loadbalancer.server.port" = "1221";
+      "com.centurylinklabs.watchtower.enable" = "true";
+    };
       
     networks = [
       "web"
     ];
   };
 
-  systemd.targets."docker-compose-papra-root" = {
-    unitConfig = {
-      Description = "One target to manage papra";
-    };
+  systemd.services."papra-secret" = {
+    serviceConfig.Type = "oneshot";
+    script = "systemctl restart papra.service";
+  };
+  
+  systemd.paths."papra-secret" = {
     wantedBy = [ "multi-user.target" ];
+    pathConfig.PathChanged = config.sops.secrets."services/papra/env".path;
   };
 
   users.groups.papra = {
