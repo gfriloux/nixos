@@ -36,6 +36,21 @@
     secrets."mail/address" = {
       path = "${config.sops.defaultSymlinkPath}/mail_address";
     };
+    secrets."mail/tags/humanite" = {
+      path = "${config.sops.defaultSymlinkPath}/mail_tags_humanite";
+    };
+    secrets."mail/tags/job" = {
+      path = "${config.sops.defaultSymlinkPath}/mail_tags_job";
+    };
+    secrets."mail/tags/achats" = {
+      path = "${config.sops.defaultSymlinkPath}/mail_tags_achats";
+    };
+    secrets."mail/tags/mailinglist" = {
+      path = "${config.sops.defaultSymlinkPath}/mail_tags_mailinglist";
+    };
+    secrets."mail/tags/spam" = {
+      path = "${config.sops.defaultSymlinkPath}/mail_tags_spam";
+    };
     secrets."rbw/server" = {
       path = "${config.sops.defaultSymlinkPath}/rbw_server";
     };
@@ -225,33 +240,15 @@
       enable = true;
       hooks = {
         postNew = ''
+          xargs -P 5 -I {} notmuch tag +ml -- tag:new {} < ${config.sops.secrets."mail/tags/mailinglist".path}
+          xargs -P 5 -I {} notmuch tag +spam +killed -new -- tag:new {} < ${config.sops.secrets."mail/tags/spam".path}
+          xargs -P 5 -I {} notmuch tag +achats -new -- tag:new {} < ${config.sops.secrets."mail/tags/achats".path}
+          xargs -P 5 -I {} notmuch tag +job -new -- tag:new {} < ${config.sops.secrets."mail/tags/job".path}
+          xargs -P 5 -I {} notmuch tag +humanite -new -- tag:new {} < ${config.sops.secrets."mail/tags/humanite".path}
           notmuch tag +inbox +unread -new -- tag:new
-          notmuch tag -new -unread +sent -- from:guillaume@friloux.me
-          notmuch tag +achats -new -unread -killed -- 'from:service@paypal.fr' or 'subject:Votre commande sur LDLC' or 'subject:Votre commande Amazon.fr.*'
-          notmuch tag +frsag -new -unread -- 'to:frsag@frsag.org'
-          notmuch tag +dmarc -new -unread -inbox -- 'subject:.*Report Domain: friloux.me.*'
-          notmuch tag +smashingmagazine +ml -new -unread -inbox -- 'from:newsletter@smashingmagazine.com'
-          notmuch tag +EGIT +ml -new -unread -inbox -- 'to:git@lists.enlightenment.org'
-          notmuch tag +softwarelead +ml -new -unread -inbox -- 'to:guillaume+softwareleadweekly@friloux.me'
-          notmuch tag +killed -inbox -new -unread -- 'from:cws-noreply@google.com'            \
-                                                  or 'from:bugzilla-noreply@freebsd.org'      \
-                                                  or 'from:fulldisclosure@seclists.org'       \
-                                                  or 'from:contact@mailer.humblebundle.com'   \
-                                                  or 'from:info@news.ovhcloud.com'            \
-                                                  or 'from:hello@molotov.tv'                  \
-                                                  or 'from:contact@mail-agilauto-ca.fr'       \
-                                                  or 'from:no-reply@primevideo.com'           \
-                                                  or 'to:guillaume+ollygan@friloux.me'        \
-                                                  or 'to:oss-security@lists.openwall.com'     \
-                                                  or 'from:developer@insideapple.apple.com'   \
-                                                  or 'from:opel@contactopel.com'              \
-                                                  or 'from:administration@conservatoire40.fr' \
-                                                  or 'from:ptm@conservatoire40.fr'            \
-                                                  or 'from:noreply-maps-timeline@google.com'  \
-                                                  or 'from:newsletter@elements.scaleway.com'  \
-                                                  or 'from:notifications@educartable.com'     \
-                                                  or 'from:tooketspg@ca-pyrenees-gascogne.fr' \
-                                                  or 'from:paypal@mail.paypal.frpaypal@mail.paypal.fr'
+          notmuch tag -new -unread +sent -- from:$(cat ${config.sops.secrets."mail/address".path})
+          notmuch tag +EGIT -new -unread -inbox -- 'to:git@lists.enlightenment.org'
+          notmuch tag
         '';
       };
     };  
@@ -271,13 +268,13 @@
       smtp.host = "mx.friloux.me";
       smtp.tls.enable = true;
       primary = true;
-      passwordCommand = "/run/current-system/sw/bin/cat /run/user/1000/secrets/mail_password";
+      passwordCommand = "/run/current-system/sw/bin/cat ${config.sops.secrets."mail/password".path}";
       notmuch.enable = true;
       imapnotify = {
       	enable = true;
       	onNotify = "/home/kuri/.nix-profile/bin/offlineimap";
       	boxes = [
-      		"Inbox"
+      	  "Inbox"
       	];
       };
       msmtp = {
