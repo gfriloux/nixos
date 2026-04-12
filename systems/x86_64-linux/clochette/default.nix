@@ -7,6 +7,7 @@
       ./hardware-configuration.nix
       ./docker-traefik.nix
       ./docker-papra.nix
+      ./backup.nix
     ];
 
   sops = {
@@ -16,6 +17,9 @@
       owner = "papra";
       group = "papra";
     };
+
+    secrets."services/borg/passphrase" = {};
+    secrets."services/borg/key/private" = {};
   };
 
   boot.loader.grub.enable = true;
