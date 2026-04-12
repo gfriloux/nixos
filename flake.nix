@@ -39,6 +39,10 @@
 
         namespace = "kuri";
 
+        systems.modules = with inputs; [
+          sops-nix.nixosModules.sops
+        ];
+
         homes.modules = with inputs; [
           inputs.nix-cli.homeModules.default
           inputs.nix-gui.homeModules.default

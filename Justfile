@@ -18,3 +18,6 @@ build_clochette:
 
 install_clochette:
 	nixos-rebuild switch --flake .#clochette --target-host guillaume@clochette.friloux.me --sudo
+
+secrets_clochette:
+	nix-shell -p sops --run "sops secrets/clochette.yaml"

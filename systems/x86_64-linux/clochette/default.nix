@@ -1,11 +1,22 @@
-{ config, lib, pkgs, ... }:
+{ config, lib, pkgs, inputs, ... }:
 
 {
   imports =
     [
+      inputs.sops-nix.nixosModules.sops
       ./hardware-configuration.nix
       ./docker-traefik.nix
+      ./docker-papra.nix
     ];
+
+  sops = {
+    defaultSopsFile = ../../../secrets/clochette.yaml;
+
+    secrets."services/papra/env" = {
+      owner = "papra";
+      group = "papra";
+    };
+  };
 
   boot.loader.grub.enable = true;
   boot.loader.grub.device = "/dev/sda";
