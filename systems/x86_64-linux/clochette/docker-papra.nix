@@ -42,7 +42,9 @@ in
   };
 
   systemd.tmpfiles.rules = [
-    "d /srv/docker/papra 0750 ${toString uid} ${toString gid} -"
-    "d /srv/docker/papra/data 0750 ${toString uid} ${toString gid} -"
+    "d /srv/docker/docs.friloux.me 0750 ${toString uid} ${toString gid} -"
+    "d /srv/docker/docs.friloux.me/data 0750 ${toString uid} ${toString gid} -"
+    "d /srv/docker/docs.friloux.me/data/db 0750 ${toString uid} ${toString gid} -"
+    "d /srv/docker/docs.friloux.me/data/documents 0750 ${toString uid} ${toString gid} -"
   ];
 }
