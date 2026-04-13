@@ -24,12 +24,6 @@
 
     startAt = "daily";
 
-    prune.keep = {
-      daily = 7;
-      weekly = 4;
-      monthly = 6;
-    };
-
     environment.BORG_RSH = "ssh -i ${config.sops.secrets."services/borg/key/private".path}";
   };
 }
