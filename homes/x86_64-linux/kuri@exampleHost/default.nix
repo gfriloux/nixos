@@ -150,10 +150,13 @@
       size = 7;
     };
 
-    gtk4.extraConfig = {
-      Settings = ''
-        gtk-application-prefer-dark-theme=1
-      '';
+    gtk4 = {
+      extraConfig = {
+        Settings = ''
+          gtk-application-prefer-dark-theme=1
+        '';
+      };
+      inherit (config.gtk) theme;
     };
   };
 
@@ -170,10 +173,6 @@
       enable = true;
       pinentry.package = lib.mkForce pkgs.pinentry-qt;
       enableSshSupport = true;
-      enableFishIntegration = true;
-    };
-    ssh-agent = {
-      enable = true;
       enableFishIntegration = true;
     };
     imapnotify.enable = true;
@@ -196,6 +195,7 @@
       signing = {
         key = "4DF35290882C2927ACD88A4F6FCA9BE19FC69E48";
         signByDefault = true;
+        format = "openpgp";
       };
       settings.user = {
         email = "guillaume@friloux.me";
