@@ -1,4 +1,4 @@
-{ system, lib, pkgs, config, ... }:
+{ pkgs, config, ... }:
 
 # Using borg:
 # List backups:

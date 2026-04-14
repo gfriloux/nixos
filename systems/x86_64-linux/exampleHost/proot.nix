@@ -5,7 +5,7 @@
 # all others goes to `configuration.nix` under the same directory as
 # this file. 
 
-{ system, pkgs, ... }: {
+{ ... }: {
   #inherit pkgs system;
   zfs-root = {
     boot = {

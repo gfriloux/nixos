@@ -1,11 +1,9 @@
 { config, lib, ... }:
 
   let
-    networking.networkmanager.enable = true;
     cfg = config.zfs-root.networking;
-    inherit (lib) types mkDefault mkOption;
+    inherit (lib) types mkOption;
   in {
-  	
   	options.zfs-root.networking = {
   	  hostName = mkOption {
   	    description = "The name of the machine.  Used by nix flake.";
@@ -22,11 +20,12 @@
   	  };
   	};
   	config = {
-  	  networking.hostId = cfg.hostId;
   	  time.timeZone = cfg.timeZone;
   	  networking = {
   	    firewall.enable = false;
   	    hostName = cfg.hostName;
+  	    networkmanager.enable = true;
+  	    hostId = cfg.hostId;
   	  };
   	};
   }

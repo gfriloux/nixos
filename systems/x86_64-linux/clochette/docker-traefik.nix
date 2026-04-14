@@ -1,4 +1,4 @@
-{ system, lib, pkgs, ... }:
+{ pkgs, ... }:
 
 {
   virtualisation.oci-containers.containers."traefik" = {
