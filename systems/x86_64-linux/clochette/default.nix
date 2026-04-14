@@ -8,6 +8,7 @@
     ./hardware-configuration.nix
     ./docker-traefik.nix
     ./docker-papra.nix
+    ./docker-wow-cp.nix
     ./backup.nix
   ];
 
@@ -21,6 +22,8 @@
       };
       "services/borg/passphrase" = {};
       "services/borg/key/private" = {};
+      "services/wow-cp/env_bookstack" = {};
+      "services/wow-cp/env_mariadb" = {};
     };
   };
 
