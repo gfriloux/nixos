@@ -33,16 +33,6 @@ in
     ];
   };
 
-  systemd.services."papra-secret" = {
-    serviceConfig.Type = "oneshot";
-    script = "systemctl restart papra.service";
-  };
-  
-  systemd.paths."papra-secret" = {
-    wantedBy = [ "multi-user.target" ];
-    pathConfig.PathChanged = config.sops.secrets."services/papra/env".path;
-  };
-
   users.groups.papra = {
     gid = gid;
   };
