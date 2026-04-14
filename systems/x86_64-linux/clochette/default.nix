@@ -13,25 +13,31 @@
   sops = {
     defaultSopsFile = ../../../secrets/clochette.yaml;
 
-    secrets."services/papra/env" = {
-      owner = "papra";
-      group = "papra";
+    secrets = {
+      "services/papra/env" = {
+        owner = "papra";
+        group = "papra";
+      };
+      "services/borg/passphrase" = {};
+      "services/borg/key/private" = {};
     };
-
-    secrets."services/borg/passphrase" = {};
-    secrets."services/borg/key/private" = {};
   };
 
-  boot.loader.grub.enable = true;
-  boot.loader.grub.device = "/dev/sda";
+  boot = {
+    loader.grub = {
+      enable = true;
+      device = "/dev/sda";
+    };
+    kernelParams = [ "console=ttyS1" ];
+  };
 
-  boot.kernelParams = [ "console=ttyS1" ];
-
-  networking.hostName = "clochette";
-  networking.networkmanager.enable = true;
-  networking.interfaces.eth0 = { ipv4.addresses = [ { address = "51.159.34.135"; prefixLength = 24; } ]; };
-  networking.defaultGateway  = "51.159.34.1";
-  networking.nameservers     = [ "51.159.47.28" "51.159.47.26" ];
+  networking = {
+    hostName = "clochette";
+    networkmanager.enable = true;
+    interfaces.eth0 = { ipv4.addresses = [ { address = "51.159.34.135"; prefixLength = 24; } ]; };
+    defaultGateway  = "51.159.34.1";
+    nameservers     = [ "51.159.47.28" "51.159.47.26" ];
+  };
 
   time.timeZone = "Europe/Paris";
 

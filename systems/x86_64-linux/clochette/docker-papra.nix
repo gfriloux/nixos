@@ -34,12 +34,12 @@ in
   };
 
   users.groups.papra = {
-    gid = gid;
+    inherit gid;
   };
   users.users.papra = {
     createHome = false;
     isSystemUser = true;
-    uid = uid;
+    inherit uid;
     group = "papra";
     shell = "${pkgs.shadow}/bin/nologin";
   };

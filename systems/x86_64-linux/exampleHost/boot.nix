@@ -64,7 +64,7 @@ in {
       };
     };
   };
-  config = mkIf (cfg.enable) (mkMerge [
+  config = mkIf cfg.enable (mkMerge [
     {
       zfs-root.fileSystems.datasets = {
         "rpool/nixos/home" = mkDefault "/home";
@@ -97,44 +97,40 @@ in {
     })
     {
       zfs-root.fileSystems = {
-        efiSystemPartitions =
-          (map (diskName: diskName + cfg.partitionScheme.efiBoot)
-            cfg.bootDevices);
-        swapPartitions =
-          (map (diskName: diskName + cfg.partitionScheme.swap) cfg.bootDevices);
+        efiSystemPartitions = map (diskName: diskName + cfg.partitionScheme.efiBoot) cfg.bootDevices;
+        swapPartitions = map (diskName: diskName + cfg.partitionScheme.swap) cfg.bootDevices;
       };
       boot = {
         kernelPackages = pkgs.linuxPackages_6_12;
         initrd.availableKernelModules = cfg.availableKernelModules;
-        kernelParams = cfg.kernelParams;
+        inherit (cfg) kernelParams;
         kernel.sysctl = {
           "kernel.unprivileged_userns_clone" = 1; # for appimages
           "fs.file-max" = 640000;
         };
         supportedFilesystems = [ "zfs" ];
         zfs = {
-          devNodes = cfg.devNodes;
+          inherit (cfg) devNodes;
           forceImportRoot = mkDefault false;
         };
         loader = {
           efi = {
-            canTouchEfiVariables = (if cfg.removableEfi then false else true);
-            efiSysMountPoint = ("/boot/efis/" + (head cfg.bootDevices)
-              + cfg.partitionScheme.efiBoot);
+            canTouchEfiVariables = if cfg.removableEfi then false else true;
+            efiSysMountPoint = "/boot/efis/" + (head cfg.bootDevices) + cfg.partitionScheme.efiBoot;
           };
           generationsDir.copyKernels = true;
           grub = {
             enable = true;
-            devices = (map (diskName: cfg.devNodes + diskName) cfg.bootDevices);
+            devices = map (diskName: cfg.devNodes + diskName) cfg.bootDevices;
             efiInstallAsRemovable = cfg.removableEfi;
             copyKernels = true;
             efiSupport = true;
             zfsSupport = true;
-            extraInstallCommands = (toString (map (diskName: ''
+            extraInstallCommands = toString (map (diskName: ''
               set -x
               ${pkgs.coreutils-full}/bin/cp -r ${config.boot.loader.efi.efiSysMountPoint}/EFI /boot/efis/${diskName}${cfg.partitionScheme.efiBoot}
               set +x
-            '') (tail cfg.bootDevices)));
+            '') (tail cfg.bootDevices));
           };
         };
       };
@@ -149,7 +145,7 @@ in {
               "/var/lib/ssh_unlock_zfs_ed25519_key"
               "/var/lib/ssh_unlock_zfs_rsa_key"
             ];
-            authorizedKeys = cfg.sshUnlock.authorizedKeys;
+            inherit (cfg.sshUnlock) authorizedKeys;
           };
           postCommands = ''
             tee -a /root/.profile >/dev/null <<EOF

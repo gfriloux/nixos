@@ -59,17 +59,23 @@
 
   boot.zfs.forceImportRoot = false;
 
-  nix.settings.experimental-features = [ "nix-command" "flakes" ];
-  nix.optimise.automatic = true;
-  nix.gc = {
-    automatic = true;
-    dates = "weekly";
-    options = "--delete-older-than 5d";
+  nix = {
+    settings.experimental-features = [ "nix-command" "flakes" ];
+    optimise.automatic = true;
+    gc = {
+      automatic = true;
+      dates = "weekly";
+      options = "--delete-older-than 5d";
+    };
   };
 
-  virtualisation.docker.enable = true;
-  virtualisation.docker.storageDriver = "zfs";
-  virtualisation.waydroid.enable = true;
+  virtualisation = {
+    docker = {
+      enable = true;
+      storageDriver = "zfs";
+    };
+    waydroid.enable = true;
+  };
 
   fonts.packages = with pkgs; [
     nerd-fonts.fira-code

@@ -22,32 +22,34 @@
     defaultSymlinkPath = "/run/user/1000/secrets";
     defaultSecretsMountPoint = "/run/user/1000/secrets.d";
   
-    secrets."mail/password" = {
-      path = "${config.sops.defaultSymlinkPath}/mail_password";
-    };
-    secrets."mail/address" = {
-      path = "${config.sops.defaultSymlinkPath}/mail_address";
-    };
-    secrets."mail/tags/humanite" = {
-      path = "${config.sops.defaultSymlinkPath}/mail_tags_humanite";
-    };
-    secrets."mail/tags/job" = {
-      path = "${config.sops.defaultSymlinkPath}/mail_tags_job";
-    };
-    secrets."mail/tags/achats" = {
-      path = "${config.sops.defaultSymlinkPath}/mail_tags_achats";
-    };
-    secrets."mail/tags/mailinglist" = {
-      path = "${config.sops.defaultSymlinkPath}/mail_tags_mailinglist";
-    };
-    secrets."mail/tags/spam" = {
-      path = "${config.sops.defaultSymlinkPath}/mail_tags_spam";
-    };
-    secrets."rbw/server" = {
-      path = "${config.sops.defaultSymlinkPath}/rbw_server";
-    };
-    secrets."workspace" = {
-      path = "${config.sops.defaultSymlinkPath}/workspace";
+    secrets = {
+      "mail/password" = {
+        path = "${config.sops.defaultSymlinkPath}/mail_password";
+      };
+      "mail/address" = {
+        path = "${config.sops.defaultSymlinkPath}/mail_address";
+      };
+      "mail/tags/humanite" = {
+        path = "${config.sops.defaultSymlinkPath}/mail_tags_humanite";
+      };
+      "mail/tags/job" = {
+        path = "${config.sops.defaultSymlinkPath}/mail_tags_job";
+      };
+      "mail/tags/achats" = {
+        path = "${config.sops.defaultSymlinkPath}/mail_tags_achats";
+      };
+      "mail/tags/mailinglist" = {
+        path = "${config.sops.defaultSymlinkPath}/mail_tags_mailinglist";
+      };
+      "mail/tags/spam" = {
+        path = "${config.sops.defaultSymlinkPath}/mail_tags_spam";
+      };
+      "rbw/server" = {
+        path = "${config.sops.defaultSymlinkPath}/rbw_server";
+      };
+      "workspace" = {
+        path = "${config.sops.defaultSymlinkPath}/workspace";
+      };
     };
   };
 

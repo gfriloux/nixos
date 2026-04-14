@@ -23,9 +23,9 @@
   	  time.timeZone = cfg.timeZone;
   	  networking = {
   	    firewall.enable = false;
-  	    hostName = cfg.hostName;
+  	    inherit (cfg) hostName;
   	    networkmanager.enable = true;
-  	    hostId = cfg.hostId;
+  	    inherit (cfg) hostId;
   	  };
   	};
   }
