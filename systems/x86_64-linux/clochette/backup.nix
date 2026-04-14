@@ -9,7 +9,7 @@
 {
   programs.ssh.knownHostsFiles = [
     (pkgs.writeText "friloux.me" ''
-      friloux.me ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOKThAXm8UnDOFly/7CmT99HODn4W0o3bOYJHGXcAhOO
+      storage2.friloux.me ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOKThAXm8UnDOFly/7CmT99HODn4W0o3bOYJHGXcAhOO
     '')
   ];
 
@@ -19,7 +19,7 @@
       "/srv/docker/docs.friloux.me"
       "/home/weechat/.config/weechat"
     ];
-    repo = "ssh://backup@friloux.me/~/clochette.friloux.me";
+    repo = "ssh://backup@storage2.friloux.me/~/clochette.friloux.me";
 
     encryption.mode = "repokey-blake2";
     encryption.passCommand = "cat ${config.sops.secrets."services/borg/passphrase".path}";
