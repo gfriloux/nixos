@@ -1,7 +1,6 @@
-{ pkgs, ... }:
-{
+{pkgs, ...}: {
   services = {
-    udev.packages = [ pkgs.yubikey-personalization ];
+    udev.packages = [pkgs.yubikey-personalization];
     pcscd.enable = true;
     displayManager.sddm.enable = true;
     displayManager.sddm.wayland.enable = true;
@@ -20,7 +19,7 @@
     zrepl = {
       enable = true;
       settings = {
-        global = { };
+        global = {};
         jobs = [
           {
             name = "storage2";
@@ -34,18 +33,22 @@
               port = 22;
               identity_file = "/root/.ssh/id_ed25519";
             };
-            recv = { placeholder = { encryption = "inherit"; }; };
+            recv = {placeholder = {encryption = "inherit";};};
             pruning = {
-              keep_receiver = [{
-                type = "grid";
-                grid = "7x1d(keep=all) | 3x30d";
-                regex = "^zrepl_.*";
-              }];
-              keep_sender = [{
-                type = "last_n";
-                count = 10;
-                regex = "^zrepl_.*";
-              }];
+              keep_receiver = [
+                {
+                  type = "grid";
+                  grid = "7x1d(keep=all) | 3x30d";
+                  regex = "^zrepl_.*";
+                }
+              ];
+              keep_sender = [
+                {
+                  type = "last_n";
+                  count = 10;
+                  regex = "^zrepl_.*";
+                }
+              ];
             };
           }
         ];
@@ -53,7 +56,7 @@
     };
     openssh = {
       enable = true;
-      settings = { PasswordAuthentication = true; };
+      settings = {PasswordAuthentication = true;};
     };
     pipewire = {
       enable = true;
@@ -66,12 +69,11 @@
     dbus.enable = true;
     gvfs.enable = true;
 
-
     xserver = {
       enable = false;
       xkb = {
-      	layout = "fr";
-      	variant = "";
+        layout = "fr";
+        variant = "";
       };
     };
 

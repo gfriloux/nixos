@@ -1,10 +1,11 @@
-{ pkgs, config, ... }:
-
-let
+{
+  pkgs,
+  config,
+  ...
+}: let
   uid = 65001;
   gid = 65001;
-in
-{
+in {
   virtualisation.oci-containers.containers."papra" = {
     image = "ghcr.io/papra-hq/papra:latest";
     serviceName = "papra";
@@ -27,7 +28,7 @@ in
       "traefik.http.services.papra.loadbalancer.server.port" = "1221";
       "com.centurylinklabs.watchtower.enable" = "true";
     };
-      
+
     networks = [
       "web"
     ];

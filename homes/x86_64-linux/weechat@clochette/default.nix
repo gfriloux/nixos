@@ -1,15 +1,14 @@
 {
-    pkgs,
-    inputs,
-    ...
-}:
-{
+  pkgs,
+  inputs,
+  ...
+}: {
   imports = [
     inputs.nix-cli.homeModules.default
   ];
 
   nix-cli.hm.enable = true;
-  
+
   home = {
     stateVersion = "24.11";
 
@@ -21,8 +20,8 @@
     };
     sessionVariables = {
       EDITOR = "micro";
-      MICRO_TRUECOLOR=1;
-      VISUAL="micro";
+      MICRO_TRUECOLOR = 1;
+      VISUAL = "micro";
     };
     language = {
       base = "fr_FR.UTF-8";

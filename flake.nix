@@ -29,7 +29,7 @@
 
   outputs = inputs:
     inputs.snowfall-lib.mkFlake {
-      systems = [ "x86_64-linux" ];
+      systems = ["x86_64-linux"];
       inherit inputs;
 
       src = ./.;

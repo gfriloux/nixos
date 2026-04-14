@@ -1,11 +1,10 @@
 {
-    lib,
-    pkgs,
-    inputs,
-    config,
-    ...
-}:
-{
+  lib,
+  pkgs,
+  inputs,
+  config,
+  ...
+}: {
   imports = [
     inputs.nix-cli.homeModules.default
     inputs.nix-gui.homeModules.default
@@ -21,7 +20,7 @@
     defaultSopsFile = ../../../secrets/kuri_exampleHost.yaml;
     defaultSymlinkPath = "/run/user/1000/secrets";
     defaultSecretsMountPoint = "/run/user/1000/secrets.d";
-  
+
     secrets = {
       "mail/password" = {
         path = "${config.sops.defaultSymlinkPath}/mail_password";
@@ -64,8 +63,8 @@
     };
     sessionVariables = {
       EDITOR = "micro";
-      MICRO_TRUECOLOR=1;
-      VISUAL="micro";
+      MICRO_TRUECOLOR = 1;
+      VISUAL = "micro";
     };
     language = {
       base = "fr_FR.UTF-8";
@@ -131,10 +130,10 @@
   };
 
   fonts = {
-  	fontconfig.enable = true;
+    fontconfig.enable = true;
   };
 
-  targets.genericLinux.enable=true;
+  targets.genericLinux.enable = true;
 
   news = {
     display = "silent";
@@ -146,9 +145,9 @@
     enable = true;
 
     font = {
-      name    = "Iosevka 8";
+      name = "Iosevka 8";
       package = pkgs.iosevka;
-      size    = 7;
+      size = 7;
     };
 
     gtk4.extraConfig = {
@@ -161,23 +160,23 @@
   systemd.user.targets.tray = {
     Unit = {
       Description = "Home Manager System Tray";
-      Requires = [ "graphical-session-pre.target" ];
+      Requires = ["graphical-session-pre.target"];
     };
   };
 
   services = {
-  	network-manager-applet.enable = true;
-  	gpg-agent = {
-  	  enable = true;
-  	  pinentry.package = lib.mkForce pkgs.pinentry-qt;
-  	  enableSshSupport = true;
-  	  enableFishIntegration = true;
-  	};
-  	ssh-agent = {
-  	  enable = true;
-  	  enableFishIntegration = true;
-  	};
-  	imapnotify.enable = true;
+    network-manager-applet.enable = true;
+    gpg-agent = {
+      enable = true;
+      pinentry.package = lib.mkForce pkgs.pinentry-qt;
+      enableSshSupport = true;
+      enableFishIntegration = true;
+    };
+    ssh-agent = {
+      enable = true;
+      enableFishIntegration = true;
+    };
+    imapnotify.enable = true;
   };
 
   programs = {
@@ -218,11 +217,11 @@
       ];
       functions = {
         envsource = ''
-       	  for line in (cat $argv | grep -v '^#')
-       	    set item (string split -m 1 '=' $line)
-       	    set -gx $item[1] $item[2]
-       	  end
-       	'';
+          for line in (cat $argv | grep -v '^#')
+            set item (string split -m 1 '=' $line)
+            set -gx $item[1] $item[2]
+          end
+        '';
       };
       shellAliases = {
         alot = "alot -n ~/.config/notmuch/default/config";
@@ -248,13 +247,13 @@
           notmuch tag
         '';
       };
-    };  
+    };
   };
 
   accounts.email = {
     maildirBasePath = "mail";
     accounts.friloux = {
-      address  = "guillaume@friloux.me";
+      address = "guillaume@friloux.me";
       userName = "guillaume@friloux.me";
       realName = "Guillaume FRILOUX";
       imap = {
@@ -268,11 +267,11 @@
       passwordCommand = "/run/current-system/sw/bin/cat ${config.sops.secrets."mail/password".path}";
       notmuch.enable = true;
       imapnotify = {
-      	enable = true;
-      	onNotify = "/home/kuri/.nix-profile/bin/offlineimap";
-      	boxes = [
-      	  "Inbox"
-      	];
+        enable = true;
+        onNotify = "/home/kuri/.nix-profile/bin/offlineimap";
+        boxes = [
+          "Inbox"
+        ];
       };
       msmtp = {
         enable = true;
@@ -286,7 +285,7 @@
         postSyncHookCommand = "notmuch new";
         extraConfig.local = {
           localfolders = "/home/kuri/mail/friloux";
-        };        
+        };
         extraConfig.remote.folderfilter = "lambda folder: folder in ['INBOX', 'Sent']";
       };
     };

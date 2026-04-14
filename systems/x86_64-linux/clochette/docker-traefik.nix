@@ -1,6 +1,4 @@
-{ pkgs, ... }:
-
-{
+{pkgs, ...}: {
   virtualisation.oci-containers.containers."traefik" = {
     image = "traefik:v3";
     serviceName = "traefik";
@@ -12,7 +10,7 @@
       "/srv/docker/traefik/acme.json:/acme.json"
       "/srv/docker/traefik/access.log:/access.log"
     ];
-      
+
     ports = [
       "80:80/tcp"
       "443:443/tcp"
@@ -23,7 +21,7 @@
   };
 
   systemd.services."docker-network-web" = {
-    path = [ pkgs.docker ];
+    path = [pkgs.docker];
     serviceConfig = {
       Type = "oneshot";
       RemainAfterExit = true;
@@ -32,7 +30,7 @@
     script = ''
       docker network inspect web || docker network create web
     '';
-    partOf = [ "docker-compose-traefik-root.target" ];
+    partOf = ["docker-compose-traefik-root.target"];
     wantedBy = [
       "docker-compose-traefik-root.target"
       "traefik.service"
@@ -43,8 +41,8 @@
     unitConfig = {
       Description = "One target to manage traefik";
     };
-    wantedBy = [ "multi-user.target" ];
+    wantedBy = ["multi-user.target"];
   };
 
-  networking.firewall.allowedTCPPorts = [ 80 443 ];
+  networking.firewall.allowedTCPPorts = [80 443];
 }

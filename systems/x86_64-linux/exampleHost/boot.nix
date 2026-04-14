@@ -1,6 +1,9 @@
-{ config, lib, pkgs, ... }:
-
-let
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}: let
   cfg = config.zfs-root.boot;
   inherit (lib) mkIf types mkDefault mkOption mkMerge strings;
   inherit (builtins) head toString map tail;
@@ -16,8 +19,7 @@ in {
       type = types.str;
       apply = x:
         assert (strings.hasSuffix "/" x
-          || abort "devNodes '${x}' must have trailing slash!");
-        x;
+          || abort "devNodes '${x}' must have trailing slash!"); x;
       default = "/dev/disk/by-id/";
     };
     bootDevices = mkOption {
@@ -26,11 +28,11 @@ in {
     };
     availableKernelModules = mkOption {
       type = types.nonEmptyListOf types.str;
-      default = [ "uas" "nvme" "ahci" ];
+      default = ["uas" "nvme" "ahci"];
     };
     kernelParams = mkOption {
       type = types.listOf types.str;
-      default = [ ];
+      default = [];
     };
     immutable = mkOption {
       description = "Enable root on ZFS immutable root support";
@@ -60,7 +62,7 @@ in {
       };
       authorizedKeys = mkOption {
         type = types.listOf types.str;
-        default = [ ];
+        default = [];
       };
     };
   };
@@ -74,7 +76,7 @@ in {
       };
     }
     (mkIf (!cfg.immutable) {
-      zfs-root.fileSystems.datasets = { "rpool/nixos/root" = "/"; };
+      zfs-root.fileSystems.datasets = {"rpool/nixos/root" = "/";};
     })
     (mkIf cfg.immutable {
       zfs-root.fileSystems = {
@@ -108,14 +110,17 @@ in {
           "kernel.unprivileged_userns_clone" = 1; # for appimages
           "fs.file-max" = 640000;
         };
-        supportedFilesystems = [ "zfs" ];
+        supportedFilesystems = ["zfs"];
         zfs = {
           inherit (cfg) devNodes;
           forceImportRoot = mkDefault false;
         };
         loader = {
           efi = {
-            canTouchEfiVariables = if cfg.removableEfi then false else true;
+            canTouchEfiVariables =
+              if cfg.removableEfi
+              then false
+              else true;
             efiSysMountPoint = "/boot/efis/" + (head cfg.bootDevices) + cfg.partitionScheme.efiBoot;
           };
           generationsDir.copyKernels = true;
