@@ -37,6 +37,10 @@
         user = "kuri";
         identityFile = "~/.ssh/id_ed25519";
       };
+      "github.com" = {
+        user = "git";
+        identityFile = config.sops.secrets."ssh/keys/github".path;
+      };
     };
   };
 }
