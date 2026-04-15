@@ -10,7 +10,7 @@
   nix-cli.hm.enable = true;
 
   home = {
-    stateVersion = "24.11";
+    stateVersion = "25.05";
 
     username = "weechat";
     homeDirectory = "/home/weechat";
