@@ -1,6 +1,6 @@
 {pkgs, ...}: {
   virtualisation.oci-containers.containers."traefik" = {
-    image = "traefik:v3";
+    image = "traefik:v3.6.8"; # renovate
     serviceName = "traefik";
 
     volumes = [
