@@ -24,6 +24,7 @@
       "services/borg/key/private" = {};
       "services/wow-cp/env_bookstack" = {};
       "services/wow-cp/env_mariadb" = {};
+      "services/wow-cp/env_mysqldump" = {};
     };
   };
 
