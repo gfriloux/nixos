@@ -13,5 +13,8 @@
       "matchDatasources": ["docker"],
       "pinDigests": true
     }
-  ]
+  ],
+  "nix": {
+    "enabled": true
+  }
 }
