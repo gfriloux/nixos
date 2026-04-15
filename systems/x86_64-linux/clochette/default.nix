@@ -57,7 +57,23 @@
 
   nix.settings.trusted-users = ["root" "guillaume" "clochette"];
 
-  services.openssh.enable = true;
+  services = {
+    openssh = {
+      enable = true;
+
+      settings = {
+        PasswordAuthentication = false;
+        PermitRootLogin = "no";
+        PubkeyAuthentication = true;
+        ChallengeResponseAuthentication = false;
+        KbdInteractiveAuthentication = false;
+        MaxAuthTries = 3;
+        LoginGraceTime = "30s";
+        X11Forwarding = false;
+      };
+    };
+    fail2ban.enable = true;
+  };
 
   security.sudo.wheelNeedsPassword = false;
 
