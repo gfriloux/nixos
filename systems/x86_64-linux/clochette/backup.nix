@@ -18,6 +18,7 @@
       "/srv/docker/traefik"
       "/srv/docker/docs.friloux.me"
       "/srv/docker/wow-cp.friloux.me"
+      "/srv/docker/crowdsec.clochette.friloux.me"
       "/home/weechat/.config/weechat"
     ];
     repo = "ssh://backup@storage2.friloux.me/~/clochette.friloux.me";

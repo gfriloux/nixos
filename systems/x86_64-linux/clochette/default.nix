@@ -9,6 +9,7 @@
     ./docker-traefik.nix
     ./docker-papra.nix
     ./docker-wow-cp.nix
+    ./docker-crowdsec.nix
     ./backup.nix
   ];
 
@@ -25,6 +26,7 @@
       "services/wow-cp/env_bookstack" = {};
       "services/wow-cp/env_mariadb" = {};
       "services/wow-cp/env_mysqldump" = {};
+      "services/crowdsec/env" = {};
     };
   };
 
@@ -70,6 +72,7 @@
         MaxAuthTries = 3;
         LoginGraceTime = "30s";
         X11Forwarding = false;
+        AllowUsers = ["guillaume" "weechat"];
       };
     };
     fail2ban.enable = true;

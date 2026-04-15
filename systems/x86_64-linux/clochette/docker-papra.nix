@@ -26,7 +26,7 @@ in {
       "traefik.http.routers.papra.tls.certresolver" = "lets-encrypt";
       "traefik.docker.network" = "web";
       "traefik.http.services.papra.loadbalancer.server.port" = "1221";
-      "com.centurylinklabs.watchtower.enable" = "true";
+      "traefik.http.routers.papra.middlewares" = "crowdsec@file";
     };
 
     networks = [

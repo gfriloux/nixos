@@ -22,6 +22,7 @@ in {
         "traefik.http.routers.wowcp.tls" = "true";
         "traefik.http.routers.wowcp.tls.certresolver" = "lets-encrypt";
         "traefik.docker.network" = "web";
+        "traefik.http.routers.wowcp.middlewares" = "crowdsec@file";
       };
       networks = [
         "wow-cp"
