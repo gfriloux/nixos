@@ -45,7 +45,7 @@ in {
       ];
     };
     "wow-cp-mysqldump" = {
-      image = "fradelg/mysql-cron-backup:latest";
+      image = "fradelg/mysql-cron-backup:1.14.2"; # renovate: datasource=docker depName=fradelg/mysql-cron-backup
       serviceName = "wow-cp-mysqldump";
       dependsOn = ["wow-cp-mariadb"];
       environmentFiles = [

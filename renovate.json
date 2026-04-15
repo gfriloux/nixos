@@ -1,0 +1,18 @@
+{
+  "extends": ["config:base"],
+  "regexManagers": [
+    {
+      "fileMatch": [".*\\.nix$"],
+      "matchStrings": [
+        "image = \"(?<currentValue>.*?)\"; # renovate: datasource=(?<datasource>.*?) depName=(?<depName>.*?)"
+      ],
+      "datasourceTemplate": "{{datasource}}"
+    }
+  ],
+  "packageRules": [
+    {
+      "matchDatasources": ["docker"],
+      "pinDigests": true
+    }
+  ]
+}
