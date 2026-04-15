@@ -7,7 +7,7 @@
   gid = 65001;
 in {
   virtualisation.oci-containers.containers."papra" = {
-    image = "ghcr.io/papra-hq/papra:latest";
+    image = "ghcr.io/papra-hq/papra:26.4.0-rootless"; # renovate
     serviceName = "papra";
     user = "${toString uid}:${toString gid}";
 
