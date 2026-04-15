@@ -8,7 +8,7 @@
 in {
   virtualisation.oci-containers.containers = {
     "wow-cp-bookstack" = {
-      image = "linuxserver/bookstack:26.03.3"; # renovate: datasource=docker depName=fradelg/mysql-cron-backup
+      image = "linuxserver/bookstack:26.03.3"; # renovate
       serviceName = "wow-cp-bookstack";
       dependsOn = ["wow-cp-mariadb"];
       environmentFiles = [
@@ -45,7 +45,7 @@ in {
       ];
     };
     "wow-cp-mysqldump" = {
-      image = "fradelg/mysql-cron-backup:1.14.2"; # renovate: datasource=docker depName=fradelg/mysql-cron-backup
+      image = "fradelg/mysql-cron-backup:1.14.2"; # renovate
       serviceName = "wow-cp-mysqldump";
       dependsOn = ["wow-cp-mariadb"];
       environmentFiles = [

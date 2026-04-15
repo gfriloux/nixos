@@ -4,8 +4,10 @@
     {
       "customType": "regex",
       "managerFilePatterns": ["/.*\\.nix$/"],
-      "matchStrings": ["image = \"(?<currentValue>.*?)\"; # renovate: datasource=(?<datasource>.*?) depName=(?<depName>.*?)"],
-      "datasourceTemplate": "{{datasource}}"
+      "matchStrings": [
+        "image = \"(?<depName>[^:\"]+):(?<currentValue>[^\"]+)\";\\s*# renovate"
+      ],
+      "datasourceTemplate": "docker"
     }
   ],
   "packageRules": [
