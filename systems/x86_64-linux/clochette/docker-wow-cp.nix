@@ -8,7 +8,7 @@
 in {
   virtualisation.oci-containers.containers = {
     "wow-cp-bookstack" = {
-      image = "linuxserver/bookstack:latest";
+      image = "linuxserver/bookstack:26.03.3"; # renovate: datasource=docker depName=fradelg/mysql-cron-backup
       serviceName = "wow-cp-bookstack";
       dependsOn = ["wow-cp-mariadb"];
       environmentFiles = [
