@@ -15,6 +15,7 @@ in
       statix
       alejandra
       pre-commit
+      serie
     ];
 
     shellHook = ''
