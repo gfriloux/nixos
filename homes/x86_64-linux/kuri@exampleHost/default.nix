@@ -51,6 +51,7 @@
       };
       "ssh/keys/guillaume@clochette" = {};
       "ssh/keys/weechat@clochette" = {};
+      "ssh/keys/kuri@storage2" = {};
       "ssh/keys/root@rogueleader" = {};
       "ssh/keys/github" = {};
     };

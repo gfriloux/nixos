@@ -35,7 +35,7 @@
       };
       "storage2.friloux.me" = {
         user = "kuri";
-        identityFile = "~/.ssh/id_ed25519";
+        identityFile = config.sops.secrets."ssh/keys/kuri@storage2".path;
       };
       "github.com" = {
         user = "git";
