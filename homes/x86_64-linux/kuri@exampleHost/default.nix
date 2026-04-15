@@ -9,13 +9,13 @@
     inputs.nix-cli.homeModules.default
     inputs.nix-gui.homeModules.default
     inputs.sops-nix.homeManagerModules.sops
+    ./ssh.nix
   ];
 
   nix-cli.hm.enable = true;
   nix-gui.hm.enable = true;
 
   sops = {
-    #age.keyFile = "/home/<your username>/.config/sops/age/keys.txt"; # must have no password!
     gnupg.home = "/home/kuri/.gnupg";
     defaultSopsFile = ../../../secrets/kuri_exampleHost.yaml;
     defaultSymlinkPath = "/run/user/1000/secrets";
@@ -49,6 +49,8 @@
       "workspace" = {
         path = "${config.sops.defaultSymlinkPath}/workspace";
       };
+      "ssh/keys/guillaume@clochette" = {};
+      "ssh/keys/weechat@clochette" = {};
     };
   };
 
@@ -127,6 +129,7 @@
     ];
 
     file.".mailcap".source = ./mailcap;
+    file.".ssh/sockets/.keep".text = "";
   };
 
   fonts = {
