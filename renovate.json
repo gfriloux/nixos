@@ -16,7 +16,4 @@
       "pinDigests": true
     }
   ],
-  "nix": {
-    "enabled": true
-  }
 }
