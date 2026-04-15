@@ -1,11 +1,10 @@
 {
-  "extends": ["config:base"],
-  "regexManagers": [
+  "extends": ["config:recommended"],
+  "customManagers": [
     {
-      "fileMatch": [".*\\.nix$"],
-      "matchStrings": [
-        "image = \"(?<currentValue>.*?)\"; # renovate: datasource=(?<datasource>.*?) depName=(?<depName>.*?)"
-      ],
+      "customType": "regex",
+      "managerFilePatterns": ["/.*\\.nix$/"],
+      "matchStrings": ["image = \"(?<currentValue>.*?)\"; # renovate: datasource=(?<datasource>.*?) depName=(?<depName>.*?)"],
       "datasourceTemplate": "{{datasource}}"
     }
   ],
