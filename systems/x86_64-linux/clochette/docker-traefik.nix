@@ -12,8 +12,14 @@
       websecure:
         address: ":443"
 
+      traefik:
+        address: "127.0.0.1:8080"
+
     api:
       dashboard: true
+
+    ping:
+      entryPoint: traefik
 
     accessLog:
       filePath: "/logs/traefik.log"
@@ -71,6 +77,14 @@ in {
       "/srv/docker/traefik/logs:/logs"
     ];
 
+    extraOptions = [
+      "--health-cmd=traefik healthcheck"
+      "--health-interval=30s"
+      "--health-timeout=10s"
+      "--health-start-period=10s"
+      "--health-retries=3"
+    ];
+
     ports = [
       "80:80/tcp"
       "443:443/tcp"
@@ -122,6 +136,6 @@ in {
     "d /srv/docker/traefik/logs 0750 0 0 -"
     "d /srv/docker/traefik/conf 0750 0 0 -"
     "d /srv/docker/traefik/acme.json 0600 0 0 -"
-    "C /srv/docker/traefik/conf/traefik.yml 0640 root root ${traefikConfig}"
+    "L+ /srv/docker/traefik/conf/traefik.yml - - - - ${traefikConfig}"
   ];
 }
