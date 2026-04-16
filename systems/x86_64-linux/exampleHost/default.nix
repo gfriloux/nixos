@@ -95,7 +95,6 @@
     file
     bonnie
     home-manager
-    wl-clipboard
     lm_sensors
     pmutils
     pavucontrol
