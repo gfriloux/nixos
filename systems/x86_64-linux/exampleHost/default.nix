@@ -99,7 +99,6 @@
     linux-wallpaperengine
     w3m
     bc
-    bash
     iotop
     file
     bonnie
