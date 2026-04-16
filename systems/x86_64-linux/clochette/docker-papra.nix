@@ -3,8 +3,6 @@
   config,
   ...
 }: let
-  uid = 65001;
-  gid = 65001;
   healthCmd = "bash -c 'exec 3<>/dev/tcp/127.0.0.1/1221 && printf \"GET /api/health HTTP/1.0\\r\\n\\r\\n\" >&3 && cat <&3 | grep -q isEverythingOk'";
 in {
   sops = {
@@ -19,7 +17,7 @@ in {
   virtualisation.oci-containers.containers."papra" = {
     image = "ghcr.io/papra-hq/papra:26.4.0-rootless"; # renovate
     serviceName = "papra";
-    user = "${toString uid}:${toString gid}";
+    user = "${toString config.users.users.papra.uid}:${toString config.users.groups.papra.gid}";
 
     environmentFiles = [
       config.sops.secrets."services/papra/env".path
@@ -55,20 +53,20 @@ in {
   };
 
   users.groups.papra = {
-    inherit gid;
+    gid = 65001;
   };
   users.users.papra = {
     createHome = false;
     isSystemUser = true;
-    inherit uid;
+    uid = 65001;
     group = "papra";
     shell = "${pkgs.shadow}/bin/nologin";
   };
 
   systemd.tmpfiles.rules = [
-    "d /srv/docker/docs.friloux.me 0750 ${toString uid} ${toString gid} -"
-    "d /srv/docker/docs.friloux.me/data 0750 ${toString uid} ${toString gid} -"
-    "d /srv/docker/docs.friloux.me/data/db 0750 ${toString uid} ${toString gid} -"
-    "d /srv/docker/docs.friloux.me/data/documents 0750 ${toString uid} ${toString gid} -"
+    "d /srv/docker/docs.friloux.me 0750 papra papra -"
+    "d /srv/docker/docs.friloux.me/data 0750 papra papra -"
+    "d /srv/docker/docs.friloux.me/data/db 0750 papra papra -"
+    "d /srv/docker/docs.friloux.me/data/documents 0750 papra papra -"
   ];
 }
