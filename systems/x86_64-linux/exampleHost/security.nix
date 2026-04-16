@@ -1,6 +1,3 @@
 {
-  security = {
-    rtkit.enable = true;
-    sudo.enable = true;
-  };
+  security.rtkit.enable = true;
 }
