@@ -6,11 +6,7 @@
     displayManager.sddm.wayland.enable = true;
     desktopManager.plasma6.enable = true;
     flatpak.enable = true;
-    pulseaudio = {
-      enable = false;
-      extraConfig = "load-module module-combine-sink";
-      support32Bit = true;
-    };
+    pulseaudio.enable = false;
     tumbler.enable = true; # Thumbnail support for images
     zfs = {
       autoScrub.enable = true;
