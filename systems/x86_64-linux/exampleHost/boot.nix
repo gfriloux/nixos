@@ -39,11 +39,6 @@ in {
       type = types.bool;
       default = false;
     };
-    removableEfi = mkOption {
-      description = "install bootloader to fallback location";
-      type = types.bool;
-      default = true;
-    };
     partitionScheme = mkOption {
       default = {
         biosBoot = "-part5";
@@ -117,17 +112,14 @@ in {
         };
         loader = {
           efi = {
-            canTouchEfiVariables =
-              if cfg.removableEfi
-              then false
-              else true;
+            canTouchEfiVariables = false;
             efiSysMountPoint = "/boot/efis/" + (head cfg.bootDevices) + cfg.partitionScheme.efiBoot;
           };
           generationsDir.copyKernels = true;
           grub = {
             enable = true;
             devices = map (diskName: cfg.devNodes + diskName) cfg.bootDevices;
-            efiInstallAsRemovable = cfg.removableEfi;
+            efiInstallAsRemovable = true;
             copyKernels = true;
             efiSupport = true;
             zfsSupport = true;
