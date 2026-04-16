@@ -9,7 +9,6 @@ _: {
   zfs-root = {
     boot = {
       bootDevices = ["nvme-Samsung_SSD_980_PRO_1TB_S5GXNL0W810368E" "nvme-Samsung_SSD_980_PRO_1TB_S5GXNL0W810454N"];
-      immutable = false;
       availableKernelModules = ["xhci_pci" "ehci_pci" "nvme" "usb_storage" "usbhid" "sd_mod" "amdgpu"];
     };
     networking = {

@@ -22,11 +22,6 @@ in {
       type = types.nonEmptyListOf types.str;
       default = ["uas" "nvme" "ahci"];
     };
-    immutable = mkOption {
-      description = "Enable root on ZFS immutable root support";
-      type = types.bool;
-      default = false;
-    };
     partitionScheme = mkOption {
       default = {
         biosBoot = "-part5";
@@ -45,31 +40,10 @@ in {
         "rpool/nixos/home" = mkDefault "/home";
         "rpool/nixos/var/lib" = mkDefault "/var/lib";
         "rpool/nixos/var/log" = mkDefault "/var/log";
+        "rpool/nixos/root" = "/";
         "bpool/nixos/root" = "/boot";
       };
     }
-    (mkIf (!cfg.immutable) {
-      zfs-root.fileSystems.datasets = {"rpool/nixos/root" = "/";};
-    })
-    (mkIf cfg.immutable {
-      zfs-root.fileSystems = {
-        datasets = {
-          "rpool/nixos/empty" = "/";
-          "rpool/nixos/root" = "/oldroot";
-        };
-        bindmounts = {
-          "/oldroot/nix" = "/nix";
-          "/oldroot/etc/nixos" = "/etc/nixos";
-        };
-      };
-      boot.initrd.postDeviceCommands = ''
-        if ! grep -q zfs_no_rollback /proc/cmdline; then
-          zpool import -N rpool
-          zfs rollback -r rpool/nixos/empty@start
-          zpool export -a
-        fi
-      '';
-    })
     {
       zfs-root.fileSystems = {
         efiSystemPartitions = map (diskName: diskName + cfg.partitionScheme.efiBoot) cfg.bootDevices;
