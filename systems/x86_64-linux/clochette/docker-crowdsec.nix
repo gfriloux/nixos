@@ -19,6 +19,14 @@
       "/srv/docker/traefik/logs:/var/log/traefik:ro"
     ];
 
+    extraOptions = [
+      "--health-cmd=wget -q -O /dev/null http://localhost:8080/health"
+      "--health-interval=30s"
+      "--health-timeout=10s"
+      "--health-start-period=30s"
+      "--health-retries=3"
+    ];
+
     labels = {
       "traefik.enable" = "false";
     };
