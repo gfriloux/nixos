@@ -30,10 +30,6 @@ in {
       type = types.nonEmptyListOf types.str;
       default = ["uas" "nvme" "ahci"];
     };
-    kernelParams = mkOption {
-      type = types.listOf types.str;
-      default = [];
-    };
     immutable = mkOption {
       description = "Enable root on ZFS immutable root support";
       type = types.bool;
@@ -90,7 +86,7 @@ in {
       boot = {
         kernelPackages = pkgs.linuxPackages_6_12;
         initrd.availableKernelModules = cfg.availableKernelModules;
-        inherit (cfg) kernelParams;
+        kernelParams = [];
         kernel.sysctl = {
           "kernel.unprivileged_userns_clone" = 1; # for appimages
           "fs.file-max" = 640000;
