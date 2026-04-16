@@ -178,8 +178,11 @@
     gpg-agent = {
       enable = true;
       pinentry.package = lib.mkForce pkgs.pinentry-qt;
-      enableSshSupport = true;
+      enableSshSupport = false;
       enableFishIntegration = true;
+    };
+    ssh-agent = {
+      enable = true;
     };
     imapnotify.enable = true;
   };
