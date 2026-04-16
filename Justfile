@@ -12,6 +12,8 @@ install:
 	rm -f home/kuri/.gtkrc-2.0.backup /home/kuri/.gtkrc-2.0
 	sudo nixos-rebuild switch --flake .
 
+test:
+	pre-commit run --all-files
 
 build_clochette:
 	nixos-rebuild build --flake .#clochette
