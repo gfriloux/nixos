@@ -26,10 +26,25 @@ in
             cat > .pre-commit-config.yaml <<'EOF'
       ---
       repos:
-        - repo: https://github.com/gfriloux/nix-precommit.git
-          rev: v0.0.1
+        - repo: local
           hooks:
-            - id: nix-flake-check
+            - id: alejandra
+              name: alejandra
+              language: system
+              entry: alejandra --check
+              files: \.nix$
+              pass_filenames: true
+            - id: deadnix
+              name: deadnix
+              language: system
+              entry: deadnix --fail
+              files: \.nix$
+              pass_filenames: true
+            - id: statix
+              name: statix
+              language: system
+              entry: statix check
+              pass_filenames: false
       EOF
           else
             echo ".pre-commit-config.yaml already exists. Skipping generation."
