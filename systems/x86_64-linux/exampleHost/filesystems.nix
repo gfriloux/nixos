@@ -49,10 +49,10 @@ in {
     cfg.efiSystemPartitions);
   config.swapDevices = mkDefault (map (swap: {
       device = "/dev/disk/by-id/${swap}";
-      discardPolicy = mkDefault "both";
+      discardPolicy = "both";
       randomEncryption = {
         enable = true;
-        allowDiscards = mkDefault true;
+        allowDiscards = true;
       };
     })
     cfg.swapPartitions);

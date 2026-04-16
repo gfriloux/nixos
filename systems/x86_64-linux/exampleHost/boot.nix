@@ -5,7 +5,7 @@
   ...
 }: let
   cfg = config.zfs-root.boot;
-  inherit (lib) types mkDefault mkOption concatMapStrings;
+  inherit (lib) types mkOption mkDefault concatMapStrings;
 in {
   options.zfs-root.boot = {
     bootDevices = mkOption {
@@ -37,10 +37,7 @@ in {
         "fs.file-max" = 640000;
       };
       supportedFilesystems = ["zfs"];
-      zfs = {
-        devNodes = "/dev/disk/by-id/";
-        forceImportRoot = mkDefault false;
-      };
+      zfs.devNodes = "/dev/disk/by-id/";
       loader = {
         efi = {
           canTouchEfiVariables = false;
