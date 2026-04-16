@@ -6,20 +6,53 @@
 }: let
   bootDevices = ["nvme-Samsung_SSD_980_PRO_1TB_S5GXNL0W810368E" "nvme-Samsung_SSD_980_PRO_1TB_S5GXNL0W810454N"];
   availableKernelModules = ["xhci_pci" "ehci_pci" "nvme" "usb_storage" "usbhid" "sd_mod" "amdgpu"];
-  inherit (lib) mkDefault concatMapStrings;
+  datasets = {
+    "rpool/nixos/home" = "/home";
+    "rpool/nixos/var/lib" = "/var/lib";
+    "rpool/nixos/var/log" = "/var/log";
+    "rpool/nixos/root" = "/";
+    "bpool/nixos/root" = "/boot";
+  };
+  inherit (lib) mkDefault mkMerge mapAttrsToList concatMapStrings;
 in {
   config = {
-    zfs-root.fileSystems = {
-      datasets = {
-        "rpool/nixos/home" = mkDefault "/home";
-        "rpool/nixos/var/lib" = mkDefault "/var/lib";
-        "rpool/nixos/var/log" = mkDefault "/var/log";
-        "rpool/nixos/root" = "/";
-        "bpool/nixos/root" = "/boot";
-      };
-      efiSystemPartitions = map (diskName: diskName + "-part1") bootDevices;
-      swapPartitions = map (diskName: diskName + "-part4") bootDevices;
-    };
+    fileSystems = mkMerge (
+      mapAttrsToList (dataset: mountpoint: {
+        "${mountpoint}" = {
+          device = dataset;
+          fsType = "zfs";
+          options = ["X-mount.mkdir" "noatime"];
+          neededForBoot = true;
+        };
+      })
+      datasets
+      ++ map (diskName: {
+        "/boot/efis/${diskName}-part1" = {
+          device = "/dev/disk/by-id/${diskName}-part1";
+          fsType = "vfat";
+          options = [
+            "x-systemd.idle-timeout=1min"
+            "x-systemd.automount"
+            "noauto"
+            "nofail"
+            "noatime"
+            "X-mount.mkdir"
+          ];
+        };
+      })
+      bootDevices
+    );
+
+    swapDevices = mkDefault (map (diskName: {
+        device = "/dev/disk/by-id/${diskName}-part4";
+        discardPolicy = "both";
+        randomEncryption = {
+          enable = true;
+          allowDiscards = true;
+        };
+      })
+      bootDevices);
+
     boot = {
       kernelPackages = pkgs.linuxPackages_6_12;
       initrd.availableKernelModules = availableKernelModules;

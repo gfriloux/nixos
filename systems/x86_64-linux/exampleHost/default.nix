@@ -6,7 +6,6 @@
   imports = [
     inputs.sops-nix.nixosModules.sops
     ./boot.nix
-    ./filesystems.nix
     ./services.nix
     ./security.nix
     ./users.nix
