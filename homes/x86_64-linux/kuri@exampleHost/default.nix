@@ -299,4 +299,18 @@
       };
     };
   };
+
+  systemd.user.services.yubikey-touch-detector = {
+    Unit = {
+      Description = "YubiKey touch detector";
+    };
+
+    Service = {
+      ExecStart = "${pkgs.yubikey-touch-detector}/bin/yubikey-touch-detector -libnotify";
+    };
+
+    Install = {
+      WantedBy = ["default.target"];
+    };
+  };
 }
