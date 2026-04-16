@@ -63,10 +63,28 @@ in {
     shell = "${pkgs.shadow}/bin/nologin";
   };
 
-  systemd.tmpfiles.rules = [
-    "d /srv/docker/docs.friloux.me 0750 papra papra -"
-    "d /srv/docker/docs.friloux.me/data 0750 papra papra -"
-    "d /srv/docker/docs.friloux.me/data/db 0750 papra papra -"
-    "d /srv/docker/docs.friloux.me/data/documents 0750 papra papra -"
-  ];
+  systemd = {
+    services."papra" = {
+      unitConfig = {
+        OnFailure = "notify-failure@%n.service";
+        StartLimitBurst = 3;
+        StartLimitIntervalSec = "300s";
+      };
+      serviceConfig = {
+        Restart = "on-failure";
+        RestartSec = "30s";
+      };
+    };
+
+    timers."docker-health-watch@papra" = {
+      wantedBy = ["papra.service"];
+      partOf = ["papra.service"];
+    };
+    tmpfiles.rules = [
+      "d /srv/docker/docs.friloux.me 0750 papra papra -"
+      "d /srv/docker/docs.friloux.me/data 0750 papra papra -"
+      "d /srv/docker/docs.friloux.me/data/db 0750 papra papra -"
+      "d /srv/docker/docs.friloux.me/data/documents 0750 papra papra -"
+    ];
+  };
 }
