@@ -15,19 +15,6 @@
 
   sops = {
     defaultSopsFile = ../../../secrets/clochette.yaml;
-
-    secrets = {
-      "services/papra/env" = {
-        owner = "papra";
-        group = "papra";
-      };
-      "services/borg/passphrase" = {};
-      "services/borg/key/private" = {};
-      "services/wow-cp/env_bookstack" = {};
-      "services/wow-cp/env_mariadb" = {};
-      "services/wow-cp/env_mysqldump" = {};
-      "services/crowdsec/env" = {};
-    };
   };
 
   boot = {

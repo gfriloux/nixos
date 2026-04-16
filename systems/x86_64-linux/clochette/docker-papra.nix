@@ -6,6 +6,15 @@
   uid = 65001;
   gid = 65001;
 in {
+  sops = {
+    secrets = {
+      "services/papra/env" = {
+        owner = "papra";
+        group = "papra";
+      };
+    };
+  };
+
   virtualisation.oci-containers.containers."papra" = {
     image = "ghcr.io/papra-hq/papra:26.4.0-rootless"; # renovate
     serviceName = "papra";

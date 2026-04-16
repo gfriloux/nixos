@@ -6,6 +6,14 @@
   uid = 65002;
   gid = 65002;
 in {
+  sops = {
+    secrets = {
+      "services/wow-cp/env_bookstack" = {};
+      "services/wow-cp/env_mariadb" = {};
+      "services/wow-cp/env_mysqldump" = {};
+    };
+  };
+
   virtualisation.oci-containers.containers = {
     "wow-cp-bookstack" = {
       image = "linuxserver/bookstack:26.03.20260315"; # renovate

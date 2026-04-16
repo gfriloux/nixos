@@ -7,6 +7,13 @@
 # List backups:
 #   BORG_PASSPHRASE=$(cat /run/secrets/services/borg/passphrase) BORG_RSH="ssh -i /run/secrets/services/borg/key/private" borg list 'ssh://backup@friloux.me/~/clochette.friloux.me'
 {
+  sops = {
+    secrets = {
+      "services/borg/passphrase" = {};
+      "services/borg/key/private" = {};
+    };
+  };
+
   programs.ssh.knownHostsFiles = [
     (pkgs.writeText "friloux.me" ''
       storage2.friloux.me ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOKThAXm8UnDOFly/7CmT99HODn4W0o3bOYJHGXcAhOO
