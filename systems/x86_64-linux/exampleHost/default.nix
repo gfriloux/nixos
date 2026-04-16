@@ -1,6 +1,5 @@
 {pkgs, ...}: {
   imports = [
-    #inputs.sops-nix.nixosModules.sops
     ./boot.nix
     ./filesystems.nix
     ./network.nix
@@ -10,9 +9,6 @@
     ./proot.nix
   ];
 
-  #sops.defaultSopsFile = ../../../secrets/example.yaml;
-  #sops.secrets."users/root/password" = { };
-
   boot.initrd.kernelModules = ["amdgpu"];
   hardware.firmware = [pkgs.linux-firmware];
 
@@ -21,8 +17,6 @@
     enable32Bit = true;
     extraPackages = with pkgs; [
       libvdpau
-      #amdvlk
-      #vaapiVdpau
       libva-vdpau-driver
     ];
   };
@@ -30,10 +24,6 @@
   nixpkgs.config.allowUnfree = true;
 
   programs.fish.enable = true;
-
-  #  system.autoUpgrade.enable = true;
-  #  system.autoUpgrade.allowReboot = true;
-  #  system.autoUpgrade.channel = "https://channels.nixos.org/nixos-unstable";
 
   console = {
     font = "Lat2-Terminus16";
@@ -110,7 +100,6 @@
     scanmem
     (pkgs.python3.withPackages (python-pkgs:
       with python-pkgs; [
-        # select Python packages here
         tqdm
         inquirerpy
         requests
@@ -118,11 +107,6 @@
     yubikey-personalization
     age
   ];
-
-  #fileSystems."/data" = {
-  #      device = "/dev/disk/by-id/wwn-0x5000c500f77f56e2-part1";
-  #      fsType = "ext4";
-  #};
 
   fileSystems."/data2" = {
     device = "/dev/disk/by-id/wwn-0x5000c500c78528e7-part1";
