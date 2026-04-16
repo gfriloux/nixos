@@ -2,10 +2,7 @@
   pkgs,
   config,
   ...
-}: let
-  uid = 65002;
-  gid = 65002;
-in {
+}: {
   sops = {
     secrets = {
       "services/wow-cp/env_bookstack" = {};
@@ -107,20 +104,20 @@ in {
   };
 
   users.groups.wow-cp = {
-    inherit gid;
+    gid = 65002;
   };
   users.users.wow-cp = {
     createHome = false;
     isSystemUser = true;
-    inherit uid;
+    uid = 65002;
     group = "wow-cp";
     shell = "${pkgs.shadow}/bin/nologin";
   };
 
   systemd.tmpfiles.rules = [
-    "d /srv/docker/wow-cp.friloux.me 0750 ${toString uid} ${toString gid} -"
-    "d /srv/docker/wow-cp.friloux.me/data 0750 ${toString uid} ${toString gid} -"
-    "d /srv/docker/wow-cp.friloux.me/db 0750 ${toString uid} ${toString gid} -"
-    "d /srv/docker/wow-cp.friloux.me/dumps 0750 ${toString uid} ${toString gid} -"
+    "d /srv/docker/wow-cp.friloux.me 0750 wow-cp wow-cp -"
+    "d /srv/docker/wow-cp.friloux.me/data 0750 wow-cp wow-cp -"
+    "d /srv/docker/wow-cp.friloux.me/db 0750 wow-cp wow-cp -"
+    "d /srv/docker/wow-cp.friloux.me/dumps 0750 wow-cp wow-cp -"
   ];
 }
