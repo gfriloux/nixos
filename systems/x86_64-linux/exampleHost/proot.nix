@@ -13,10 +13,6 @@ _: {
       immutable = false;
       availableKernelModules = ["xhci_pci" "ehci_pci" "nvme" "usb_storage" "usbhid" "sd_mod" "amdgpu"];
       kernelParams = [];
-      sshUnlock = {
-        enable = false;
-        authorizedKeys = [];
-      };
     };
     networking = {
       hostName = "exampleHost";
