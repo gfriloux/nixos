@@ -6,7 +6,6 @@
 }: let
   cfg = config.zfs-root.boot;
   inherit (lib) types mkDefault mkOption;
-  inherit (builtins) head toString map tail;
 in {
   options.zfs-root.boot = {
     bootDevices = mkOption {
@@ -46,7 +45,7 @@ in {
       loader = {
         efi = {
           canTouchEfiVariables = false;
-          efiSysMountPoint = "/boot/efis/" + (head cfg.bootDevices) + "-part1";
+          efiSysMountPoint = "/boot/efis/" + (builtins.head cfg.bootDevices) + "-part1";
         };
         generationsDir.copyKernels = true;
         grub = {
@@ -60,7 +59,7 @@ in {
             set -x
             ${pkgs.coreutils-full}/bin/cp -r ${config.boot.loader.efi.efiSysMountPoint}/EFI /boot/efis/${diskName}-part1
             set +x
-          '') (tail cfg.bootDevices));
+          '') (builtins.tail cfg.bootDevices));
         };
       };
     };
