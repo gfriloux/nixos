@@ -51,9 +51,7 @@
     keyMap = "fr";
   };
 
-  i18n = {
-    defaultLocale = "fr_FR.UTF-8";
-  };
+  i18n.defaultLocale = "fr_FR.UTF-8";
 
   systemd.user.services.wireplumber.wantedBy = ["default.target"];
 
