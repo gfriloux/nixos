@@ -17,17 +17,6 @@ in {
       type = types.nonEmptyListOf types.str;
       default = ["uas" "nvme" "ahci"];
     };
-    partitionScheme = mkOption {
-      default = {
-        biosBoot = "-part5";
-        efiBoot = "-part1";
-        swap = "-part4";
-        bootPool = "-part2";
-        rootPool = "-part3";
-      };
-      description = "Describe on disk partitions";
-      type = types.attrsOf types.str;
-    };
   };
   config = {
     zfs-root.fileSystems = {
@@ -38,8 +27,8 @@ in {
         "rpool/nixos/root" = "/";
         "bpool/nixos/root" = "/boot";
       };
-      efiSystemPartitions = map (diskName: diskName + cfg.partitionScheme.efiBoot) cfg.bootDevices;
-      swapPartitions = map (diskName: diskName + cfg.partitionScheme.swap) cfg.bootDevices;
+      efiSystemPartitions = map (diskName: diskName + "-part1") cfg.bootDevices;
+      swapPartitions = map (diskName: diskName + "-part4") cfg.bootDevices;
     };
     boot = {
       kernelPackages = pkgs.linuxPackages_6_12;
@@ -57,7 +46,7 @@ in {
       loader = {
         efi = {
           canTouchEfiVariables = false;
-          efiSysMountPoint = "/boot/efis/" + (head cfg.bootDevices) + cfg.partitionScheme.efiBoot;
+          efiSysMountPoint = "/boot/efis/" + (head cfg.bootDevices) + "-part1";
         };
         generationsDir.copyKernels = true;
         grub = {
@@ -69,7 +58,7 @@ in {
           zfsSupport = true;
           extraInstallCommands = toString (map (diskName: ''
             set -x
-            ${pkgs.coreutils-full}/bin/cp -r ${config.boot.loader.efi.efiSysMountPoint}/EFI /boot/efis/${diskName}${cfg.partitionScheme.efiBoot}
+            ${pkgs.coreutils-full}/bin/cp -r ${config.boot.loader.efi.efiSysMountPoint}/EFI /boot/efis/${diskName}-part1
             set +x
           '') (tail cfg.bootDevices));
         };
