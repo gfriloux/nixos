@@ -25,6 +25,13 @@ in {
       volumes = [
         "/srv/docker/wow-cp.friloux.me/data:/config"
       ];
+      extraOptions = [
+        "--health-cmd=curl -fs http://localhost/status | grep -q '\"database\":true'"
+        "--health-interval=30s"
+        "--health-timeout=10s"
+        "--health-start-period=60s"
+        "--health-retries=3"
+      ];
       labels = {
         "traefik.enable" = "true";
         "traefik.http.routers.wowcp.rule" = "Host(`wow-cp.friloux.me`)";
@@ -48,6 +55,13 @@ in {
       ];
       volumes = [
         "/srv/docker/wow-cp.friloux.me/db:/config"
+      ];
+      extraOptions = [
+        "--health-cmd=mysqladmin ping -h localhost --silent"
+        "--health-interval=30s"
+        "--health-timeout=10s"
+        "--health-start-period=30s"
+        "--health-retries=3"
       ];
       labels = {
         "traefik.enable" = "false";
