@@ -65,13 +65,7 @@
     dbus.enable = true;
     gvfs.enable = true;
 
-    xserver = {
-      enable = false;
-      xkb = {
-        layout = "fr";
-        variant = "";
-      };
-    };
+    xserver.enable = false;
 
     libinput.enable = true;
   };
