@@ -30,7 +30,7 @@ in {
   };
   config.fileSystems = mkMerge (mapAttrsToList (dataset: mountpoint: {
       "${mountpoint}" = {
-        device = "${dataset}";
+        device = dataset;
         fsType = "zfs";
         options = ["X-mount.mkdir" "noatime"];
         neededForBoot = true;
@@ -39,7 +39,7 @@ in {
     cfg.datasets
     ++ mapAttrsToList (bindsrc: mountpoint: {
       "${mountpoint}" = {
-        device = "${bindsrc}";
+        device = bindsrc;
         fsType = "none";
         options = ["bind" "X-mount.mkdir" "noatime"];
       };
