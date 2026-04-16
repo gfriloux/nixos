@@ -12,11 +12,6 @@ in {
       type = types.attrsOf types.str;
       default = {};
     };
-    bindmounts = mkOption {
-      description = "Set mountpoint for bindmounts";
-      type = types.attrsOf types.str;
-      default = {};
-    };
     efiSystemPartitions = mkOption {
       description = "Set mountpoint for efi system partitions";
       type = types.listOf types.str;
@@ -37,14 +32,6 @@ in {
       };
     })
     cfg.datasets
-    ++ mapAttrsToList (bindsrc: mountpoint: {
-      "${mountpoint}" = {
-        device = bindsrc;
-        fsType = "none";
-        options = ["bind" "X-mount.mkdir" "noatime"];
-      };
-    })
-    cfg.bindmounts
     ++ map (esp: {
       "/boot/efis/${esp}" = {
         device = "/dev/disk/by-id/${esp}";
