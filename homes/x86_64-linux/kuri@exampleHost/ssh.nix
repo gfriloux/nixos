@@ -1,4 +1,20 @@
 {config, ...}: {
+  sops = {
+    secrets = {
+      "ssh/keys/guillaume@clochette" = {};
+      "ssh/keys/weechat@clochette" = {};
+      "ssh/keys/kuri@storage2" = {};
+      "ssh/keys/root@rogueleader" = {};
+      "ssh/keys/github" = {};
+    };
+  };
+
+  services = {
+    ssh-agent = {
+      enable = true;
+    };
+  };
+
   programs.ssh = {
     enable = true;
     enableDefaultConfig = false;
