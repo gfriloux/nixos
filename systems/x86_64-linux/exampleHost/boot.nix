@@ -5,7 +5,7 @@
   ...
 }: let
   cfg = config.zfs-root.boot;
-  inherit (lib) mkIf types mkDefault mkOption mkMerge strings;
+  inherit (lib) mkIf types mkDefault mkOption mkMerge;
   inherit (builtins) head toString map tail;
 in {
   options.zfs-root.boot = {
@@ -13,14 +13,6 @@ in {
       description = "Enable root on ZFS support";
       type = types.bool;
       default = true;
-    };
-    devNodes = mkOption {
-      description = "Specify where to discover ZFS pools";
-      type = types.str;
-      apply = x:
-        assert (strings.hasSuffix "/" x
-          || abort "devNodes '${x}' must have trailing slash!"); x;
-      default = "/dev/disk/by-id/";
     };
     bootDevices = mkOption {
       description = "Specify boot devices";
@@ -93,7 +85,7 @@ in {
         };
         supportedFilesystems = ["zfs"];
         zfs = {
-          inherit (cfg) devNodes;
+          devNodes = "/dev/disk/by-id/";
           forceImportRoot = mkDefault false;
         };
         loader = {
@@ -104,7 +96,7 @@ in {
           generationsDir.copyKernels = true;
           grub = {
             enable = true;
-            devices = map (diskName: cfg.devNodes + diskName) cfg.bootDevices;
+            devices = map (diskName: "/dev/disk/by-id/" + diskName) cfg.bootDevices;
             efiInstallAsRemovable = true;
             copyKernels = true;
             efiSupport = true;
