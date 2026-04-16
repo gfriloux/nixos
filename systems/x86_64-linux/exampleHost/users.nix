@@ -1,8 +1,4 @@
 {pkgs, ...}: {
-  users.users.root = {
-    openssh.authorizedKeys.keys = ["sshKey_placeholder"];
-  };
-
   users.users.kuri = {
     openssh.authorizedKeys.keys = ["sshKey_placeholder"];
     isNormalUser = true;
