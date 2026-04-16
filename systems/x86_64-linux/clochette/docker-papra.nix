@@ -35,7 +35,9 @@ in {
       "traefik.http.routers.papra.tls.certresolver" = "lets-encrypt";
       "traefik.docker.network" = "web";
       "traefik.http.services.papra.loadbalancer.server.port" = "1221";
-      "traefik.http.routers.papra.middlewares" = "crowdsec@file";
+      "traefik.http.routers.papra.middlewares" = "crowdsec@file,rate-limit@file,security-headers@file";
+      "traefik.http.routers.papra-login.rule" = "Host(`docs.friloux.me`) && Path(`/login`)";
+      "traefik.http.routers.papra-login.middlewares" = "crowdsec@file,rate-limit-strict@file,security-headers@file";
     };
 
     networks = [

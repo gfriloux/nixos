@@ -26,11 +26,14 @@ in {
         "/srv/docker/wow-cp.friloux.me/data:/config"
       ];
       labels = {
+        "traefik.enable" = "true";
         "traefik.http.routers.wowcp.rule" = "Host(`wow-cp.friloux.me`)";
         "traefik.http.routers.wowcp.tls" = "true";
         "traefik.http.routers.wowcp.tls.certresolver" = "lets-encrypt";
         "traefik.docker.network" = "web";
-        "traefik.http.routers.wowcp.middlewares" = "crowdsec@file";
+        "traefik.http.routers.wowcp.middlewares" = "crowdsec@file,rate-limit@file,security-headers@file";
+        "traefik.http.routers.wowcp-login.rule" = "Host(`wow-cp.friloux.me`) && Path(`/login`)";
+        "traefik.http.routers.wowcp-login.middlewares" = "crowdsec@file,rate-limit-strict@file,security-headers@file";
       };
       networks = [
         "wow-cp"
