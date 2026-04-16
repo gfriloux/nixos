@@ -5,7 +5,7 @@
   ...
 }: let
   cfg = config.zfs-root.boot;
-  inherit (lib) types mkDefault mkOption;
+  inherit (lib) types mkDefault mkOption concatMapStrings;
 in {
   options.zfs-root.boot = {
     bootDevices = mkOption {
@@ -55,11 +55,11 @@ in {
           copyKernels = true;
           efiSupport = true;
           zfsSupport = true;
-          extraInstallCommands = toString (map (diskName: ''
+          extraInstallCommands = concatMapStrings (diskName: ''
             set -x
             ${pkgs.coreutils-full}/bin/cp -r ${config.boot.loader.efi.efiSysMountPoint}/EFI /boot/efis/${diskName}-part1
             set +x
-          '') (builtins.tail cfg.bootDevices));
+          '') (builtins.tail cfg.bootDevices);
         };
       };
     };
