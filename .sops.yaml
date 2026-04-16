@@ -1,12 +1,11 @@
 keys:
-  - &admin_kuri 4DF35290882C2927ACD88A4F6FCA9BE19FC69E48
   - &desktop_examplehost age1xr32hdvanup0zk63v8hrcv2u2c09wplz6fd42w47mkjrd49j39xqaqqckq
   - &server_clochette age18594hnd4mk3736a36a5fqc5w55sanac86tv8du0hz67rfk558srs3y9jwa
 creation_rules:
   - path_regex: secrets/kuri_exampleHost.yaml$
     key_groups:
-    - pgp:
-      - *admin_kuri
+    - age:
+      - *desktop_examplehost
   - path_regex: secrets/clochette.yaml
     key_groups:
     - age:

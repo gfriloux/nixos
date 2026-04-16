@@ -1,9 +1,17 @@
-{pkgs, ...}: {
-  users.users.kuri = {
-    openssh.authorizedKeys.keys = ["sshKey_placeholder"];
-    isNormalUser = true;
-    extraGroups = ["users" "networkmanager" "video" "audio" "docker" "wheel" "disk"];
-    shell = pkgs.fish;
-    linger = true;
+{
+  pkgs,
+  config,
+  ...
+}: {
+  users = {
+    mutableUsers = false;
+    users.kuri = {
+      openssh.authorizedKeys.keys = ["sshKey_placeholder"];
+      isNormalUser = true;
+      extraGroups = ["users" "networkmanager" "video" "audio" "docker" "wheel" "disk"];
+      shell = pkgs.fish;
+      linger = true;
+      hashedPasswordFile = config.sops.secrets."users/kuri/hashed-password".path;
+    };
   };
 }

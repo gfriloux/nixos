@@ -1,10 +1,25 @@
-{pkgs, ...}: {
+{
+  pkgs,
+  inputs,
+  ...
+}: {
   imports = [
+    inputs.sops-nix.nixosModules.sops
     ./boot.nix
     ./filesystems.nix
     ./services.nix
     ./security.nix
     ./users.nix
+  ];
+
+  sops = {
+    defaultSopsFile = ../../../secrets/kuri_exampleHost.yaml;
+    age.keyFile = "/etc/sops/age/keys.txt";
+    secrets."users/kuri/hashed-password".neededForUsers = true;
+  };
+
+  systemd.tmpfiles.rules = [
+    "d /etc/sops/age 0700 root root -"
   ];
 
   time.timeZone = "Europe/Paris";
