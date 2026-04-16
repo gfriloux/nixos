@@ -12,6 +12,7 @@
     ./docker-wow-cp.nix
     ./docker-crowdsec.nix
     ./backup.nix
+    ./notify.nix
   ];
 
   sops = {
