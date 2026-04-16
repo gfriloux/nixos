@@ -105,6 +105,17 @@ in {
     };
   };
 
+  services.logrotate.settings.traefik = {
+    files = "/srv/docker/traefik/logs/traefik.log";
+    frequency = "daily";
+    rotate = 14;
+    compress = true;
+    delaycompress = true;
+    missingok = true;
+    notifempty = true;
+    copytruncate = true;
+  };
+
   networking.firewall.allowedTCPPorts = [80 443];
 
   systemd.tmpfiles.rules = [
