@@ -77,8 +77,16 @@ in {
     };
 
     timers."docker-health-watch@papra" = {
-      wantedBy = ["papra.service"];
+      description = "Timer de surveillance santé Docker pour papra";
+
+      wantedBy = ["timers.target"];
       partOf = ["papra.service"];
+
+      timerConfig = {
+        OnBootSec = "240s";
+        OnUnitActiveSec = "30s";
+        Unit = "docker-health-watch@papra.service";
+      };
     };
     tmpfiles.rules = [
       "d /srv/docker/docs.friloux.me 0750 papra papra -"

@@ -40,14 +40,5 @@ in {
         };
       };
     };
-    timers = {
-      "docker-health-watch@" = {
-        description = "Timer de surveillance santé Docker pour %i";
-        timerConfig = {
-          OnBootSec = "240s";
-          OnUnitActiveSec = "30s";
-        };
-      };
-    };
   };
 }
