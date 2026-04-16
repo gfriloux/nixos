@@ -94,9 +94,31 @@ in {
     ];
   };
 
+  services.logrotate.settings.traefik = {
+    files = "/srv/docker/traefik/logs/traefik.log";
+    frequency = "daily";
+    rotate = 14;
+    compress = true;
+    delaycompress = true;
+    missingok = true;
+    notifempty = true;
+    copytruncate = true;
+  };
+
+  networking.firewall.allowedTCPPorts = [80 443];
+
   systemd = {
     services = {
       "traefik" = {
+        unitConfig = {
+          OnFailure = "notify-failure@%n.service";
+          StartLimitBurst = 3;
+          StartLimitIntervalSec = "300s";
+        };
+        serviceConfig = {
+          Restart = "on-failure";
+          RestartSec = "30s";
+        };
         after = ["crowdsec.service"];
         requires = ["crowdsec.service"];
       };
@@ -117,25 +139,23 @@ in {
         ];
       };
     };
+    timers."docker-health-watch@traefik" = {
+      description = "Timer de surveillance santé Docker pour traefik";
+
+      wantedBy = ["timers.target"];
+      partOf = ["traefik.service"];
+
+      timerConfig = {
+        OnBootSec = "240s";
+        OnUnitActiveSec = "30s";
+        Unit = "docker-health-watch@traefik.service";
+      };
+    };
+    tmpfiles.rules = [
+      "d /srv/docker/traefik/logs 0750 0 0 -"
+      "d /srv/docker/traefik/conf 0750 0 0 -"
+      "d /srv/docker/traefik/acme.json 0600 0 0 -"
+      "L+ /srv/docker/traefik/conf/traefik.yml - - - - ${traefikConfig}"
+    ];
   };
-
-  services.logrotate.settings.traefik = {
-    files = "/srv/docker/traefik/logs/traefik.log";
-    frequency = "daily";
-    rotate = 14;
-    compress = true;
-    delaycompress = true;
-    missingok = true;
-    notifempty = true;
-    copytruncate = true;
-  };
-
-  networking.firewall.allowedTCPPorts = [80 443];
-
-  systemd.tmpfiles.rules = [
-    "d /srv/docker/traefik/logs 0750 0 0 -"
-    "d /srv/docker/traefik/conf 0750 0 0 -"
-    "d /srv/docker/traefik/acme.json 0600 0 0 -"
-    "L+ /srv/docker/traefik/conf/traefik.yml - - - - ${traefikConfig}"
-  ];
 }
