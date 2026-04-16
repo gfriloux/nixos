@@ -32,7 +32,6 @@ in {
     boot = {
       kernelPackages = pkgs.linuxPackages_6_12;
       initrd.availableKernelModules = cfg.availableKernelModules;
-      kernelParams = [];
       kernel.sysctl = {
         "kernel.unprivileged_userns_clone" = 1; # for appimages
         "fs.file-max" = 640000;
