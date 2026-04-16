@@ -15,7 +15,6 @@
     zrepl = {
       enable = true;
       settings = {
-        global = {};
         jobs = [
           {
             name = "storage2";
