@@ -86,23 +86,6 @@
     };
   };
 
-  systemd.services."docker-network-wow-cp" = {
-    path = [pkgs.docker];
-    serviceConfig = {
-      Type = "oneshot";
-      RemainAfterExit = true;
-      ExecStop = "${pkgs.docker}/bin/docker network rm -f wow-cp";
-    };
-    script = ''
-      docker network inspect wow-cp || docker network create wow-cp
-    '';
-    wantedBy = [
-      "wow-cp-bookstack.service"
-      "wow-cp-mariadb.service"
-      "wow-cp-mysqldump.service"
-    ];
-  };
-
   users.groups.wow-cp = {
     gid = 65002;
   };
@@ -114,10 +97,60 @@
     shell = "${pkgs.shadow}/bin/nologin";
   };
 
-  systemd.tmpfiles.rules = [
-    "d /srv/docker/wow-cp.friloux.me 0750 wow-cp wow-cp -"
-    "d /srv/docker/wow-cp.friloux.me/data 0750 wow-cp wow-cp -"
-    "d /srv/docker/wow-cp.friloux.me/db 0750 wow-cp wow-cp -"
-    "d /srv/docker/wow-cp.friloux.me/dumps 0750 wow-cp wow-cp -"
-  ];
+  systemd = {
+    services."docker-network-wow-cp" = {
+      path = [pkgs.docker];
+      serviceConfig = {
+        Type = "oneshot";
+        RemainAfterExit = true;
+        ExecStop = "${pkgs.docker}/bin/docker network rm -f wow-cp";
+      };
+      script = ''
+        docker network inspect wow-cp || docker network create wow-cp
+      '';
+      wantedBy = [
+        "wow-cp-bookstack.service"
+        "wow-cp-mariadb.service"
+        "wow-cp-mysqldump.service"
+      ];
+    };
+    timers = {
+      "docker-health-watch@wow-cp-bookstack" = {
+        description = "Timer de surveillance santé Docker pour wow-cp-bookstack";
+        wantedBy = ["timers.target"];
+        partOf = ["wow-cp-bookstack.service"];
+        timerConfig = {
+          OnBootSec = "240s";
+          OnUnitActiveSec = "30s";
+          Unit = "docker-health-watch@wow-cp-bookstack.service";
+        };
+      };
+      "docker-health-watch@wow-cp-mariadb" = {
+        description = "Timer de surveillance santé Docker pour wow-cp-mariadb";
+        wantedBy = ["timers.target"];
+        partOf = ["wow-cp-mariadb.service"];
+        timerConfig = {
+          OnBootSec = "240s";
+          OnUnitActiveSec = "30s";
+          Unit = "docker-health-watch@wow-cp-mariadb.service";
+        };
+      };
+      "docker-health-watch@wow-cp-mysqldump" = {
+        description = "Timer de surveillance santé Docker pour wow-cp-mysqldump";
+        wantedBy = ["timers.target"];
+        partOf = ["wow-cp-mysqldump.service"];
+        timerConfig = {
+          OnBootSec = "240s";
+          OnUnitActiveSec = "30s";
+          Unit = "docker-health-watch@wow-cp-mysqldump.service";
+        };
+      };
+    };
+    tmpfiles.rules = [
+      "d /srv/docker/wow-cp.friloux.me 0750 wow-cp wow-cp -"
+      "d /srv/docker/wow-cp.friloux.me/data 0750 wow-cp wow-cp -"
+      "d /srv/docker/wow-cp.friloux.me/db 0750 wow-cp wow-cp -"
+      "d /srv/docker/wow-cp.friloux.me/dumps 0750 wow-cp wow-cp -"
+    ];
+  };
 }
