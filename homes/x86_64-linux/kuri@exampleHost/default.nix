@@ -133,7 +133,7 @@
           gtk-application-prefer-dark-theme=1
         '';
       };
-      theme = null;
+      theme = null; # adopts new HM default (stateVersion < 26.05 uses config.gtk.theme)
     };
   };
 
@@ -169,7 +169,7 @@
       signing = {
         key = "4DF35290882C2927ACD88A4F6FCA9BE19FC69E48";
         signByDefault = true;
-        format = "openpgp";
+        format = null; # adopts new HM default (stateVersion < 25.05 uses "openpgp")
       };
       settings.user = {
         email = "guillaume@friloux.me";
