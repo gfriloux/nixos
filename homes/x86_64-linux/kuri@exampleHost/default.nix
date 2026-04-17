@@ -162,7 +162,6 @@
     };
     home-manager.enable = true;
     gpg.enable = true;
-    direnv.enable = true;
     git = {
       signing = {
         key = "4DF35290882C2927ACD88A4F6FCA9BE19FC69E48";
