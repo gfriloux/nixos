@@ -101,22 +101,58 @@
   };
 
   systemd = {
-    services."docker-network-wow-cp" = {
-      path = [pkgs.docker];
-      serviceConfig = {
-        Type = "oneshot";
-        RemainAfterExit = true;
-        ExecStop = "${pkgs.docker}/bin/docker network rm -f wow-cp";
+    services = {
+      "wow-cp-bookstack" = {
+        unitConfig = {
+          OnFailure = "notify-failure@%n.service";
+          StartLimitBurst = 3;
+          StartLimitIntervalSec = "300s";
+        };
+        serviceConfig = {
+          Restart = "on-failure";
+          RestartSec = "30s";
+        };
       };
-      script = ''
-        docker network inspect wow-cp || docker network create wow-cp
-      '';
-      wantedBy = [
-        "wow-cp-bookstack.service"
-        "wow-cp-mariadb.service"
-        "wow-cp-mysqldump.service"
-      ];
+      "wow-cp-mariadb" = {
+        unitConfig = {
+          OnFailure = "notify-failure@%n.service";
+          StartLimitBurst = 3;
+          StartLimitIntervalSec = "300s";
+        };
+        serviceConfig = {
+          Restart = "on-failure";
+          RestartSec = "30s";
+        };
+      };
+      "wow-cp-mysqldump" = {
+        unitConfig = {
+          OnFailure = "notify-failure@%n.service";
+          StartLimitBurst = 3;
+          StartLimitIntervalSec = "300s";
+        };
+        serviceConfig = {
+          Restart = "on-failure";
+          RestartSec = "30s";
+        };
+      };
+      "docker-network-wow-cp" = {
+        path = [pkgs.docker];
+        serviceConfig = {
+          Type = "oneshot";
+          RemainAfterExit = true;
+          ExecStop = "${pkgs.docker}/bin/docker network rm -f wow-cp";
+        };
+        script = ''
+          docker network inspect wow-cp || docker network create wow-cp
+        '';
+        wantedBy = [
+          "wow-cp-bookstack.service"
+          "wow-cp-mariadb.service"
+          "wow-cp-mysqldump.service"
+        ];
+      };
     };
+
     tmpfiles.rules = [
       "d /srv/docker/wow-cp.friloux.me 0750 wow-cp wow-cp -"
       "d /srv/docker/wow-cp.friloux.me/data 0750 wow-cp wow-cp -"
