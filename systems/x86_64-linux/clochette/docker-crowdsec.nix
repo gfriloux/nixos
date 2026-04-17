@@ -29,6 +29,7 @@
 
     labels = {
       "traefik.enable" = "false";
+      "friloux.me/health-watch" = "true";
     };
 
     networks = [
@@ -37,18 +38,6 @@
   };
 
   systemd = {
-    timers."docker-health-watch@crowdsec" = {
-      description = "Timer de surveillance santé Docker pour crowdsec";
-
-      wantedBy = ["timers.target"];
-      partOf = ["crowdsec.service"];
-
-      timerConfig = {
-        OnBootSec = "240s";
-        OnUnitActiveSec = "30s";
-        Unit = "docker-health-watch@crowdsec.service";
-      };
-    };
     tmpfiles.rules = [
       "d /srv/docker/crowdsec.clochette.friloux.me/data 0750 0 0 -"
       "d /srv/docker/crowdsec.clochette.friloux.me/etc 0750 0 0 -"
