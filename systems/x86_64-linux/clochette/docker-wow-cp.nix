@@ -38,6 +38,7 @@
         "traefik.http.routers.wowcp.middlewares" = "crowdsec@file,rate-limit@file,security-headers@file";
         "traefik.http.routers.wowcp-login.rule" = "Host(`wow-cp.friloux.me`) && Path(`/login`)";
         "traefik.http.routers.wowcp-login.middlewares" = "crowdsec@file,rate-limit-strict@file,security-headers@file";
+        "friloux.me/health-watch" = "true";
       };
       networks = [
         "wow-cp"
@@ -62,6 +63,7 @@
       ];
       labels = {
         "traefik.enable" = "false";
+        "friloux.me/health-watch" = "true";
       };
       networks = [
         "wow-cp"
@@ -79,6 +81,7 @@
       ];
       labels = {
         "traefik.enable" = "false";
+        "friloux.me/health-watch" = "true";
       };
       networks = [
         "wow-cp"
@@ -113,38 +116,6 @@
         "wow-cp-mariadb.service"
         "wow-cp-mysqldump.service"
       ];
-    };
-    timers = {
-      "docker-health-watch@wow-cp-bookstack" = {
-        description = "Timer de surveillance santé Docker pour wow-cp-bookstack";
-        wantedBy = ["timers.target"];
-        partOf = ["wow-cp-bookstack.service"];
-        timerConfig = {
-          OnBootSec = "240s";
-          OnUnitActiveSec = "30s";
-          Unit = "docker-health-watch@wow-cp-bookstack.service";
-        };
-      };
-      "docker-health-watch@wow-cp-mariadb" = {
-        description = "Timer de surveillance santé Docker pour wow-cp-mariadb";
-        wantedBy = ["timers.target"];
-        partOf = ["wow-cp-mariadb.service"];
-        timerConfig = {
-          OnBootSec = "240s";
-          OnUnitActiveSec = "30s";
-          Unit = "docker-health-watch@wow-cp-mariadb.service";
-        };
-      };
-      "docker-health-watch@wow-cp-mysqldump" = {
-        description = "Timer de surveillance santé Docker pour wow-cp-mysqldump";
-        wantedBy = ["timers.target"];
-        partOf = ["wow-cp-mysqldump.service"];
-        timerConfig = {
-          OnBootSec = "240s";
-          OnUnitActiveSec = "30s";
-          Unit = "docker-health-watch@wow-cp-mysqldump.service";
-        };
-      };
     };
     tmpfiles.rules = [
       "d /srv/docker/wow-cp.friloux.me 0750 wow-cp wow-cp -"
