@@ -69,7 +69,7 @@ in {
         "kernel.unprivileged_userns_clone" = 1; # for appimages
         "fs.file-max" = 640000;
       };
-      supportedFilesystems = ["zfs"];
+      supportedFilesystems.zfs = true;
       zfs.devNodes = "/dev/disk/by-id/";
       loader = {
         efi = {
