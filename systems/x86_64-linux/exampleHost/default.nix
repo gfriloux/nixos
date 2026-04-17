@@ -7,7 +7,6 @@
     inputs.sops-nix.nixosModules.sops
     ./boot.nix
     ./services.nix
-    ./security.nix
     ./users.nix
   ];
 

@@ -1,4 +1,6 @@
 {pkgs, ...}: {
+  security.rtkit.enable = true; # needed by pipewire for real-time scheduling
+
   services = {
     udev.packages = [pkgs.yubikey-personalization];
     pcscd.enable = true;
