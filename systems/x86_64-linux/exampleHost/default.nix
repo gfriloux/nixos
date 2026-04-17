@@ -87,12 +87,6 @@
   ];
 
   environment.systemPackages = with pkgs; [
-    steam
-    appimage-run
-    steam-run
-    flatpak-builder
-    appstream
-    appstream-glib
     xwayland-satellite
     wl-clipboard
     linux-wallpaperengine
@@ -110,7 +104,6 @@
     samba
     docker-compose
     ueberzug
-    offlineimap
     protonup-ng
     rustup
     gcc
