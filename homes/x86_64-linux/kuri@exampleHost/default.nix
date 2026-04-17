@@ -122,7 +122,7 @@
     enable = true;
 
     font = {
-      name = "Iosevka 8";
+      name = "Iosevka";
       package = pkgs.iosevka;
       size = 7;
     };
