@@ -80,10 +80,6 @@
       kooha
       ghostty
       gimp
-      heroic
-      scummvm
-      ryubing
-      transmission_4-qt6
       gparted
       ouch
       aria2
