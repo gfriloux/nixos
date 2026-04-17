@@ -1,6 +1,7 @@
 {
   pkgs,
   config,
+  lib,
   ...
 }: let
   notifyScript = pkgs.writeShellScript "notify-failure" ''
@@ -20,6 +21,13 @@
       ${pkgs.docker}/bin/docker kill "$CONTAINER"
     fi
   '';
+
+  watched =
+    lib.filterAttrs (
+      _: c:
+        (c.labels or {}) ? "friloux.me/health-watch"
+    )
+    config.virtualisation.oci-containers.containers;
 in {
   sops.secrets."services/ntfy/topic" = {};
 
@@ -40,5 +48,21 @@ in {
         };
       };
     };
+
+    timers =
+      lib.mapAttrs' (name: _: {
+        name = "docker-health-watch@${name}";
+        value = {
+          description = "Timer de surveillance santé Docker pour ${name}";
+          wantedBy = ["timers.target"];
+          partOf = ["${name}.service"];
+          timerConfig = {
+            OnBootSec = "240s";
+            OnUnitActiveSec = "30s";
+            Unit = "docker-health-watch@${name}.service";
+          };
+        };
+      })
+      watched;
   };
 }
