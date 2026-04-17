@@ -77,7 +77,7 @@
         enable = true;
         postSyncHookCommand = "notmuch new";
         extraConfig.local = {
-          localfolders = "/home/kuri/mail/friloux";
+          localfolders = "${config.home.homeDirectory}/mail/friloux";
         };
         extraConfig.remote.folderfilter = "lambda folder: folder in ['INBOX', 'Sent']";
       };
