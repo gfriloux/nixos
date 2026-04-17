@@ -37,22 +37,8 @@
     ];
   };
 
-  systemd = {
-    services."crowdsec" = {
-      unitConfig = {
-        OnFailure = "notify-failure@%n.service";
-        StartLimitBurst = 3;
-        StartLimitIntervalSec = "300s";
-      };
-      serviceConfig = {
-        Restart = "on-failure";
-        RestartSec = "30s";
-      };
-    };
-
-    tmpfiles.rules = [
-      "d /srv/docker/crowdsec.clochette.friloux.me/data 0750 0 0 -"
-      "d /srv/docker/crowdsec.clochette.friloux.me/etc 0750 0 0 -"
-    ];
-  };
+  systemd.tmpfiles.rules = [
+    "d /srv/docker/crowdsec.clochette.friloux.me/data 0750 0 0 -"
+    "d /srv/docker/crowdsec.clochette.friloux.me/etc 0750 0 0 -"
+  ];
 }

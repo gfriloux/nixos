@@ -101,56 +101,21 @@
   };
 
   systemd = {
-    services = {
-      "wow-cp-bookstack" = {
-        unitConfig = {
-          OnFailure = "notify-failure@%n.service";
-          StartLimitBurst = 3;
-          StartLimitIntervalSec = "300s";
-        };
-        serviceConfig = {
-          Restart = "on-failure";
-          RestartSec = "30s";
-        };
+    services."docker-network-wow-cp" = {
+      path = [pkgs.docker];
+      serviceConfig = {
+        Type = "oneshot";
+        RemainAfterExit = true;
+        ExecStop = "${pkgs.docker}/bin/docker network rm -f wow-cp";
       };
-      "wow-cp-mariadb" = {
-        unitConfig = {
-          OnFailure = "notify-failure@%n.service";
-          StartLimitBurst = 3;
-          StartLimitIntervalSec = "300s";
-        };
-        serviceConfig = {
-          Restart = "on-failure";
-          RestartSec = "30s";
-        };
-      };
-      "wow-cp-mysqldump" = {
-        unitConfig = {
-          OnFailure = "notify-failure@%n.service";
-          StartLimitBurst = 3;
-          StartLimitIntervalSec = "300s";
-        };
-        serviceConfig = {
-          Restart = "on-failure";
-          RestartSec = "30s";
-        };
-      };
-      "docker-network-wow-cp" = {
-        path = [pkgs.docker];
-        serviceConfig = {
-          Type = "oneshot";
-          RemainAfterExit = true;
-          ExecStop = "${pkgs.docker}/bin/docker network rm -f wow-cp";
-        };
-        script = ''
-          docker network inspect wow-cp || docker network create wow-cp
-        '';
-        wantedBy = [
-          "wow-cp-bookstack.service"
-          "wow-cp-mariadb.service"
-          "wow-cp-mysqldump.service"
-        ];
-      };
+      script = ''
+        docker network inspect wow-cp || docker network create wow-cp
+      '';
+      wantedBy = [
+        "wow-cp-bookstack.service"
+        "wow-cp-mariadb.service"
+        "wow-cp-mysqldump.service"
+      ];
     };
 
     tmpfiles.rules = [

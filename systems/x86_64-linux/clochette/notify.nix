@@ -32,22 +32,35 @@ in {
   sops.secrets."services/ntfy/topic" = {};
 
   systemd = {
-    services = {
-      "notify-failure@" = {
-        description = "Notification d'échec du service %i";
-        serviceConfig = {
-          Type = "oneshot";
-          ExecStart = "${notifyScript} %i";
+    services =
+      {
+        "notify-failure@" = {
+          description = "Notification d'échec du service %i";
+          serviceConfig = {
+            Type = "oneshot";
+            ExecStart = "${notifyScript} %i";
+          };
         };
-      };
-      "docker-health-watch@" = {
-        description = "Surveillance santé Docker du conteneur %i";
-        serviceConfig = {
-          Type = "oneshot";
-          ExecStart = "${healthWatchScript} %i";
+        "docker-health-watch@" = {
+          description = "Surveillance santé Docker du conteneur %i";
+          serviceConfig = {
+            Type = "oneshot";
+            ExecStart = "${healthWatchScript} %i";
+          };
         };
-      };
-    };
+      }
+      // lib.mapAttrs (_: _: {
+        unitConfig = {
+          OnFailure = "notify-failure@%n.service";
+          StartLimitBurst = 3;
+          StartLimitIntervalSec = "300s";
+        };
+        serviceConfig = {
+          Restart = "on-failure";
+          RestartSec = "30s";
+        };
+      })
+      watched;
 
     timers =
       lib.mapAttrs' (name: _: {
