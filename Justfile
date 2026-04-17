@@ -1,6 +1,6 @@
 
 secrets:
-	nix-shell -p sops --run "sops secrets/kuri_exampleHost.yaml"
+	sops secrets/kuri_exampleHost.yaml
 
 update:
 	nix flake update
@@ -22,4 +22,4 @@ install_clochette:
 	nixos-rebuild switch --flake .#clochette --target-host guillaume@clochette.friloux.me --sudo --ask-sudo-password
 
 secrets_clochette:
-	nix-shell -p sops --run "sops secrets/clochette.yaml"
+	sops secrets/clochette.yaml
