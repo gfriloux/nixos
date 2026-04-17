@@ -42,7 +42,6 @@
       settings = {
         PasswordAuthentication = false;
         PermitRootLogin = "no";
-        PubkeyAuthentication = true;
         KbdInteractiveAuthentication = false;
         MaxAuthTries = 3;
         LoginGraceTime = "30s";
