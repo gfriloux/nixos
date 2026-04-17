@@ -215,14 +215,14 @@
   systemd.user.services.yubikey-touch-detector = {
     Unit = {
       Description = "YubiKey touch detector";
+      After = ["graphical-session.target"];
+      PartOf = ["graphical-session.target"];
     };
-
     Service = {
       ExecStart = "${pkgs.yubikey-touch-detector}/bin/yubikey-touch-detector -libnotify";
     };
-
     Install = {
-      WantedBy = ["default.target"];
+      WantedBy = ["graphical-session.target"];
     };
   };
 }
