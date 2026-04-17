@@ -154,7 +154,7 @@ in {
     tmpfiles.rules = [
       "d /srv/docker/traefik/logs 0750 0 0 -"
       "d /srv/docker/traefik/conf 0750 0 0 -"
-      "d /srv/docker/traefik/acme.json 0600 0 0 -"
+      "f /srv/docker/traefik/acme.json 0600 0 0 -"
       "L+ /srv/docker/traefik/conf/traefik.yml - - - - ${traefikConfig}"
     ];
   };
