@@ -17,7 +17,7 @@
   nix-gui.hm.enable = true;
 
   sops = {
-    gnupg.home = "${config.home.homeDirectory}/.gnupg";
+    age.keyFile = "/etc/sops/age/keys.txt";
     defaultSopsFile = ../../../secrets/kuri_exampleHost.yaml;
     defaultSymlinkPath = "/run/user/1000/secrets";
     defaultSecretsMountPoint = "/run/user/1000/secrets.d";

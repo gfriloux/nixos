@@ -17,7 +17,8 @@
   };
 
   systemd.tmpfiles.rules = [
-    "d /etc/sops/age 0700 root root -"
+    "d /etc/sops/age 0750 root users -"
+    "z /etc/sops/age/keys.txt 0640 root users -"
   ];
 
   time.timeZone = "Europe/Paris";
