@@ -29,7 +29,6 @@
     firewall.enable = false;
   };
 
-  boot.initrd.kernelModules = ["amdgpu"];
   hardware.firmware = [pkgs.linux-firmware];
 
   hardware.graphics = {
@@ -52,14 +51,6 @@
 
   i18n.defaultLocale = "fr_FR.UTF-8";
 
-  systemd.user.services.wireplumber.wantedBy = ["default.target"];
-
-  xdg.portal = {
-    enable = true;
-    extraPortals = [pkgs.xdg-desktop-portal-gtk];
-    config.common.default = "*";
-  };
-
   boot.zfs.forceImportRoot = false;
 
   nix = {
@@ -70,14 +61,6 @@
       dates = "weekly";
       options = "--delete-older-than 5d";
     };
-  };
-
-  virtualisation = {
-    docker = {
-      enable = true;
-      storageDriver = "zfs";
-    };
-    waydroid.enable = true;
   };
 
   fonts.packages = with pkgs; [

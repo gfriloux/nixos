@@ -1,4 +1,20 @@
 {pkgs, ...}: {
+  systemd.user.services.wireplumber.wantedBy = ["default.target"];
+
+  xdg.portal = {
+    enable = true;
+    extraPortals = [pkgs.xdg-desktop-portal-gtk];
+    config.common.default = "*";
+  };
+
+  virtualisation = {
+    docker = {
+      enable = true;
+      storageDriver = "zfs";
+    };
+    waydroid.enable = true;
+  };
+
   security.rtkit.enable = true; # needed by pipewire for real-time scheduling
 
   services = {
