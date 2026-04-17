@@ -85,6 +85,11 @@ in {
       "--health-retries=3"
     ];
 
+    labels = {
+      "traefik.enable" = "false";
+      "friloux.me/health-watch" = "true";
+    };
+
     ports = [
       "80:80/tcp"
       "443:443/tcp"
@@ -137,18 +142,6 @@ in {
         wantedBy = [
           "traefik.service"
         ];
-      };
-    };
-    timers."docker-health-watch@traefik" = {
-      description = "Timer de surveillance santé Docker pour traefik";
-
-      wantedBy = ["timers.target"];
-      partOf = ["traefik.service"];
-
-      timerConfig = {
-        OnBootSec = "240s";
-        OnUnitActiveSec = "30s";
-        Unit = "docker-health-watch@traefik.service";
       };
     };
     tmpfiles.rules = [
