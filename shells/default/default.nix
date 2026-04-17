@@ -16,6 +16,7 @@ in
       alejandra
       pre-commit
       serie
+      tokei
     ];
 
     shellHook = ''
