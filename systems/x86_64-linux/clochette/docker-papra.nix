@@ -37,6 +37,7 @@ in {
       "traefik.http.routers.papra.middlewares" = "crowdsec@file,rate-limit@file,security-headers@file";
       "traefik.http.routers.papra-login.rule" = "Host(`docs.friloux.me`) && Path(`/login`)";
       "traefik.http.routers.papra-login.middlewares" = "crowdsec@file,rate-limit-strict@file,security-headers@file";
+      "friloux.me/health-watch" = "true";
     };
 
     extraOptions = [
@@ -76,18 +77,6 @@ in {
       };
     };
 
-    timers."docker-health-watch@papra" = {
-      description = "Timer de surveillance santé Docker pour papra";
-
-      wantedBy = ["timers.target"];
-      partOf = ["papra.service"];
-
-      timerConfig = {
-        OnBootSec = "240s";
-        OnUnitActiveSec = "30s";
-        Unit = "docker-health-watch@papra.service";
-      };
-    };
     tmpfiles.rules = [
       "d /srv/docker/docs.friloux.me 0750 papra papra -"
       "d /srv/docker/docs.friloux.me/data 0750 papra papra -"
