@@ -43,7 +43,6 @@
         PasswordAuthentication = false;
         PermitRootLogin = "no";
         PubkeyAuthentication = true;
-        ChallengeResponseAuthentication = false;
         KbdInteractiveAuthentication = false;
         MaxAuthTries = 3;
         LoginGraceTime = "30s";
