@@ -133,7 +133,7 @@
           gtk-application-prefer-dark-theme=1
         '';
       };
-      inherit (config.gtk) theme;
+      theme = null;
     };
   };
 
