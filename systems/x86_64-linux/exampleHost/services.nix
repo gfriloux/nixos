@@ -4,8 +4,10 @@
   services = {
     udev.packages = [pkgs.yubikey-personalization];
     pcscd.enable = true;
-    displayManager.sddm.enable = true;
-    displayManager.sddm.wayland.enable = true;
+    displayManager.sddm = {
+      enable = true;
+      wayland.enable = true;
+    };
     desktopManager.plasma6.enable = true;
     flatpak.enable = true;
     pulseaudio.enable = false;
