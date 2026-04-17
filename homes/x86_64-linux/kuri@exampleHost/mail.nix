@@ -1,4 +1,8 @@
-{config, ...}: {
+{
+  config,
+  pkgs,
+  ...
+}: {
   sops = {
     secrets = {
       "mail/password" = {};
@@ -57,7 +61,7 @@
       notmuch.enable = true;
       imapnotify = {
         enable = true;
-        onNotify = "/home/kuri/.nix-profile/bin/offlineimap";
+        onNotify = "${pkgs.offlineimap}/bin/offlineimap";
         boxes = [
           "Inbox"
         ];
