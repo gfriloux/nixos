@@ -85,7 +85,6 @@
       pulse.enable = true;
     };
 
-    dbus.enable = true;
     gvfs.enable = true;
 
     xserver = {
