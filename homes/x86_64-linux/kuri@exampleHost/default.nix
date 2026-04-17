@@ -110,8 +110,6 @@
     fontconfig.enable = true;
   };
 
-  targets.genericLinux.enable = true;
-
   news = {
     display = "silent";
     json = lib.mkForce {};
