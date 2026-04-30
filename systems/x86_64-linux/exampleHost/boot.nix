@@ -66,7 +66,6 @@ in {
       initrd.availableKernelModules = availableKernelModules;
       initrd.kernelModules = ["amdgpu"];
       kernel.sysctl = {
-        "kernel.unprivileged_userns_clone" = 1; # for appimages
         "fs.file-max" = 640000;
       };
       supportedFilesystems.zfs = true;
