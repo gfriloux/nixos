@@ -62,7 +62,7 @@ in {
       bootDevices);
 
     boot = {
-      kernelPackages = pkgs.linuxPackages_6_12;
+      kernelPackages = pkgs.linuxPackages_6_18;
       initrd.availableKernelModules = availableKernelModules;
       initrd.kernelModules = ["amdgpu"];
       kernel.sysctl = {
