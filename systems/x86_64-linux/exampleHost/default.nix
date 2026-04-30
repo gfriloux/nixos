@@ -27,7 +27,10 @@
     hostName = "exampleHost";
     hostId = "21ed29b1";
     networkmanager.enable = true;
-    firewall.enable = false;
+    firewall = {
+      enable = true;
+      allowedTCPPorts = [22]; # SSH
+    };
   };
 
   hardware.firmware = [pkgs.linux-firmware];
@@ -73,7 +76,6 @@
   environment.systemPackages = with pkgs; [
     xwayland-satellite
     wl-clipboard
-    linux-wallpaperengine
     w3m
     bc
     iotop
