@@ -27,10 +27,7 @@
     hostName = "exampleHost";
     hostId = "21ed29b1";
     networkmanager.enable = true;
-    firewall = {
-      enable = true;
-      allowedTCPPorts = [22]; # SSH
-    };
+    firewall.enable = true;
   };
 
   hardware.firmware = [pkgs.linux-firmware];

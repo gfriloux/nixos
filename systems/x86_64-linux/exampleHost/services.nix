@@ -69,13 +69,6 @@
         ];
       };
     };
-    openssh = {
-      enable = true;
-      settings = {
-        PasswordAuthentication = true;
-        PermitRootLogin = "no";
-      };
-    };
     pipewire = {
       enable = true;
       alsa = {
