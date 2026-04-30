@@ -87,6 +87,7 @@
       unzip
       cmatrix
       flameshot
+      nh
       nvd
       libfido2
       #fido2-manage
