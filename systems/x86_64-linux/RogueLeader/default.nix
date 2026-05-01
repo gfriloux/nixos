@@ -10,6 +10,7 @@
     ./disko.nix
     ./docker-traefik.nix
     ./docker-crowdsec.nix
+    ./docker-uptime-kuma.nix
     ./notify.nix
     ./users.nix
   ];
