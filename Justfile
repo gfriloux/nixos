@@ -24,6 +24,18 @@ install_clochette:
 secrets_clochette:
 	sops secrets/clochette.yaml
 
+build_rogueleader:
+	nh os build .#RogueLeader
+
+install_rogueleader:
+	nixos-rebuild switch --flake .#RogueLeader --target-host guillaume@rogueleader.home --use-remote-sudo --ask-sudo-password
+
+home_rogueleader:
+	nix run nixpkgs#home-manager -- switch --flake .#"guillaume@RogueLeader" -b backup --target-host guillaume@rogueleader.home
+
+secrets_rogueleader:
+	sops secrets/RogueLeader.yaml
+
 scan:
 	nix eval --raw \
 		'.#nixosConfigurations.clochette.config.virtualisation.oci-containers.containers' \
