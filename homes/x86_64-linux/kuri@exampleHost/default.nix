@@ -89,6 +89,7 @@
       flameshot
       nh
       nvd
+      nix-tree
       libfido2
       #fido2-manage
       yubikey-manager
