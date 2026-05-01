@@ -23,3 +23,9 @@ install_clochette:
 
 secrets_clochette:
 	sops secrets/clochette.yaml
+
+scan:
+	nix eval --raw \
+		'.#nixosConfigurations.clochette.config.virtualisation.oci-containers.containers' \
+		--apply 'c: builtins.concatStringsSep "\n" (map (x: x.image) (builtins.attrValues c))' \
+		| xargs -I{} trivy image --severity HIGH,CRITICAL {}

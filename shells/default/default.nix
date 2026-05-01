@@ -17,6 +17,7 @@ in
       pre-commit
       serie
       tokei
+      trivy
     ];
 
     shellHook = ''
