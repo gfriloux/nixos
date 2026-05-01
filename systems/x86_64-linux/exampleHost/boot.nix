@@ -67,6 +67,12 @@ in {
       initrd.kernelModules = ["amdgpu"];
       kernel.sysctl = {
         "fs.file-max" = 640000;
+        "kernel.kptr_restrict" = 2; # cache les adresses kernel dans /proc
+        "kernel.dmesg_restrict" = 1; # dmesg réservé à root
+        "kernel.unprivileged_bpf_disabled" = 1; # BPF restreint à root
+        "net.core.bpf_jit_harden" = 2; # durcit le JIT BPF
+        "kernel.perf_event_paranoid" = 3; # restreint perf_events
+        "kernel.yama.ptrace_scope" = 1; # ptrace limité au parent uniquement
       };
       blacklistedKernelModules = [
         # DMA attack vector (FireWire)
