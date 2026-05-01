@@ -90,6 +90,23 @@
       nh
       nvd
       nix-tree
+      rustup
+      gcc
+      protonup-ng
+      scanmem
+      bonnie
+      ueberzug
+      docker-compose
+      pavucontrol
+      pulsemixer
+      w3m
+      age
+      (python3.withPackages (python-pkgs:
+        with python-pkgs; [
+          tqdm
+          inquirerpy
+          requests
+        ]))
       libfido2
       #fido2-manage
       yubikey-manager

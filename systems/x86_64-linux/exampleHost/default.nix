@@ -74,32 +74,14 @@
   environment.systemPackages = with pkgs; [
     xwayland-satellite
     wl-clipboard
-    w3m
     bc
     iotop
     file
-    bonnie
     home-manager
     lm_sensors
     pmutils
-    pavucontrol
-    pulsemixer
     ntfs3g
-    samba
-    docker-compose
-    ueberzug
-    protonup-ng
-    rustup
-    gcc
-    scanmem
-    (pkgs.python3.withPackages (python-pkgs:
-      with python-pkgs; [
-        tqdm
-        inquirerpy
-        requests
-      ]))
     yubikey-personalization
-    age
   ];
 
   fileSystems."/data2" = {
