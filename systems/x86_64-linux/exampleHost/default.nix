@@ -5,7 +5,9 @@
 }: {
   imports = [
     inputs.sops-nix.nixosModules.sops
+    inputs.disko.nixosModules.disko
     ./boot.nix
+    ./disko.nix
     ./services.nix
     ./users.nix
   ];
