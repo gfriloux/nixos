@@ -68,6 +68,17 @@ in {
       kernel.sysctl = {
         "fs.file-max" = 640000;
       };
+      blacklistedKernelModules = [
+        # DMA attack vector (FireWire)
+        "firewire-core"
+        "firewire-ohci"
+        "firewire-sbp2"
+        # Unused network protocols (frequent CVE vectors)
+        "dccp"
+        "sctp"
+        "rds"
+        "tipc"
+      ];
       supportedFilesystems.zfs = true;
       zfs.devNodes = "/dev/disk/by-id/";
       loader = {
