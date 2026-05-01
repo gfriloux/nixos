@@ -37,5 +37,41 @@
     startAt = "daily";
 
     environment.BORG_RSH = "ssh -i ${config.sops.secrets."services/borg/key/private".path}";
+
+    postHook = ''
+      NTFY_TOPIC=$(cat ${config.sops.secrets."services/ntfy/topic".path})
+      ${pkgs.curl}/bin/curl -s \
+        -H "Title: [clochette] Backup réussi" \
+        -d "Backup Borg du $(date +%Y-%m-%d) terminé avec succès" \
+        "https://ntfy.sh/$NTFY_TOPIC"
+    '';
+  };
+
+  systemd.services.borgbackup-check = {
+    description = "Vérification d'intégrité Borg";
+    unitConfig.OnFailure = "notify-failure@%n.service";
+    serviceConfig = {
+      Type = "oneshot";
+      ExecStart = pkgs.writeShellScript "borgbackup-check" ''
+        export BORG_PASSPHRASE=$(cat ${config.sops.secrets."services/borg/passphrase".path})
+        export BORG_RSH="ssh -i ${config.sops.secrets."services/borg/key/private".path}"
+        ${pkgs.borgbackup}/bin/borg check --verify-data \
+          'ssh://backup@storage2.friloux.me/~/clochette.friloux.me'
+        NTFY_TOPIC=$(cat ${config.sops.secrets."services/ntfy/topic".path})
+        ${pkgs.curl}/bin/curl -s \
+          -H "Title: [clochette] Intégrité Borg OK" \
+          -d "Vérification hebdomadaire des données Borg réussie" \
+          "https://ntfy.sh/$NTFY_TOPIC"
+      '';
+    };
+  };
+
+  systemd.timers.borgbackup-check = {
+    description = "Timer vérification hebdomadaire Borg";
+    wantedBy = ["timers.target"];
+    timerConfig = {
+      OnCalendar = "weekly";
+      Persistent = true;
+    };
   };
 }
