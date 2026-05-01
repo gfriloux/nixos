@@ -38,7 +38,7 @@
       };
       "rogueleader.home" = {
         hostname = "192.168.0.10";
-        user = "root";
+        user = "guillaume";
         identityFile = config.sops.secrets."ssh/keys/root@rogueleader".path;
       };
       "clochette.friloux.me" = {
