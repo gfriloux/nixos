@@ -87,6 +87,7 @@
   fileSystems."/data2" = {
     device = "/dev/disk/by-id/wwn-0x5000c500c78528e7-part1";
     fsType = "ext4";
+    options = ["noatime" "nofail"];
   };
 
   system.stateVersion = "24.11";
