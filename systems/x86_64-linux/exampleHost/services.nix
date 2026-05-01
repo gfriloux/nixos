@@ -7,12 +7,9 @@
     config.common.default = "*";
   };
 
-  virtualisation = {
-    docker = {
-      enable = true;
-      storageDriver = "zfs";
-    };
-    waydroid.enable = true;
+  virtualisation.docker = {
+    enable = true;
+    storageDriver = "zfs";
   };
 
   security.rtkit.enable = true; # needed by pipewire for real-time scheduling
