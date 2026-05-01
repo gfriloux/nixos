@@ -56,6 +56,7 @@
 
   nix = {
     settings.experimental-features = ["nix-command" "flakes"];
+    settings.allowed-users = ["kuri"];
     optimise.automatic = true;
     gc = {
       automatic = true;
