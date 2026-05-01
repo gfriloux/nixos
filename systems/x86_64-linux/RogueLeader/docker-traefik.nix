@@ -46,6 +46,12 @@
         network: web
       file:
         filename: "/etc/traefik/traefik_dynamic.yml"
+
+    experimental:
+      plugins:
+        bouncer:
+          moduleName: "github.com/maxlerebourg/crowdsec-bouncer-traefik-plugin"
+          version: "v1.5.1"
   '';
 in {
   sops.secrets."services/traefik/conf/traefik_dynamic.yml" = {
@@ -103,6 +109,10 @@ in {
   networking.firewall.allowedTCPPorts = [80 443];
 
   systemd = {
+    services."traefik" = {
+      after = ["crowdsec.service"];
+      requires = ["crowdsec.service"];
+    };
     services."docker-network-web" = {
       path = [pkgs.docker];
       serviceConfig = {

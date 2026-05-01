@@ -9,6 +9,7 @@
     ./hardware-configuration.nix
     ./disko.nix
     ./docker-traefik.nix
+    ./docker-crowdsec.nix
     ./notify.nix
     ./users.nix
   ];
