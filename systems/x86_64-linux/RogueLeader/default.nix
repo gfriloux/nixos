@@ -11,6 +11,7 @@
     ./docker-traefik.nix
     ./docker-crowdsec.nix
     ./docker-uptime-kuma.nix
+    ./docker-mealie.nix
     ./notify.nix
     ./users.nix
   ];
