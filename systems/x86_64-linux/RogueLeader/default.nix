@@ -8,6 +8,7 @@
     inputs.disko.nixosModules.disko
     ./hardware-configuration.nix
     ./disko.nix
+    ./backup.nix
     ./docker-traefik.nix
     ./docker-crowdsec.nix
     ./docker-uptime-kuma.nix
