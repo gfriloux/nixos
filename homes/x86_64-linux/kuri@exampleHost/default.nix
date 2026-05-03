@@ -112,6 +112,7 @@
       #fido2-manage
       yubikey-manager
       yubikey-touch-detector
+      yubioath-flutter
       vesktop
       (writeShellScriptBin "rbw-wrapper" ''
         export RBW_EMAIL="$(cat ${config.sops.secrets."mail/address".path})"
@@ -195,7 +196,7 @@
     gpg.enable = true;
     git = {
       signing = {
-        key = "4DF35290882C2927ACD88A4F6FCA9BE19FC69E48";
+        key = "52381C92A5071464F3160D257D4216D8BDDA9A09";
         signByDefault = true;
         format = null; # adopts new HM default (stateVersion < 25.05 uses "openpgp")
       };
