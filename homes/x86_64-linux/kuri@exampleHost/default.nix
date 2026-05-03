@@ -9,12 +9,14 @@
     inputs.nix-cli.homeModules.default
     inputs.nix-gui.homeModules.default
     inputs.sops-nix.homeManagerModules.sops
+    inputs.pgpilot-flake.homeModules.pgpilot
     ./ssh.nix
     ./mail.nix
   ];
 
   nix-cli.hm.enable = true;
   nix-gui.hm.enable = true;
+  pgpilot.pgpilot.enable = true;
 
   sops = {
     age.keyFile = "/etc/sops/age/keys.txt";

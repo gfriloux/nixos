@@ -25,6 +25,10 @@
       url = "github:snowfallorg/lib";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    pgpilot-flake = {
+      url = "github:gfriloux/pgpilot-flake";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = inputs:
@@ -47,6 +51,7 @@
           inputs.nix-cli.homeModules.default
           inputs.nix-gui.homeModules.default
           inputs.sops-nix.homeManagerModules.sops
+          inputs.pgpilot-flake.homeModules.pgpilot
         ];
 
         meta = {
