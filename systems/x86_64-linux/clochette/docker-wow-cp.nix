@@ -25,7 +25,7 @@
       ];
       extraOptions = lib.kuri.docker.mkHealthCheck {
         cmd = "curl -fs http://localhost/status | grep -q '\"database\":true'";
-        startPeriod = "60s";
+        startPeriod = "300s";
       };
       labels = {
         "traefik.enable" = "true";
