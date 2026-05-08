@@ -1,6 +1,6 @@
 _: {
   virtualisation.oci-containers.containers."uptime-kuma" = {
-    image = "louislam/uptime-kuma:2.3.0"; # renovate
+    image = "louislam/uptime-kuma:2.3.2"; # renovate
     serviceName = "uptime-kuma";
 
     volumes = [
