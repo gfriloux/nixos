@@ -9,6 +9,7 @@
     ./hardware-configuration.nix
     ./disko.nix
     ./backup.nix
+    ./docker-borg-ui.nix
     ./docker-uptime-kuma.nix
     ./docker-mealie.nix
     ./users.nix
