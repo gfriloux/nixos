@@ -13,7 +13,6 @@
     ./docker-crowdsec.nix
     ./docker-uptime-kuma.nix
     ./docker-mealie.nix
-    ./docker-pre-pull.nix
     ./notify.nix
     ./users.nix
   ];
