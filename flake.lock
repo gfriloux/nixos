@@ -571,11 +571,11 @@
         "snowfall-lib": "snowfall-lib_4"
       },
       "locked": {
-        "lastModified": 1777830928,
-        "narHash": "sha256-BHtYEGHLPvN/Nfnhd+O8z5ofTQ1cj9VZlraFS07vTiE=",
+        "lastModified": 1778250229,
+        "narHash": "sha256-L9ePZayDQnCACy26bXZaZqUndmvY5yviI5xFsREpywc=",
         "owner": "gfriloux",
         "repo": "pgpilot-flake",
-        "rev": "941d1ada1220238aa39242c0824293771a386c5e",
+        "rev": "81f60c08dd54278252f1493efd367303187d7a94",
         "type": "github"
       },
       "original": {
@@ -587,16 +587,16 @@
     "pgpilot-src": {
       "flake": false,
       "locked": {
-        "lastModified": 1777829842,
-        "narHash": "sha256-fxAvqhuJs2difi4IdE1JvtHGPQ6B1NnkRVz/bzzsFrk=",
+        "lastModified": 1778248253,
+        "narHash": "sha256-tmpvvd9cgLcmEHmtiLWLk08ZFm1p7cLyHVlZoDpIEI0=",
         "owner": "gfriloux",
         "repo": "pgpilot",
-        "rev": "e53e7ae91d139991f8e4e9c9bba71bc2bc4743cc",
+        "rev": "e95ceb5992b99e642a38617bd3d49d1f5c8f3be2",
         "type": "github"
       },
       "original": {
         "owner": "gfriloux",
-        "ref": "v0.3.0",
+        "ref": "v0.7.0",
         "repo": "pgpilot",
         "type": "github"
       }
