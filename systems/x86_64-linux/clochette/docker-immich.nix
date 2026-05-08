@@ -76,7 +76,7 @@
     };
 
     "immich-redis" = {
-      image = "redis:7-alpine"; # renovate
+      image = "redis:8-alpine"; # renovate
       serviceName = "immich-redis";
 
       extraOptions = lib.kuri.docker.mkHealthCheck {
