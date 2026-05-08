@@ -9,13 +9,19 @@
     ./hardware-configuration.nix
     ./disko.nix
     ./backup.nix
-    ./docker-traefik.nix
-    ./docker-crowdsec.nix
     ./docker-uptime-kuma.nix
     ./docker-mealie.nix
-    ./notify.nix
     ./users.nix
   ];
+
+  kuri = {
+    notify-docker.enable = true;
+    docker-traefik.enable = true;
+    docker-crowdsec = {
+      enable = true;
+      dataDir = "/srv/docker/crowdsec.rogueleader.home";
+    };
+  };
 
   sops = {
     defaultSopsFile = ../../../secrets/RogueLeader.yaml;

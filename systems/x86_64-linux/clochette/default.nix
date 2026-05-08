@@ -6,15 +6,21 @@
   imports = [
     inputs.sops-nix.nixosModules.sops
     ./hardware-configuration.nix
-    ./docker-traefik.nix
     ./docker-papra.nix
     ./docker-wow-cp.nix
-    ./docker-crowdsec.nix
     ./backup.nix
-    ./notify.nix
     ./network.nix
     ./users.nix
   ];
+
+  kuri = {
+    notify-docker.enable = true;
+    docker-traefik.enable = true;
+    docker-crowdsec = {
+      enable = true;
+      dataDir = "/srv/docker/crowdsec.clochette.friloux.me";
+    };
+  };
 
   sops = {
     defaultSopsFile = ../../../secrets/clochette.yaml;

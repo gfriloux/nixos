@@ -1,4 +1,4 @@
-_: {
+{lib, ...}: {
   virtualisation.oci-containers.containers."mealie" = {
     image = "hkotel/mealie:v3.17.0"; # renovate
     serviceName = "mealie";
@@ -21,15 +21,14 @@ _: {
       "/srv/docker/cuisine.home.friloux.me/data:/app/data"
     ];
 
-    extraOptions = [
-      "--dns=8.8.8.8"
-      "--dns=1.1.1.1"
-      "--health-cmd=curl -f http://localhost:9000/api/app/about"
-      "--health-interval=30s"
-      "--health-timeout=10s"
-      "--health-start-period=30s"
-      "--health-retries=3"
-    ];
+    extraOptions =
+      [
+        "--dns=8.8.8.8"
+        "--dns=1.1.1.1"
+      ]
+      ++ lib.kuri.docker.mkHealthCheck {
+        cmd = "curl -f http://localhost:9000/api/app/about";
+      };
 
     labels = {
       "traefik.enable" = "true";

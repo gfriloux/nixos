@@ -1,6 +1,7 @@
 {
   pkgs,
   config,
+  lib,
   ...
 }: {
   sops = {
@@ -22,13 +23,10 @@
       volumes = [
         "/srv/docker/wow-cp.friloux.me/data:/config"
       ];
-      extraOptions = [
-        "--health-cmd=curl -fs http://localhost/status | grep -q '\"database\":true'"
-        "--health-interval=30s"
-        "--health-timeout=10s"
-        "--health-start-period=60s"
-        "--health-retries=3"
-      ];
+      extraOptions = lib.kuri.docker.mkHealthCheck {
+        cmd = "curl -fs http://localhost/status | grep -q '\"database\":true'";
+        startPeriod = "60s";
+      };
       labels = {
         "traefik.enable" = "true";
         "traefik.http.routers.wowcp.rule" = "Host(`wow-cp.friloux.me`)";
@@ -54,13 +52,9 @@
       volumes = [
         "/srv/docker/wow-cp.friloux.me/db:/config"
       ];
-      extraOptions = [
-        "--health-cmd=mysqladmin ping -h localhost --silent"
-        "--health-interval=30s"
-        "--health-timeout=10s"
-        "--health-start-period=30s"
-        "--health-retries=3"
-      ];
+      extraOptions = lib.kuri.docker.mkHealthCheck {
+        cmd = "mysqladmin ping -h localhost --silent";
+      };
       labels = {
         "traefik.enable" = "false";
         "friloux.me/health-watch" = "true";
@@ -101,22 +95,15 @@
   };
 
   systemd = {
-    services."docker-network-wow-cp" = {
-      path = [pkgs.docker];
-      serviceConfig = {
-        Type = "oneshot";
-        RemainAfterExit = true;
-        ExecStop = "${pkgs.docker}/bin/docker network rm -f wow-cp";
+    services."docker-network-wow-cp" =
+      lib.kuri.docker.mkNetwork pkgs "wow-cp"
+      // {
+        wantedBy = [
+          "wow-cp-bookstack.service"
+          "wow-cp-mariadb.service"
+          "wow-cp-mysqldump.service"
+        ];
       };
-      script = ''
-        docker network inspect wow-cp || docker network create wow-cp
-      '';
-      wantedBy = [
-        "wow-cp-bookstack.service"
-        "wow-cp-mariadb.service"
-        "wow-cp-mysqldump.service"
-      ];
-    };
 
     tmpfiles.rules = [
       "d /srv/docker/wow-cp.friloux.me 0750 wow-cp wow-cp -"

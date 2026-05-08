@@ -1,6 +1,7 @@
 {
   pkgs,
   config,
+  lib,
   ...
 }: let
   healthCmd = "bash -c 'exec 3<>/dev/tcp/127.0.0.1/1221 && printf \"GET /api/health HTTP/1.0\\r\\n\\r\\n\" >&3 && cat <&3 | grep -q isEverythingOk'";
@@ -40,13 +41,9 @@ in {
       "friloux.me/health-watch" = "true";
     };
 
-    extraOptions = [
-      "--health-cmd=${healthCmd}"
-      "--health-interval=30s"
-      "--health-timeout=10s"
-      "--health-start-period=30s"
-      "--health-retries=3"
-    ];
+    extraOptions = lib.kuri.docker.mkHealthCheck {
+      cmd = healthCmd;
+    };
 
     networks = [
       "web"

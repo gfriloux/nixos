@@ -1,4 +1,4 @@
-_: {
+{lib, ...}: {
   virtualisation.oci-containers.containers."uptime-kuma" = {
     image = "louislam/uptime-kuma:2.3.2"; # renovate
     serviceName = "uptime-kuma";
@@ -7,13 +7,9 @@ _: {
       "/srv/docker/status.friloux.me/data:/app/data"
     ];
 
-    extraOptions = [
-      "--health-cmd=curl -f http://localhost:3001/api/entry-page"
-      "--health-interval=30s"
-      "--health-timeout=10s"
-      "--health-start-period=30s"
-      "--health-retries=3"
-    ];
+    extraOptions = lib.kuri.docker.mkHealthCheck {
+      cmd = "curl -f http://localhost:3001/api/entry-page";
+    };
 
     labels = {
       "traefik.enable" = "true";
