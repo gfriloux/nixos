@@ -11,6 +11,7 @@
     ./docker-wow-cp.nix
     ./docker-crowdsec.nix
     ./backup.nix
+    ./docker-pre-pull.nix
     ./notify.nix
     ./network.nix
     ./users.nix
