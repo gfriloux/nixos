@@ -27,6 +27,10 @@
 
       websecure:
         address: ":443"
+        transport:
+          respondingTimeouts:
+            readTimeout: 600s
+            idleTimeout: 600s
 
       traefik:
         address: "127.0.0.1:8080"
