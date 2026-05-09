@@ -106,7 +106,18 @@
 
     tmpfiles.rules = [
       "d /srv/docker/photos.friloux.me/upload 0750 0 0 -"
-      "d /srv/docker/photos.friloux.me/db 0750 0 0 -"
+      "d /srv/docker/photos.friloux.me/db 0750 immich-postgres immich-postgres -"
     ];
+  };
+
+  users.groups."immich-postgres" = {
+    gid = 999;
+  };
+  users.users."immich-postgres" = {
+    createHome = false;
+    isSystemUser = true;
+    uid = 999;
+    group = "immich-postgres";
+    shell = "${pkgs.shadow}/bin/nologin";
   };
 }
