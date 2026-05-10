@@ -1,4 +1,8 @@
 _: {
+  networking.firewall.extraInputRules = ''
+    ip saddr 100.64.0.0/10 tcp dport 22 accept
+  '';
+
   networking = {
     hostName = "clochette";
     networkmanager.enable = true;

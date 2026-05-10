@@ -42,6 +42,7 @@
         identityFile = config.sops.secrets."ssh/keys/root@rogueleader".path;
       };
       "clochette.friloux.me" = {
+        hostname = "clochette";
         user = "guillaume";
         identityFile = config.sops.secrets."ssh/keys/guillaume@clochette".path;
       };

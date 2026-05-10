@@ -45,6 +45,7 @@
   services = {
     openssh = {
       enable = true;
+      openFirewall = false;
 
       settings = {
         PasswordAuthentication = false;
@@ -56,6 +57,7 @@
         AllowUsers = ["guillaume" "weechat"];
       };
     };
+    tailscale.enable = true;
     fail2ban.enable = true;
   };
 
