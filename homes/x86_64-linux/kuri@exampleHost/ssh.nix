@@ -47,6 +47,7 @@
         identityFile = config.sops.secrets."ssh/keys/guillaume@clochette".path;
       };
       "irc.friloux.me" = {
+        hostname = "clochette";
         user = "weechat";
         identityFile = config.sops.secrets."ssh/keys/weechat@clochette".path;
       };
