@@ -78,6 +78,8 @@
       pulse.enable = true;
     };
 
+    tailscale.enable = true;
+
     gvfs.enable = true;
 
     xserver = {
