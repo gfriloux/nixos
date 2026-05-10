@@ -12,6 +12,7 @@
     ./backup.nix
     ./network.nix
     ./users.nix
+    ./docker-crowdsec-manager.nix
   ];
 
   kuri = {
@@ -60,6 +61,8 @@
     tailscale.enable = true;
     fail2ban.enable = true;
   };
+
+  networking.firewall.trustedInterfaces = ["tailscale0"];
 
   virtualisation = {
     docker = {

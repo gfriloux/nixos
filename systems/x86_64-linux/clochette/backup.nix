@@ -26,6 +26,7 @@
       "/srv/docker/docs.friloux.me"
       "/srv/docker/wow-cp.friloux.me"
       "/srv/docker/crowdsec.clochette.friloux.me"
+      "/srv/docker/crowdsec-manager"
       "/srv/docker/photos.friloux.me"
       "/home/weechat/.config/weechat"
     ];
