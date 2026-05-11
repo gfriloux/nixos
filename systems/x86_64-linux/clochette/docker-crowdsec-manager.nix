@@ -1,6 +1,6 @@
 _: {
   virtualisation.oci-containers.containers."crowdsec-manager" = {
-    image = "hhftechnology/crowdsec-manager:2.4.0"; # renovate
+    image = "hhftechnology/crowdsec-manager:2.4.1"; # renovate
     serviceName = "crowdsec-manager";
 
     environment = {
