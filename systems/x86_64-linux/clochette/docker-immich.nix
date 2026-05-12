@@ -94,6 +94,8 @@
   };
 
   systemd = {
+    services."docker-immich-postgres".serviceConfig.TimeoutStartSec = "300";
+
     services."docker-network-immich" =
       lib.kuri.docker.mkNetwork pkgs "immich"
       // {
