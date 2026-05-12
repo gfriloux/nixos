@@ -9,7 +9,7 @@
     inputs.nix-cli.homeModules.default
     inputs.nix-gui.homeModules.default
     inputs.sops-nix.homeManagerModules.sops
-    inputs.pgpilot-flake.homeModules.pgpilot
+    inputs.pgpilot.homeModules.pgpilot
     ./ssh.nix
     ./mail.nix
   ];

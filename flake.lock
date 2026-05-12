@@ -562,41 +562,23 @@
         "type": "github"
       }
     },
-    "pgpilot-flake": {
+    "pgpilot": {
       "inputs": {
         "nixpkgs": [
           "nixpkgs"
         ],
-        "pgpilot-src": "pgpilot-src",
         "snowfall-lib": "snowfall-lib_4"
       },
       "locked": {
-        "lastModified": 1778250229,
-        "narHash": "sha256-L9ePZayDQnCACy26bXZaZqUndmvY5yviI5xFsREpywc=",
-        "owner": "gfriloux",
-        "repo": "pgpilot-flake",
-        "rev": "81f60c08dd54278252f1493efd367303187d7a94",
-        "type": "github"
-      },
-      "original": {
-        "owner": "gfriloux",
-        "repo": "pgpilot-flake",
-        "type": "github"
-      }
-    },
-    "pgpilot-src": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1778248253,
-        "narHash": "sha256-tmpvvd9cgLcmEHmtiLWLk08ZFm1p7cLyHVlZoDpIEI0=",
+        "lastModified": 1778613478,
+        "narHash": "sha256-l9YGFMy3j/5kAlHFS1dKbsRB+jY9Tcxi27UloXTfvsk=",
         "owner": "gfriloux",
         "repo": "pgpilot",
-        "rev": "e95ceb5992b99e642a38617bd3d49d1f5c8f3be2",
+        "rev": "6fd9772ef76ef2a2505d52f6808fb63b1e125c32",
         "type": "github"
       },
       "original": {
         "owner": "gfriloux",
-        "ref": "v0.7.0",
         "repo": "pgpilot",
         "type": "github"
       }
@@ -608,7 +590,7 @@
         "nix-cli": "nix-cli",
         "nix-gui": "nix-gui",
         "nixpkgs": "nixpkgs",
-        "pgpilot-flake": "pgpilot-flake",
+        "pgpilot": "pgpilot",
         "snowfall-lib": "snowfall-lib_5",
         "sops-nix": "sops-nix"
       }
@@ -689,7 +671,7 @@
         "flake-compat": "flake-compat_4",
         "flake-utils-plus": "flake-utils-plus_4",
         "nixpkgs": [
-          "pgpilot-flake",
+          "pgpilot",
           "nixpkgs"
         ]
       },

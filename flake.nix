@@ -25,8 +25,8 @@
       url = "github:snowfallorg/lib";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    pgpilot-flake = {
-      url = "github:gfriloux/pgpilot-flake";
+    pgpilot = {
+      url = "github:gfriloux/pgpilot";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
