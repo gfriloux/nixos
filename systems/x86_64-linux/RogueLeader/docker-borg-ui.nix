@@ -53,7 +53,7 @@ in {
     };
 
     "borg-redis" = {
-      image = "redis:7-alpine"; # renovate
+      image = "redis:8-alpine"; # renovate
       serviceName = "borg-redis";
 
       extraOptions = lib.kuri.docker.mkHealthCheck {
