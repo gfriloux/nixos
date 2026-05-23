@@ -1,4 +1,6 @@
 {pkgs, ...}: {
+  environment.systemPackages = [pkgs.catppuccin-sddm];
+
   systemd.user.services.wireplumber.wantedBy = ["default.target"];
 
   xdg.portal = {
@@ -23,6 +25,7 @@
     displayManager.sddm = {
       enable = true;
       wayland.enable = true;
+      theme = "catppuccin-mocha-mauve";
     };
     desktopManager.plasma6.enable = true;
     flatpak.enable = true;

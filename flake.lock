@@ -570,16 +570,40 @@
         "snowfall-lib": "snowfall-lib_4"
       },
       "locked": {
-        "lastModified": 1778613478,
-        "narHash": "sha256-l9YGFMy3j/5kAlHFS1dKbsRB+jY9Tcxi27UloXTfvsk=",
+        "lastModified": 1779548308,
+        "narHash": "sha256-kQu8yOvaCmWHpItiiWsGMpTx1gX4u6F5GYTMk5FXQRk=",
         "owner": "gfriloux",
         "repo": "pgpilot",
-        "rev": "6fd9772ef76ef2a2505d52f6808fb63b1e125c32",
+        "rev": "7fa960b2ed94d083425f92311bf511aa84ee4505",
         "type": "github"
       },
       "original": {
         "owner": "gfriloux",
         "repo": "pgpilot",
+        "type": "github"
+      }
+    },
+    "plasma-manager": {
+      "inputs": {
+        "home-manager": [
+          "home-manager"
+        ],
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1775856943,
+        "narHash": "sha256-b7Mp7P+q2Md5AGt4rjHfMcBykzMumFTen10ST++AuTU=",
+        "owner": "nix-community",
+        "repo": "plasma-manager",
+        "rev": "a524a6160e6df89f7673ba293cf7d78b559eb1a5",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-community",
+        "ref": "trunk",
+        "repo": "plasma-manager",
         "type": "github"
       }
     },
@@ -591,6 +615,7 @@
         "nix-gui": "nix-gui",
         "nixpkgs": "nixpkgs",
         "pgpilot": "pgpilot",
+        "plasma-manager": "plasma-manager",
         "snowfall-lib": "snowfall-lib_5",
         "sops-nix": "sops-nix"
       }

@@ -10,6 +10,7 @@
     inputs.nix-gui.homeModules.default
     inputs.sops-nix.homeManagerModules.sops
     inputs.pgpilot.homeModules.pgpilot
+    inputs.plasma-manager.homeManagerModules.plasma-manager
     ./ssh.nix
     ./mail.nix
   ];
@@ -57,7 +58,7 @@
       glibcLocales
       imagemagick
       folder-color-switcher
-      dracula-theme
+      catppuccin-kde
       dconf
       dconf-editor
       pinentry-gtk2
@@ -195,6 +196,18 @@
       enableTelevisionIntegration = true;
     };
     home-manager.enable = true;
+    plasma = {
+      enable = true;
+      workspace = {
+        lookAndFeel = "Catppuccin-Mocha-Global";
+        colorScheme = "CatppuccinMocha";
+        iconTheme = "Papirus-Dark";
+        cursor = {
+          theme = "Catppuccin-Mocha-Dark-Cursors";
+          size = 24;
+        };
+      };
+    };
     gpg.enable = true;
     git = {
       signing = {
