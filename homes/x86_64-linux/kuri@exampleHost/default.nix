@@ -11,7 +11,7 @@
     inputs.stc.homeModules.relics-yubikey-user
     inputs.sops-nix.homeManagerModules.sops
     inputs.pgpilot.homeModules.pgpilot
-    inputs.plasma-manager.homeModules.plasma-manager
+    inputs.stc.homeModules.relics-plasma-manager
     ./ssh.nix
     ./mail.nix
   ];
@@ -20,6 +20,7 @@
     cogitator.enginseer.enable = true;
     cogitator.desktop.enable = true;
     yubikey.enable = true;
+    plasmaManager.enable = true;
   };
   pgpilot.pgpilot.enable = true;
 
@@ -81,10 +82,7 @@
       appstream-glib
       #rustdesk
       cargo-binstall
-      fastfetch
-      git-workspace
       kooha
-      ghostty
       gparted
       ouch
       aria2
@@ -92,10 +90,6 @@
       unzip
       cmatrix
       flameshot
-      nixd
-      nh
-      nvd
-      nix-tree
       rustup
       gcc
       protonup-ng
@@ -106,7 +100,6 @@
       pavucontrol
       pulsemixer
       w3m
-      age
       (python3.withPackages (python-pkgs:
         with python-pkgs; [
           tqdm
@@ -196,7 +189,6 @@
     };
     home-manager.enable = true;
     plasma = {
-      enable = true;
       workspace = {
         lookAndFeel = "Catppuccin-Mocha-Global";
         colorScheme = "CatppuccinMocha";

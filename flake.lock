@@ -674,9 +674,11 @@
     "plasma-manager": {
       "inputs": {
         "home-manager": [
+          "stc",
           "home-manager"
         ],
         "nixpkgs": [
+          "stc",
           "nixpkgs"
         ]
       },
@@ -701,7 +703,6 @@
         "home-manager": "home-manager",
         "nixpkgs": "nixpkgs",
         "pgpilot": "pgpilot",
-        "plasma-manager": "plasma-manager",
         "snowfall-lib": "snowfall-lib_2",
         "sops-nix": "sops-nix",
         "stc": "stc"
@@ -881,16 +882,17 @@
           "nixpkgs"
         ],
         "nixpkgs-stable": "nixpkgs-stable",
+        "plasma-manager": "plasma-manager",
         "sops-nix": "sops-nix_2",
         "television-ssh": "television-ssh",
         "zen-browser": "zen-browser"
       },
       "locked": {
-        "lastModified": 1780174316,
-        "narHash": "sha256-VzoMasPLDN/YakFPKaxyOrZdpDCYI5V+Dn9vxdU+nRY=",
+        "lastModified": 1780177738,
+        "narHash": "sha256-W3JhGXXAVbuRVPwKJB6WA4ubev9zt+kZV67FoW5omPg=",
         "owner": "gfriloux",
         "repo": "stc",
-        "rev": "83a469d88cff415c97e4123f5affb905e754fd1d",
+        "rev": "ebdaa6ea893907a64fe5aae269956c30abb55228",
         "type": "github"
       },
       "original": {
