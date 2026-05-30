@@ -62,9 +62,7 @@ in {
       bootDevices);
 
     boot = {
-      kernelPackages = pkgs.linuxPackages_6_18;
       initrd.availableKernelModules = availableKernelModules;
-      initrd.kernelModules = ["amdgpu"];
       kernel.sysctl = {
         "fs.file-max" = 640000;
         "kernel.kptr_restrict" = 2; # cache les adresses kernel dans /proc
@@ -85,7 +83,6 @@ in {
         "rds"
         "tipc"
       ];
-      supportedFilesystems.zfs = true;
       zfs.devNodes = "/dev/disk/by-id/";
       loader = {
         efi = {

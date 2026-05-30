@@ -6,6 +6,10 @@
   imports = [
     inputs.sops-nix.nixosModules.sops
     inputs.disko.nixosModules.disko
+    inputs.stc.nixosModules.relics-zfs
+    inputs.stc.nixosModules.cogitator-plasma
+    inputs.stc.nixosModules.cogitator-gaming
+    inputs.stc.nixosModules.relics-yubikey-system
     ./boot.nix
     ./disko.nix
     ./services.nix
@@ -34,15 +38,6 @@
 
   hardware.firmware = [pkgs.linux-firmware];
 
-  hardware.graphics = {
-    enable = true;
-    enable32Bit = true;
-    extraPackages = with pkgs; [
-      libvdpau
-      libva-vdpau-driver
-    ];
-  };
-
   nixpkgs.config.allowUnfree = true;
 
   programs.fish.enable = true;
@@ -54,7 +49,17 @@
 
   i18n.defaultLocale = "fr_FR.UTF-8";
 
-  boot.zfs.forceImportRoot = false;
+  stc = {
+    zfs.enable = true;
+    cogitator.plasma.enable = true;
+    plasma6 = {
+      keyboardLayout = "fr";
+      sddmTheme = "catppuccin-mocha-mauve";
+    };
+    cogitator.gaming.enable = true;
+    amdGpu.initrd = true;
+    yubikey.enable = true;
+  };
 
   nix = {
     settings.experimental-features = ["nix-command" "flakes"];
@@ -83,7 +88,6 @@
     lm_sensors
     pmutils
     ntfs3g
-    yubikey-personalization
   ];
 
   fileSystems."/data2" = {

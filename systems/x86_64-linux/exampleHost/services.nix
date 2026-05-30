@@ -1,20 +1,11 @@
 {pkgs, ...}: {
   environment.systemPackages = [pkgs.catppuccin-sddm];
 
-  systemd.user.services.wireplumber.wantedBy = ["default.target"];
-
-  xdg.portal = {
-    enable = true;
-    extraPortals = [pkgs.xdg-desktop-portal-gtk];
-    config.common.default = "*";
-  };
-
   virtualisation.docker = {
     enable = true;
     storageDriver = "zfs";
   };
 
-  security.rtkit.enable = true; # needed by pipewire for real-time scheduling
   security.protectKernelImage = true;
 
   systemd.coredump.settings.Coredump = {
@@ -23,21 +14,7 @@
   };
 
   services = {
-    udev.packages = [pkgs.yubikey-personalization];
-    pcscd.enable = true;
-    displayManager.sddm = {
-      enable = true;
-      wayland.enable = true;
-      theme = "catppuccin-mocha-mauve";
-    };
-    desktopManager.plasma6.enable = true;
     flatpak.enable = true;
-    pulseaudio.enable = false;
-    tumbler.enable = true; # Thumbnail support for images
-    zfs = {
-      autoScrub.enable = true;
-      trim.enable = true;
-    };
     zrepl = {
       enable = true;
       settings = {
@@ -75,24 +52,6 @@
         ];
       };
     };
-    pipewire = {
-      enable = true;
-      alsa = {
-        enable = true;
-        support32Bit = true;
-      };
-      pulse.enable = true;
-    };
-
     tailscale.enable = true;
-
-    gvfs.enable = true;
-
-    xserver = {
-      enable = false;
-      xkb.layout = "fr";
-    };
-
-    libinput.enable = true;
   };
 }

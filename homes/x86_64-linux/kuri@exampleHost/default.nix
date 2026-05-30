@@ -8,15 +8,19 @@
   imports = [
     inputs.stc.homeModules.cogitator-enginseer
     inputs.stc.homeModules.cogitator-desktop
+    inputs.stc.homeModules.relics-yubikey-user
     inputs.sops-nix.homeManagerModules.sops
     inputs.pgpilot.homeModules.pgpilot
-    inputs.plasma-manager.homeManagerModules.plasma-manager
+    inputs.plasma-manager.homeModules.plasma-manager
     ./ssh.nix
     ./mail.nix
   ];
 
-  stc.cogitator.enginseer.enable = true;
-  stc.cogitator.desktop.enable = true;
+  stc = {
+    cogitator.enginseer.enable = true;
+    cogitator.desktop.enable = true;
+    yubikey.enable = true;
+  };
   pgpilot.pgpilot.enable = true;
 
   sops = {
@@ -70,7 +74,6 @@
       ryubing
       winetricks
       wineWow64Packages.staging
-      steam
       appimage-run
       steam-run
       flatpak-builder
@@ -110,11 +113,7 @@
           inquirerpy
           requests
         ]))
-      libfido2
       #fido2-manage
-      yubikey-manager
-      yubikey-touch-detector
-      yubioath-flutter
       vesktop
       pcsx2
       (writeShellScriptBin "rbw-wrapper" ''
@@ -249,20 +248,6 @@
         envsource /run/user/1000/secrets/workspace
         set -gx SSH_AUTH_SOCK "/run/user/1000/ssh-agent"
       '';
-    };
-  };
-
-  systemd.user.services.yubikey-touch-detector = {
-    Unit = {
-      Description = "YubiKey touch detector";
-      After = ["graphical-session.target"];
-      PartOf = ["graphical-session.target"];
-    };
-    Service = {
-      ExecStart = "${pkgs.yubikey-touch-detector}/bin/yubikey-touch-detector -libnotify";
-    };
-    Install = {
-      WantedBy = ["graphical-session.target"];
     };
   };
 }
