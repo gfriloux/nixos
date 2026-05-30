@@ -428,7 +428,7 @@
     "gitflow-toolkit": {
       "inputs": {
         "flake-utils": "flake-utils_5",
-        "home-manager": "home-manager_4",
+        "home-manager": "home-manager_2",
         "nixpkgs": [
           "stc",
           "nixpkgs"
@@ -473,50 +473,6 @@
     "home-manager_2": {
       "inputs": {
         "nixpkgs": [
-          "nix-gui",
-          "nixpkgs"
-        ]
-      },
-      "locked": {
-        "lastModified": 1780099287,
-        "narHash": "sha256-efIPwVGtIWIjWcznhaop6XN6HxnOL8800hF6CBNvlqQ=",
-        "owner": "nix-community",
-        "repo": "home-manager",
-        "rev": "7d8127d308c3fb9664f7e643eec944be74ebb37d",
-        "type": "github"
-      },
-      "original": {
-        "owner": "nix-community",
-        "ref": "master",
-        "repo": "home-manager",
-        "type": "github"
-      }
-    },
-    "home-manager_3": {
-      "inputs": {
-        "nixpkgs": [
-          "nix-gui",
-          "zen-browser",
-          "nixpkgs"
-        ]
-      },
-      "locked": {
-        "lastModified": 1778805320,
-        "narHash": "sha256-nGFJ01m2CTBKD4ABtcY4vLhHrRN91LKr/pn41PcU78A=",
-        "owner": "nix-community",
-        "repo": "home-manager",
-        "rev": "9846abe15e7d0d36b8acbd4d05f2b87461744c92",
-        "type": "github"
-      },
-      "original": {
-        "owner": "nix-community",
-        "repo": "home-manager",
-        "type": "github"
-      }
-    },
-    "home-manager_4": {
-      "inputs": {
-        "nixpkgs": [
           "stc",
           "gitflow-toolkit",
           "nixpkgs"
@@ -537,7 +493,7 @@
         "type": "github"
       }
     },
-    "home-manager_5": {
+    "home-manager_3": {
       "inputs": {
         "nixpkgs": [
           "stc",
@@ -559,7 +515,7 @@
         "type": "github"
       }
     },
-    "home-manager_6": {
+    "home-manager_4": {
       "inputs": {
         "nixpkgs": [
           "stc",
@@ -582,7 +538,7 @@
         "type": "github"
       }
     },
-    "home-manager_7": {
+    "home-manager_5": {
       "inputs": {
         "nixpkgs": [
           "stc",
@@ -606,7 +562,7 @@
     },
     "impermanence": {
       "inputs": {
-        "home-manager": "home-manager_5",
+        "home-manager": "home-manager_3",
         "nixpkgs": "nixpkgs_2"
       },
       "locked": {
@@ -643,28 +599,6 @@
       "original": {
         "owner": "gfriloux",
         "repo": "nix-checks",
-        "type": "github"
-      }
-    },
-    "nix-gui": {
-      "inputs": {
-        "home-manager": "home-manager_2",
-        "nixpkgs": [
-          "nixpkgs"
-        ],
-        "zen-browser": "zen-browser"
-      },
-      "locked": {
-        "lastModified": 1761833811,
-        "narHash": "sha256-1fdPGKQcQVuDvD8pDbmvX6hZyl2hVgRaoAvdfc2rxS4=",
-        "owner": "gfriloux",
-        "repo": "nix-gui",
-        "rev": "fa20535fa20cf70ce2ba19bde8b53aaeaae0772f",
-        "type": "github"
-      },
-      "original": {
-        "owner": "gfriloux",
-        "repo": "nix-gui",
         "type": "github"
       }
     },
@@ -765,7 +699,6 @@
       "inputs": {
         "disko": "disko",
         "home-manager": "home-manager",
-        "nix-gui": "nix-gui",
         "nixpkgs": "nixpkgs",
         "pgpilot": "pgpilot",
         "plasma-manager": "plasma-manager",
@@ -950,7 +883,7 @@
         "nixpkgs-stable": "nixpkgs-stable",
         "sops-nix": "sops-nix_2",
         "television-ssh": "television-ssh",
-        "zen-browser": "zen-browser_2"
+        "zen-browser": "zen-browser"
       },
       "locked": {
         "lastModified": 1780167954,
@@ -1104,7 +1037,7 @@
     "television-ssh": {
       "inputs": {
         "flake-utils": "flake-utils_7",
-        "home-manager": "home-manager_6",
+        "home-manager": "home-manager_4",
         "nixpkgs": [
           "stc",
           "nixpkgs"
@@ -1149,29 +1082,7 @@
     },
     "zen-browser": {
       "inputs": {
-        "home-manager": "home-manager_3",
-        "nixpkgs": [
-          "nix-gui",
-          "nixpkgs"
-        ]
-      },
-      "locked": {
-        "lastModified": 1780123543,
-        "narHash": "sha256-vRHmt1N3rPgLJFcSQfHb2c3F7edzVPcyAk6/2QYmO1s=",
-        "owner": "0xc000022070",
-        "repo": "zen-browser-flake",
-        "rev": "7e1dae7aa169ad02f18ca11da247008181b2dc7f",
-        "type": "github"
-      },
-      "original": {
-        "owner": "0xc000022070",
-        "repo": "zen-browser-flake",
-        "type": "github"
-      }
-    },
-    "zen-browser_2": {
-      "inputs": {
-        "home-manager": "home-manager_7",
+        "home-manager": "home-manager_5",
         "nixpkgs": [
           "stc",
           "nixpkgs"

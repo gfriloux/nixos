@@ -7,7 +7,7 @@
 }: {
   imports = [
     inputs.stc.homeModules.cogitator-enginseer
-    inputs.nix-gui.homeModules.default
+    inputs.stc.homeModules.cogitator-desktop
     inputs.sops-nix.homeManagerModules.sops
     inputs.pgpilot.homeModules.pgpilot
     inputs.plasma-manager.homeManagerModules.plasma-manager
@@ -16,7 +16,7 @@
   ];
 
   stc.cogitator.enginseer.enable = true;
-  nix-gui.hm.enable = true;
+  stc.cogitator.desktop.enable = true;
   pgpilot.pgpilot.enable = true;
 
   sops = {
@@ -82,7 +82,6 @@
       git-workspace
       kooha
       ghostty
-      gimp
       gparted
       ouch
       aria2

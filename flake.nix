@@ -10,10 +10,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.home-manager.follows = "home-manager";
     };
-    nix-gui = {
-      url = "github:gfriloux/nix-gui";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
     sops-nix = {
       url = "github:Mic92/sops-nix";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -55,7 +51,7 @@
 
         homes.modules = with inputs; [
           inputs.stc.homeModules.cogitator-enginseer
-          inputs.nix-gui.homeModules.default
+          inputs.stc.homeModules.cogitator-desktop
           inputs.sops-nix.homeManagerModules.sops
           inputs.pgpilot-flake.homeModules.pgpilot
         ];
