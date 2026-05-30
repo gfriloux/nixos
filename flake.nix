@@ -5,9 +5,10 @@
       url = "github:nix-community/home-manager/master";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    nix-cli = {
-      url = "github:gfriloux/nix-cli";
+    stc = {
+      url = "github:gfriloux/stc";
       inputs.nixpkgs.follows = "nixpkgs";
+      inputs.home-manager.follows = "home-manager";
     };
     nix-gui = {
       url = "github:gfriloux/nix-gui";
@@ -53,7 +54,7 @@
         ];
 
         homes.modules = with inputs; [
-          inputs.nix-cli.homeModules.default
+          inputs.stc.homeModules.cogitator-enginseer
           inputs.nix-gui.homeModules.default
           inputs.sops-nix.homeManagerModules.sops
           inputs.pgpilot-flake.homeModules.pgpilot

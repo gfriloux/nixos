@@ -6,7 +6,7 @@
   ...
 }: {
   imports = [
-    inputs.nix-cli.homeModules.default
+    inputs.stc.homeModules.cogitator-enginseer
     inputs.nix-gui.homeModules.default
     inputs.sops-nix.homeManagerModules.sops
     inputs.pgpilot.homeModules.pgpilot
@@ -15,7 +15,7 @@
     ./mail.nix
   ];
 
-  nix-cli.hm.enable = true;
+  stc.cogitator.enginseer.enable = true;
   nix-gui.hm.enable = true;
   pgpilot.pgpilot.enable = true;
 
@@ -117,6 +117,7 @@
       yubikey-touch-detector
       yubioath-flutter
       vesktop
+      pcsx2
       (writeShellScriptBin "rbw-wrapper" ''
         export RBW_EMAIL="$(cat ${config.sops.secrets."mail/address".path})"
         export RBW_SERVER="$(cat ${config.sops.secrets."rbw/server".path})"

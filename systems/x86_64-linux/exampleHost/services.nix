@@ -17,7 +17,10 @@
   security.rtkit.enable = true; # needed by pipewire for real-time scheduling
   security.protectKernelImage = true;
 
-  systemd.coredump.extraConfig = "Storage=none\nProcessSizeMax=0";
+  systemd.coredump.settings.Coredump = {
+    Storage = "none";
+    ProcessSizeMax = 0;
+  };
 
   services = {
     udev.packages = [pkgs.yubikey-personalization];
