@@ -43,7 +43,7 @@ export default defineConfig({
             {
               label: 'Sacred Geometry',
               translations: { fr: 'Géométrie Sacrée' },
-              autogenerate: { directory: 'architecture' },
+              items: [{ autogenerate: { directory: 'architecture' } }],
             },
           ],
         },
@@ -54,24 +54,24 @@ export default defineConfig({
             {
               label: 'exampleHost',
               translations: { fr: 'exampleHost' },
-              autogenerate: { directory: 'examplehost' },
+              items: [{ autogenerate: { directory: 'examplehost' } }],
             },
             {
               label: 'clochette',
               translations: { fr: 'clochette' },
-              autogenerate: { directory: 'clochette' },
+              items: [{ autogenerate: { directory: 'clochette' } }],
             },
             {
               label: 'RogueLeader',
               translations: { fr: 'RogueLeader' },
-              autogenerate: { directory: 'rogueleader' },
+              items: [{ autogenerate: { directory: 'rogueleader' } }],
             },
           ],
         },
         {
           label: 'Rites Opérationnels',
           translations: { fr: 'Rites Opérationnels' },
-          autogenerate: { directory: 'operations' },
+          items: [{ autogenerate: { directory: 'operations' } }],
         },
       ],
     }),
