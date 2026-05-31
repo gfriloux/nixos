@@ -24,6 +24,11 @@
   };
   pgpilot.pgpilot.enable = true;
 
+  programs.ghostty = {
+    settings.copy-on-select = "clipboard";
+    systemd.enable = true;
+  };
+
   sops = {
     age.keyFile = "/etc/sops/age/keys.txt";
     defaultSopsFile = ../../../secrets/kuri_exampleHost.yaml;
