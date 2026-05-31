@@ -1,0 +1,33 @@
+---
+title: KURI · Codex Mechanica
+description: "Dans le millénaire sombre, l'infrastructure est liturgie."
+template: splash
+hero:
+  title: KURI
+  tagline: "Dans le millénaire sombre, l'infrastructure est liturgie. Un seul Codex pour forger les sanctuaires. Louanges à l'Omnimessie."
+  actions:
+    - text: La Catéchèse
+      link: /fr/introduction/
+      icon: right-arrow
+      variant: primary
+    - text: GitHub
+      link: https://github.com/gfriloux/nixos
+      icon: external
+---
+
+import { CardGrid, Card } from '@astrojs/starlight/components';
+
+<CardGrid>
+  <Card title="Sanctuaires-Machines" icon="laptop">
+    Trois hôtes consacrés — `exampleHost`, `clochette`, `RogueLeader` — chacun un sanctuaire-machine confié au Techprêtre.
+  </Card>
+  <Card title="Géométrie Sacrée" icon="document">
+    L'architecture de la Forge : structure snowfall-lib, stockage ZFS, réseautage noosphérique, reliquaires secrets.
+  </Card>
+  <Card title="Motifs Sacrés" icon="puzzle">
+    Modules NixOS réutilisables — `docker-traefik`, `docker-crowdsec`, `notify-docker` — les motifs sacrés consacrant chaque sanctuaire.
+  </Card>
+  <Card title="Rites Opérationnels" icon="setting">
+    Rites de déploiement, reliquaires sops-nix, liturgies de réinstallation, et cantiques de dépannage.
+  </Card>
+</CardGrid>

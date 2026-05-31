@@ -41,3 +41,15 @@ scan:
 		'.#nixosConfigurations.clochette.config.virtualisation.oci-containers.containers' \
 		--apply 'c: builtins.concatStringsSep "\n" (map (x: x.image) (builtins.attrValues c))' \
 		| xargs -I{} trivy image --severity HIGH,CRITICAL {}
+
+docs-install:
+	cd docs && npm install
+
+docs-dev: docs-install
+	cd docs && npm run dev
+
+docs-build: docs-install
+	cd docs && npm run build
+
+docs-preview: docs-build
+	cd docs && npm run preview

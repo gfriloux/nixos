@@ -18,6 +18,7 @@ in
       serie
       tokei
       trivy
+      nodejs
     ];
 
     shellHook = ''

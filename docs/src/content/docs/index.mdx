@@ -1,0 +1,33 @@
+---
+title: KURI · Codex Mechanica
+description: "In the dark millennium, infrastructure is liturgy."
+template: splash
+hero:
+  title: KURI
+  tagline: "In the dark millennium, infrastructure is liturgy. One Codex to forge the shrines. Praise the Omnissiah."
+  actions:
+    - text: The Catechism
+      link: /introduction/
+      icon: right-arrow
+      variant: primary
+    - text: GitHub
+      link: https://github.com/gfriloux/nixos
+      icon: external
+---
+
+import { CardGrid, Card } from '@astrojs/starlight/components';
+
+<CardGrid>
+  <Card title="Machine-Shrines" icon="laptop">
+    Three consecrated hosts — `exampleHost`, `clochette`, `RogueLeader` — each a machine-shrine tended by the Techpriest.
+  </Card>
+  <Card title="Sacred Geometry" icon="document">
+    The architecture of the Forge: snowfall-lib structure, ZFS storage, noosphere networking, reliquary secrets.
+  </Card>
+  <Card title="Sacred Patterns" icon="puzzle">
+    Reusable NixOS modules — `docker-traefik`, `docker-crowdsec`, `notify-docker` — the holy patterns consecrating each shrine.
+  </Card>
+  <Card title="Rites Opérationnels" icon="setting">
+    Deployment rites, sops-nix reliquaries, reinstallation liturgies, and troubleshooting canticles.
+  </Card>
+</CardGrid>

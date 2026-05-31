@@ -1,0 +1,414 @@
+/* ============================================================================
+   KURI · GRIMOIRE — Adeptus Mechanicus illuminated-codex theme for Starlight
+   ----------------------------------------------------------------------------
+   Drop-in stylesheet. Register via astro.config.mjs:
+       starlight({ customCss: ['./src/styles/grimoire.css'] })
+   Fonts are loaded through the `head` array in astro.config (see snippet).
+   Effects (motes, candlelight, Console Cogitator) live in grimoire-fx.js.
+
+   Targets Starlight's REAL DOM. Class names verified against Starlight ~0.30+.
+   Selectors most likely to drift on a Starlight bump are flagged [VERIFY].
+
+   THEME MODEL — DARK-FIRST, matching Starlight's native toggle:
+     :root                      → Umbra  (dark · bound tome)   = default
+     :root[data-theme="light"]  → Lumen  (light · parchment)
+   Starlight's own header toggle owns the switch and persists it; do NOT add
+   another. Set the initial default in astro.config (see README).
+   "May your modules evaluate without heresy."
+   ========================================================================= */
+
+/* ============================ TOKENS · UMBRA (dark, default) =========== */
+:root {
+  --gm-paper:#161009; --gm-paper-2:#1d150c; --gm-paper-3:#241a10; --gm-aged:#120d07; --gm-vellum:#2a1f12;
+  --gm-ink:#f0e4c4; --gm-text:#cdbb92; --gm-dim:#9a8862; --gm-faint:#736446;
+  --gm-oxblood:#cf5345; --gm-oxblood-deep:#a83327; --gm-oxblood-soft:#d9695b;
+  --gm-gold:#bd9438; --gm-gold-bright:#e7c570; --gm-gold-deep:#8a6a22; --gm-gold-glow:rgba(231,197,112,.4);
+  --gm-line:#3a2c19; --gm-line-2:#4d3b21; --gm-bone:#f4ead0; --gm-shadow:rgba(0,0,0,.5);
+  --gm-on-accent:#f4ead0;
+  --gm-candle-1:rgba(190,148,56,.14); --gm-candle-2:rgba(0,0,0,.55);
+  --gm-mote:rgba(231,197,112,.5); --gm-grain:rgba(220,196,140,.05);
+  --gm-code-bg:#0f0b06; --gm-code-bar:#1b140c; --gm-code-ink:#e7d8b4;
+
+  --gm-f-orn:"UnifrakturCook",serif; --gm-f-display:"Cinzel Decorative",serif; --gm-f-head:"Cinzel",serif;
+  --gm-f-body:"EB Garamond",Georgia,serif; --gm-f-mono:"JetBrains Mono",ui-monospace,monospace;
+
+  /* effect dials (driven by grimoire-fx.js · Console Cogitator) */
+  --gm-fx-sheen:1; --gm-fx-candle:1; --gm-fx-motes:1; --gm-fx-anim:1;
+
+  /* ---- Starlight bridge ---- */
+  --sl-color-accent-low: var(--gm-oxblood-deep);
+  --sl-color-accent:     var(--gm-oxblood);
+  --sl-color-accent-high:var(--gm-gold-bright);
+  --sl-color-white:  var(--gm-ink);
+  --sl-color-gray-1: #ece0c4;
+  --sl-color-gray-2: #cdbb92;
+  --sl-color-gray-3: #9a8862;
+  --sl-color-gray-4: #736446;
+  --sl-color-gray-5: #3a2c19;
+  --sl-color-gray-6: #1d150c;
+  --sl-color-black:  var(--gm-paper);
+  --sl-color-bg:         var(--gm-paper);
+  --sl-color-bg-nav:     var(--gm-paper-2);
+  --sl-color-bg-sidebar: var(--gm-paper-2);
+  --sl-color-hairline:       var(--gm-line);
+  --sl-color-hairline-light: var(--gm-line-2);
+  --sl-color-hairline-shade: #120d07;
+  --sl-color-text-accent: var(--gm-gold-bright);
+  --sl-font: var(--gm-f-body);
+  --sl-font-mono: var(--gm-f-mono);
+  --sl-nav-height: 4rem;
+}
+
+/* ============================ TOKENS · LUMEN (light) =================== */
+:root[data-theme="light"] {
+  --gm-paper:#efe3c6; --gm-paper-2:#e7d9ba; --gm-paper-3:#f6eed8; --gm-aged:#e1d1aa; --gm-vellum:#f9f3e2;
+  --gm-ink:#2b2114; --gm-text:#4d3f29; --gm-dim:#7a6a4c; --gm-faint:#a08f6c;
+  --gm-oxblood:#9e2723; --gm-oxblood-deep:#74160f; --gm-oxblood-soft:#b9433b;
+  --gm-gold:#9c7d2c; --gm-gold-bright:#caa544; --gm-gold-deep:#6f5318; --gm-gold-glow:rgba(170,133,46,.45);
+  --gm-line:#cdb98e; --gm-line-2:#b89f70; --gm-bone:#f6eedb; --gm-shadow:rgba(60,42,15,.16);
+  --gm-on-accent:#f6eedb;
+  --gm-candle-1:rgba(170,133,46,.10); --gm-candle-2:rgba(120,85,30,.0);
+  --gm-mote:rgba(150,116,40,.55); --gm-grain:rgba(60,42,15,.10);
+  --gm-code-bg:#221a10; --gm-code-bar:#2e2414; --gm-code-ink:#e7d8b4;
+
+  --sl-color-gray-1:#2a2113; --sl-color-gray-2:#4d3f29; --sl-color-gray-3:#7a6a4c;
+  --sl-color-gray-4:#a08f6c; --sl-color-gray-5:#cdb98e; --sl-color-gray-6:#e7d9ba;
+  --sl-color-hairline-shade:#ddceaa;
+  --sl-color-text-accent: var(--gm-oxblood);
+}
+
+/* ============================ BASE / ATMOSPHERE ======================== */
+body { color: var(--gm-text); -webkit-font-smoothing: antialiased; }
+/* candlelit sanctum — breathing warm glow + darkened edges */
+body::before {
+  content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 0;
+  background:
+    radial-gradient(1100px 760px at 50% 28%, var(--gm-candle-1), transparent 58%),
+    radial-gradient(1300px 1000px at 50% 50%, transparent 50%, var(--gm-candle-2) 100%);
+  opacity: calc(.4 + .6 * var(--gm-fx-candle));
+  animation: gm-candle calc(7s / max(var(--gm-fx-anim), .0001)) ease-in-out infinite;
+}
+/* gilt grain */
+body::after {
+  content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 0; opacity: .5;
+  background-image: radial-gradient(circle at 1px 1px, var(--gm-grain) 1px, transparent 0);
+  background-size: 6px 6px;
+}
+::selection { background: var(--gm-oxblood); color: var(--gm-on-accent); }
+::-webkit-scrollbar { width: 12px; height: 12px; }
+::-webkit-scrollbar-track { background: var(--gm-aged); }
+::-webkit-scrollbar-thumb { background: linear-gradient(var(--gm-gold-deep), var(--gm-line)); border: 2px solid var(--gm-aged); }
+::-webkit-scrollbar-thumb:hover { background: var(--gm-gold); }
+
+/* floating gold motes (incense-ash) — layer injected by grimoire-fx.js */
+.gm-motes { position: fixed; inset: 0; z-index: 1; pointer-events: none; overflow: hidden; opacity: var(--gm-fx-motes); }
+.gm-mote { position: absolute; bottom: -10px; border-radius: 50%; background: var(--gm-mote);
+  box-shadow: 0 0 6px var(--gm-gold-glow); animation: gm-rise-mote linear infinite; }
+
+/* ================================ HEADER =============================== */
+/* [VERIFY] header wrapper = `.header` inside <header> */
+.header {
+  background: linear-gradient(var(--gm-paper-2), var(--gm-aged));
+  border-bottom: 2px solid var(--gm-gold);
+}
+header.header::after { /* gilt dashed underline */
+  content: ""; position: absolute; left: 0; right: 0; bottom: -6px; height: 3px;
+  background-image: repeating-linear-gradient(90deg, var(--gm-gold) 0 6px, transparent 6px 16px);
+  opacity: .6; pointer-events: none;
+}
+/* [VERIFY] site title link */
+a.site-title {
+  font-family: var(--gm-f-orn); font-weight: 700; font-size: 1.7rem; letter-spacing: .02em;
+  color: var(--gm-ink); gap: .55rem;
+}
+a.site-title img { filter: drop-shadow(0 0 7px var(--gm-gold-glow)); }
+/* if the logo SVG carries .gm-ring groups, fx.js animates them (see README) */
+
+/* Search in right-group: site-search has display:contents so target the button */
+@media (min-width: 50rem) {
+  .gm-search button[data-open-modal] {
+    width: 16rem;
+    max-width: 16rem;
+  }
+}
+
+/* ================================ SIDEBAR ============================== */
+.sidebar { border-inline-end: 2px solid var(--gm-line-2);
+  background: linear-gradient(var(--gm-paper-2), var(--gm-paper)); }
+/* group headings */
+.sidebar-content .group-label > span,            /* [VERIFY] */
+.sidebar-content summary .group-label {
+  font-family: var(--gm-f-head); font-weight: 700; font-size: .82rem;
+  letter-spacing: .12em; text-transform: uppercase; color: var(--gm-oxblood);
+  display: inline-flex; align-items: center; gap: .5rem;
+}
+.sidebar-content .group-label > span::before { content: "❧"; color: var(--gm-gold); font-size: .95rem; }
+.sidebar-content a {
+  font-size: .92rem; color: var(--gm-text);
+  border-inline-start: 2px solid transparent; transition: .16s;
+}
+.sidebar-content a:hover {
+  color: var(--gm-ink); background: color-mix(in oklab, var(--gm-gold) 13%, transparent);
+  border-inline-start-color: var(--gm-gold);
+}
+.sidebar-content a[aria-current="page"] {
+  color: var(--gm-gold-bright); font-weight: 600;
+  background: linear-gradient(90deg, color-mix(in oklab, var(--gm-oxblood) 22%, transparent), transparent);
+  border-inline-start-color: var(--gm-oxblood);
+}
+:root[data-theme="light"] .sidebar-content a[aria-current="page"] { color: var(--gm-oxblood-deep); }
+
+/* ============================== RIGHT TOC ============================== */
+starlight-toc a {
+  border-inline-start: 1px solid var(--gm-line-2); color: var(--gm-dim);
+  font-size: .85rem; transition: .15s;
+}
+starlight-toc a:hover { color: var(--gm-ink); border-inline-start-color: var(--gm-gold); }
+starlight-toc a[aria-current="true"] {
+  color: var(--gm-gold-bright); border-inline-start-color: var(--gm-oxblood);
+  text-shadow: 0 0 14px var(--gm-gold-glow);
+}
+:root[data-theme="light"] starlight-toc a[aria-current="true"] { color: var(--gm-oxblood); }
+.right-sidebar h2 { /* "On this page" */
+  font-family: var(--gm-f-head); font-weight: 700; font-size: .72rem; letter-spacing: .16em;
+  text-transform: uppercase; color: var(--gm-oxblood);
+}
+
+/* ============================ MARKDOWN CONTENT ========================= */
+.sl-markdown-content { color: var(--gm-text); font-size: 1.06rem; line-height: 1.72; }
+.sl-markdown-content :is(h1,h2,h3,h4) { font-family: var(--gm-f-head); color: var(--gm-ink); }
+/* page title — gilded, sheening */
+.sl-markdown-content h1, .content-panel h1 {
+  font-family: var(--gm-f-display); font-weight: 900; letter-spacing: .01em;
+  background-image: linear-gradient(100deg, var(--gm-gold-deep) 0%, var(--gm-gold) 30%,
+    var(--gm-gold-bright) 50%, var(--gm-gold) 70%, var(--gm-gold-deep) 100%);
+  background-size: 250% 100%; -webkit-background-clip: text; background-clip: text;
+  color: transparent; -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 1px 0 var(--gm-shadow));
+  animation: gm-sheen calc(8s / max(var(--gm-fx-anim), .0001)) linear infinite;
+}
+.gm-no-sheen .sl-markdown-content h1, .gm-no-sheen .content-panel h1, .gm-no-sheen .gm-hero-title { animation: none; }
+.sl-markdown-content h2 {
+  font-weight: 700; position: relative; padding-bottom: .4rem; margin-top: 2.6rem;
+  border-bottom: 1px solid var(--gm-line-2);
+}
+.sl-markdown-content h2::before {
+  content: "❧ "; color: var(--gm-gold); font-family: var(--gm-f-body); font-size: .62em; vertical-align: .08em;
+}
+.sl-markdown-content h2::after {
+  content: ""; position: absolute; left: 0; bottom: -1px; width: 90px; height: 2px;
+  background: var(--gm-oxblood); box-shadow: 0 0 10px -2px var(--gm-oxblood);
+}
+.sl-markdown-content h3 { color: var(--gm-bone); }
+.sl-markdown-content strong { color: var(--gm-ink); }
+.sl-markdown-content a {
+  color: var(--gm-oxblood); text-decoration: none; font-weight: 600;
+  background-image: linear-gradient(var(--gm-gold), var(--gm-gold));
+  background-size: 0% 2px; background-repeat: no-repeat; background-position: 0 100%;
+  transition: background-size .3s, color .2s; padding-bottom: 1px;
+}
+.sl-markdown-content a:hover { color: var(--gm-oxblood-deep); background-size: 100% 2px; }
+:root[data-theme="light"] .sl-markdown-content a { color: var(--gm-oxblood); }
+:root:not([data-theme="light"]) .sl-markdown-content a:hover { color: var(--gm-gold-bright); }
+/* inline code */
+.sl-markdown-content :not(pre) > code {
+  font-family: var(--gm-f-mono); font-size: .78em;
+  background: var(--gm-paper-3); color: var(--gm-gold-bright);
+  border: 1px solid var(--gm-line-2); border-radius: 0; padding: .12em .4em;
+}
+:root[data-theme="light"] .sl-markdown-content :not(pre) > code { color: var(--gm-oxblood-deep); }
+.sl-markdown-content :is(ul,ol) > li::marker { color: var(--gm-gold); }
+
+/* optional illuminated drop cap — add class="lead" to the intro paragraph */
+.sl-markdown-content p.lead { font-size: 1.28rem; font-style: italic; color: var(--gm-ink); }
+.sl-markdown-content p.lead::first-letter {
+  font-family: var(--gm-f-display); font-weight: 900; font-size: 4.1rem; line-height: .66;
+  float: left; margin: .08em .4em 0 0; padding: .14em .18em; color: var(--gm-gold-bright);
+  font-style: normal; border: 2px solid var(--gm-gold);
+  background: color-mix(in oklab, var(--gm-gold) 12%, transparent);
+  box-shadow: 0 0 0 1px var(--gm-paper) inset, 0 0 18px -4px var(--gm-gold-glow);
+}
+
+/* ================================ CARDS =============================== */
+.sl-markdown-content .card {
+  background: var(--gm-paper-3); border: 1px solid var(--gm-line-2); border-radius: 0;
+  position: relative; overflow: hidden; transition: .22s;
+}
+.sl-markdown-content .card::before {
+  content: ""; position: absolute; inset: 5px; border: 1px solid var(--gm-gold);
+  opacity: .32; pointer-events: none; transition: .22s;
+}
+.sl-markdown-content .card::after {
+  content: "❧"; position: absolute; top: 8px; right: 11px; color: var(--gm-gold);
+  opacity: 0; transform: translateY(-6px) rotate(-12deg); transition: .22s;
+}
+.sl-markdown-content .card:hover {
+  border-color: var(--gm-oxblood); transform: translateY(-4px);
+  box-shadow: 0 18px 34px -20px var(--gm-shadow), 0 0 26px -10px var(--gm-gold-glow);
+}
+.sl-markdown-content .card:hover::before { opacity: .85; inset: 4px; }
+.sl-markdown-content .card:hover::after { opacity: .7; transform: translateY(0) rotate(0); }
+.sl-markdown-content .card .title {
+  font-family: var(--gm-f-head); font-weight: 700; letter-spacing: .04em; color: var(--gm-ink);
+}
+.sl-markdown-content .card .icon {
+  color: var(--gm-gold); background: var(--gm-vellum);
+  border: 1px solid var(--gm-line-2); border-radius: 0; padding: .35rem;
+}
+.sl-markdown-content .card:hover .icon { color: var(--gm-oxblood); border-color: var(--gm-oxblood); }
+
+/* ================================ ASIDES ============================== */
+.starlight-aside {
+  border-radius: 0; border: 1px solid var(--gm-line-2);
+  border-inline-start: 4px solid var(--gm-asd, var(--gm-gold));
+  background: color-mix(in oklab, var(--gm-asd, var(--gm-gold)) 9%, var(--gm-paper-3));
+  position: relative; overflow: hidden;
+}
+.starlight-aside::after {
+  content: ""; position: absolute; top: -40px; right: -30px; width: 120px; height: 120px;
+  background: radial-gradient(circle, var(--gm-gold-glow), transparent 70%); opacity: .45; pointer-events: none;
+}
+.starlight-aside__title {
+  font-family: var(--gm-f-head); font-weight: 700; letter-spacing: .1em;
+  text-transform: uppercase; color: var(--gm-asd, var(--gm-gold));
+}
+.starlight-aside--note    { --gm-asd: var(--gm-gold); }
+.starlight-aside--tip     { --gm-asd: var(--gm-gold-bright); }
+.starlight-aside--caution { --gm-asd: var(--gm-oxblood); }
+.starlight-aside--danger  { --gm-asd: var(--gm-oxblood); }
+
+/* ===================== CODE · EXPRESSIVE CODE ========================= */
+.expressive-code {
+  --ec-brdRad: 0px; --ec-brdCol: var(--gm-line-2);
+  --ec-codeBg: var(--gm-code-bg); --ec-frm-edBg: var(--gm-code-bg);
+  --ec-frm-trmBg: var(--gm-code-bar); --ec-frm-edTabBarBg: var(--gm-code-bar);
+  --ec-frm-edActTabBg: var(--gm-code-bg); --ec-frm-edActTabIndTopCol: var(--gm-oxblood);
+  --ec-frm-edTabBarBrdBtmCol: var(--gm-oxblood);
+  --ec-frm-trmTtbBg: var(--gm-code-bar); --ec-frm-trmTtbBrdBtmCol: var(--gm-oxblood);
+  --ec-frm-trmTtbDotsFg: var(--gm-gold);
+  --ec-uiFontFam: var(--gm-f-mono); --ec-codeFontFam: var(--gm-f-mono);
+  font-size: .9rem;
+}
+.expressive-code .frame .title {
+  font-family: var(--gm-f-mono); letter-spacing: .1em; text-transform: uppercase;
+  color: var(--gm-gold-bright) !important; font-size: .68rem;
+}
+:root[data-theme="light"] .expressive-code { color-scheme: dark; } /* keep code panels dark in Lumen */
+
+/* ================================ TABLES — illuminated ledger ========= */
+/* display:table overrides Starlight's display:block (markdown.css) which kept
+   cells sized by content instead of filling the full table width */
+.sl-markdown-content table { display: table; border-collapse: collapse; width: 100%;
+  border: 1px solid var(--gm-line-2); box-shadow: 0 8px 22px -18px var(--gm-shadow); }
+.sl-markdown-content thead th {
+  position: relative; background: linear-gradient(var(--gm-oxblood), color-mix(in oklab, var(--gm-oxblood) 74%, #000));
+  font-family: var(--gm-f-head); font-size: .78rem; font-weight: 700; letter-spacing: .18em;
+  text-transform: uppercase; color: var(--gm-gold-bright); text-align: left; padding: .7rem 1rem;
+  border-top: 2px solid var(--gm-gold); box-shadow: inset 0 -2px 0 var(--gm-gold-deep);
+  text-shadow: 0 1px 0 rgba(0,0,0,.4);
+}
+.sl-markdown-content thead th:first-child { padding-inline-start: 2.2rem; }
+.sl-markdown-content thead th:first-child::before {
+  content: "❧"; position: absolute; inset-inline-start: .85rem; top: 50%; transform: translateY(-50%);
+  color: var(--gm-gold-bright); font-size: .9rem; opacity: .92;
+}
+.sl-markdown-content thead th + th { box-shadow: inset 0 -2px 0 var(--gm-gold-deep),
+  inset 1px 0 0 color-mix(in oklab, var(--gm-gold) 35%, transparent); }
+.sl-markdown-content :is(td,th) { border: none; }
+.sl-markdown-content td { border-bottom: 1px solid var(--gm-line); padding: .6rem 1rem; color: var(--gm-text); }
+.sl-markdown-content tbody td:first-child { color: var(--gm-ink); font-weight: 600;
+  border-inline-end: 1px solid var(--gm-line); padding-inline-start: 1rem; }
+.sl-markdown-content tbody tr:nth-child(even) { background: var(--gm-paper-2); }
+.sl-markdown-content tbody tr:last-child td { border-bottom: none; }
+.sl-markdown-content tbody tr:hover { background: color-mix(in oklab, var(--gm-gold) 16%, var(--gm-paper-3)); }
+
+/* ============================== PAGINATION ============================ */
+.pagination-links a {
+  border: 1px solid var(--gm-line-2); border-radius: 0; background: var(--gm-paper-3); transition: .16s;
+}
+.pagination-links a:hover { border-color: var(--gm-gold); background: var(--gm-paper-2);
+  box-shadow: 0 0 20px -10px var(--gm-gold-glow); }
+.pagination-links a span:first-child {
+  color: var(--gm-oxblood); font-family: var(--gm-f-mono); font-size: .7rem; letter-spacing: .14em; text-transform: uppercase;
+}
+.pagination-links a .link-title { font-family: var(--gm-f-head); color: var(--gm-ink); }
+
+/* ====================== HERO (splash template) =========================
+   Markup from a Hero.astro override (see README); classes are .gm-hero*.   */
+.gm-hero { position: relative; overflow: hidden; padding: 4rem 0 1rem; }
+.gm-hero-eyebrow {
+  font-family: var(--gm-f-head); font-weight: 700; font-size: .8rem; letter-spacing: .22em;
+  text-transform: uppercase; color: var(--gm-gold); display: flex; align-items: center; gap: .7rem; margin-bottom: .5rem;
+}
+.gm-hero-eyebrow::before { content: ""; width: 28px; height: 1px; background: var(--gm-gold); }
+.gm-hero-title {
+  font-family: var(--gm-f-display); font-weight: 900; line-height: 1.02; letter-spacing: .02em;
+  font-size: clamp(2.6rem, 6vw, 4.4rem); margin: 0 0 .3rem;
+  background-image: linear-gradient(100deg, var(--gm-gold-deep), var(--gm-gold) 35%, var(--gm-gold-bright) 50%, var(--gm-gold) 65%, var(--gm-gold-deep));
+  background-size: 250% 100%; -webkit-background-clip: text; background-clip: text; color: transparent; -webkit-text-fill-color: transparent;
+  animation: gm-sheen calc(9s / max(var(--gm-fx-anim), .0001)) linear infinite;
+}
+.gm-hero-rule { display: flex; align-items: center; gap: 10px; margin: 1rem 0 1.4rem; color: var(--gm-gold); max-width: 360px; }
+.gm-hero-rule::before, .gm-hero-rule::after { content: ""; height: 2px; background: linear-gradient(90deg, var(--gm-gold), transparent); flex: 1; }
+.gm-hero-rule::before { background: linear-gradient(270deg, var(--gm-gold), transparent); max-width: 120px; }
+.gm-hero-rule span { width: 10px; height: 10px; background: var(--gm-oxblood); transform: rotate(45deg); box-shadow: 0 0 0 3px var(--gm-paper), 0 0 0 4px var(--gm-gold); }
+/* hero action buttons */
+.sl-markdown-content .action, .gm-hero .action {
+  border-radius: 0; border: 1px solid var(--gm-line-2); color: var(--gm-ink);
+  font-family: var(--gm-f-head); letter-spacing: .06em; text-transform: uppercase;
+}
+.action.primary {
+  color: var(--gm-on-accent); border-color: var(--gm-oxblood);
+  background: linear-gradient(color-mix(in oklab, var(--gm-oxblood) 70%, #1a0606), var(--gm-oxblood-deep));
+  box-shadow: 0 0 18px -4px var(--gm-gold-glow);
+}
+
+/* ============================== ENTRANCE / REVEAL =====================
+   fx.js adds .gm-reveal to below-the-fold blocks, then .gm-in when scrolled
+   into view. Content is NEVER hidden without JS (classes are JS-added).     */
+.gm-reveal { opacity: 0; }
+.gm-reveal.gm-in { animation: gm-rise .8s cubic-bezier(.2,.7,.2,1) both; }
+.sl-markdown-content h2.gm-reveal.gm-in::after { animation: gm-draw 1s cubic-bezier(.2,.7,.2,1) both; }
+
+/* ===================== Console Cogitator (Rites panel) ================= */
+#gm-console-btn { position: fixed; right: 22px; bottom: 22px; z-index: 9995; width: 50px; height: 50px;
+  display: grid; place-items: center; cursor: pointer; color: var(--gm-on-accent);
+  background: var(--gm-oxblood); border: 2px solid var(--gm-gold);
+  box-shadow: 0 8px 26px -6px var(--gm-shadow), 0 0 18px -4px var(--gm-gold-glow); }
+#gm-console-btn svg { width: 26px; height: 26px; }
+#gm-console-btn svg .gm-ring { transform-origin: 50% 50%; transform-box: fill-box;
+  animation: gm-spin calc(26s / max(var(--gm-fx-anim), .0001)) linear infinite; }
+#gm-console { position: fixed; right: 22px; bottom: 84px; z-index: 9996; width: 296px;
+  background: linear-gradient(var(--gm-paper-3), var(--gm-paper-2)); border: 1px solid var(--gm-gold);
+  box-shadow: 0 30px 60px -20px var(--gm-shadow); font-family: var(--gm-f-body); }
+#gm-console[hidden] { display: none; }
+.gm-c-head { display: flex; align-items: center; gap: 9px; padding: 13px 16px; border-bottom: 2px solid var(--gm-oxblood);
+  font-family: var(--gm-f-head); font-weight: 700; font-size: 13px; letter-spacing: .12em; text-transform: uppercase; color: var(--gm-oxblood); }
+.gm-c-head .led { width: 7px; height: 7px; border-radius: 50%; background: var(--gm-gold-bright);
+  box-shadow: 0 0 8px var(--gm-gold-glow); margin-left: auto; animation: gm-blink 1.6s steps(1) infinite; }
+.gm-c-body { padding: 6px 16px 14px; }
+.gm-field { display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 11px 0; border-bottom: 1px solid var(--gm-line); }
+.gm-field:last-child { border-bottom: none; }
+.gm-field-label { font-family: var(--gm-f-mono); font-size: 10.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--gm-dim); }
+.gm-field-label b { display: block; font-family: var(--gm-f-head); font-size: 13px; letter-spacing: .04em; color: var(--gm-ink); text-transform: none; margin-top: 1px; }
+.gm-toggle { width: 44px; height: 22px; flex: none; border: 1px solid var(--gm-line-2); background: var(--gm-paper); cursor: pointer; position: relative; transition: .18s; border-radius: 11px; }
+.gm-toggle::after { content: ""; position: absolute; top: 2px; left: 2px; width: 16px; height: 16px; border-radius: 50%; background: var(--gm-faint); transition: .18s; }
+.gm-toggle.is-on { border-color: var(--gm-gold); background: color-mix(in oklab, var(--gm-gold) 30%, transparent); }
+.gm-toggle.is-on::after { left: 24px; background: var(--gm-gold-bright); box-shadow: 0 0 8px var(--gm-gold-glow); }
+
+/* ============================== KEYFRAMES ============================= */
+@keyframes gm-spin { to { transform: rotate(360deg); } }
+@keyframes gm-spin-rev { to { transform: rotate(-360deg); } }
+@keyframes gm-sheen { to { background-position: -250% 0; } }
+@keyframes gm-rise { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: none; } }
+@keyframes gm-draw { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0 0 0 0); } }
+@keyframes gm-candle { 0%,100% { opacity: calc(.4 + .6*var(--gm-fx-candle)); } 50% { opacity: calc(.33 + .6*var(--gm-fx-candle)); } }
+@keyframes gm-blink { 50% { opacity: .25; } }
+@keyframes gm-rise-mote { to { transform: translateY(-110vh); opacity: 0; } }
+
+@media (prefers-reduced-motion: reduce) {
+  body::before, .sl-markdown-content h1, .gm-hero-title, .gm-mote,
+  #gm-console-btn svg .gm-ring { animation: none !important; }
+  .gm-reveal, .gm-reveal.gm-in { opacity: 1 !important; animation: none !important; transform: none !important; }
+  .sl-markdown-content h2.gm-in::after { animation: none !important; }
+}
