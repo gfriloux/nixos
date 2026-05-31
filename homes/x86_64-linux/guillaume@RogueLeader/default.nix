@@ -4,10 +4,12 @@
   ...
 }: {
   imports = [
-    inputs.nix-cli.homeModules.default
+    inputs.stc.homeModules.cogitator-enginseer
   ];
 
-  nix-cli.hm.enable = true;
+  stc = {
+    cogitator.enginseer.enable = true;
+  };
 
   home = {
     stateVersion = "25.11";
