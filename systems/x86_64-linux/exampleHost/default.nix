@@ -50,15 +50,17 @@
   i18n.defaultLocale = "fr_FR.UTF-8";
 
   stc = {
-    zfs.enable = true;
-    cogitator.plasma.enable = true;
-    plasma6 = {
-      keyboardLayout = "fr";
-      sddmTheme = "catppuccin-mocha-mauve";
+    relics = {
+      zfs.enable = true;
+      plasma6 = {
+        keyboardLayout = "fr";
+        sddmTheme = "catppuccin-mocha-mauve";
+      };
+      amdGpu.initrd = true;
+      yubikey.enable = true;
     };
+    cogitator.plasma.enable = true;
     cogitator.gaming.enable = true;
-    amdGpu.initrd = true;
-    yubikey.enable = true;
   };
 
   nix = {

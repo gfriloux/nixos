@@ -17,10 +17,14 @@
   ];
 
   stc = {
-    cogitator.enginseer.enable = true;
-    cogitator.desktop.enable = true;
-    yubikey.enable = true;
-    plasmaManager.enable = true;
+    cogitator = {
+      enginseer.enable = true;
+      desktop.enable = true;
+    };
+    relics = {
+      yubikey.enable = true;
+      plasmaManager.enable = true;
+    };
   };
   pgpilot.pgpilot.enable = true;
 
