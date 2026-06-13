@@ -28,6 +28,8 @@
   };
   pgpilot.pgpilot.enable = true;
 
+  kuri.dank-shell.enable = true;
+
   programs.ghostty = {
     settings.copy-on-select = "clipboard";
     systemd.enable = true;
