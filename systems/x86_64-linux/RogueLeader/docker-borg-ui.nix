@@ -1,19 +1,8 @@
 {
-  config,
   lib,
   pkgs,
   ...
-}: let
-  sshPublicKey = pkgs.writeText "borg-ui-id_ed25519.pub" ''
-    ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJoIItfArMjUJkk3k5jbHGmMyUKlyPZMF1DisGCvCE0f borg-ui@RogueLeader
-  '';
-in {
-  sops.secrets."services/borg-ui/ssh-key" = {
-    mode = "0600";
-    owner = "borg-ui";
-    group = "borg-ui";
-  };
-
+}: {
   virtualisation.oci-containers.containers = {
     "borg-ui" = {
       image = "ainullcode/borg-ui:2.2.5"; # renovate
@@ -33,8 +22,6 @@ in {
       volumes = [
         "/srv/docker/borg-ui.friloux.me/data:/data"
         "/srv/docker/borg-ui.friloux.me/cache:/home/borg/.cache/borg"
-        "${config.sops.secrets."services/borg-ui/ssh-key".path}:/home/borg/.ssh/id_ed25519:ro"
-        "${sshPublicKey}:/home/borg/.ssh/id_ed25519.pub:ro"
         "/etc/localtime:/etc/localtime:ro"
       ];
 
