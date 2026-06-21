@@ -1,0 +1,79 @@
+# aerc styleset — Daybreak
+# pour me@friloux.me · placer dans ~/.config/aerc/stylesets/ puis [ui] styleset-name=daybreak
+
+*.default = true
+*.selected.reverse = false
+*.selected.fg = #f5f1e6
+*.selected.bg = #1f8a6e
+
+default.fg = #3a342b
+default.bg = #f5f1e6
+
+title.fg = #f5f1e6
+title.bg = #1f8a6e
+title.bold = true
+
+header.fg = #2f6f9e
+header.bold = true
+
+*error.fg = #c0392b
+*warning.fg = #b07d1a
+*success.fg = #4f8a3a
+
+# liste des messages
+msglist_default.fg = #3a342b
+msglist_unread.fg = #2f6f9e
+msglist_unread.bold = true
+msglist_read.fg = #8a8070
+msglist_flagged.fg = #c4622e
+msglist_deleted.fg = #8a8070
+msglist_marked.fg = #f5f1e6
+msglist_marked.bg = #1f8a6e
+msglist_result.fg = #b07d1a
+
+# arborescence des dossiers
+dirlist_default.fg = #1f8a6e
+dirlist_unread.fg = #2f6f9e
+dirlist_unread.bold = true
+dirlist_recent.fg = #4f8a3a
+
+# barre de statut
+statusline_default.fg = #f5f1e6
+statusline_default.bg = #1f8a6e
+statusline_error.fg = #c0392b
+statusline_error.bg = #ebe5d6
+statusline_success.fg = #4f8a3a
+statusline_success.bg = #ebe5d6
+
+# complétions
+completion_default.fg = #3a342b
+completion_default.bg = #ebe5d6
+completion_gutter.bg = #ebe5d6
+completion_pill.bg = #1f8a6e
+completion_pill.fg = #f5f1e6
+
+# bordures & sélecteurs
+border.fg = #c9bfa8
+selector_default.fg = #3a342b
+selector_focused.fg = #f5f1e6
+selector_focused.bg = #1f8a6e
+selector_chooser.bold = true
+
+# corps des mails (lecture)
+[viewer]
+header.fg = #2f6f9e
+header.bold = true
+url.fg = #2f6f9e
+url.underline = true
+signature.fg = #8a8070
+signature.dim = true
+quote_1.fg = #4f8a3a
+quote_2.fg = #2f6f9e
+quote_3.fg = #b07d1a
+quote_4.fg = #c0392b
+quote_x.fg = #8a8070
+diff_meta.fg = #1f8a6e
+diff_meta.bold = true
+diff_chunk.fg = #2f6f9e
+diff_add.fg = #4f8a3a
+diff_del.fg = #c0392b

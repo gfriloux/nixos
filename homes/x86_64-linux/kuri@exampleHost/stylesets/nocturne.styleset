@@ -1,0 +1,79 @@
+# aerc styleset — Nocturne
+# pour me@friloux.me · placer dans ~/.config/aerc/stylesets/ puis [ui] styleset-name=nocturne
+
+*.default = true
+*.selected.reverse = false
+*.selected.fg = #1c1a2b
+*.selected.bg = #bd93f9
+
+default.fg = #e9e4f5
+default.bg = #1c1a2b
+
+title.fg = #1c1a2b
+title.bg = #bd93f9
+title.bold = true
+
+header.fg = #ff79c6
+header.bold = true
+
+*error.fg = #ff5555
+*warning.fg = #f1fa8c
+*success.fg = #50fa7b
+
+# liste des messages
+msglist_default.fg = #e9e4f5
+msglist_unread.fg = #8be9fd
+msglist_unread.bold = true
+msglist_read.fg = #7d7699
+msglist_flagged.fg = #ffb86c
+msglist_deleted.fg = #7d7699
+msglist_marked.fg = #1c1a2b
+msglist_marked.bg = #bd93f9
+msglist_result.fg = #f1fa8c
+
+# arborescence des dossiers
+dirlist_default.fg = #bd93f9
+dirlist_unread.fg = #ff79c6
+dirlist_unread.bold = true
+dirlist_recent.fg = #50fa7b
+
+# barre de statut
+statusline_default.fg = #1c1a2b
+statusline_default.bg = #bd93f9
+statusline_error.fg = #ff5555
+statusline_error.bg = #252238
+statusline_success.fg = #50fa7b
+statusline_success.bg = #252238
+
+# complétions
+completion_default.fg = #e9e4f5
+completion_default.bg = #252238
+completion_gutter.bg = #252238
+completion_pill.bg = #bd93f9
+completion_pill.fg = #1c1a2b
+
+# bordures & sélecteurs
+border.fg = #403a64
+selector_default.fg = #e9e4f5
+selector_focused.fg = #1c1a2b
+selector_focused.bg = #bd93f9
+selector_chooser.bold = true
+
+# corps des mails (lecture)
+[viewer]
+header.fg = #ff79c6
+header.bold = true
+url.fg = #8be9fd
+url.underline = true
+signature.fg = #7d7699
+signature.dim = true
+quote_1.fg = #50fa7b
+quote_2.fg = #8be9fd
+quote_3.fg = #ffb86c
+quote_4.fg = #ff79c6
+quote_x.fg = #7d7699
+diff_meta.fg = #bd93f9
+diff_meta.bold = true
+diff_chunk.fg = #8be9fd
+diff_add.fg = #50fa7b
+diff_del.fg = #ff5555

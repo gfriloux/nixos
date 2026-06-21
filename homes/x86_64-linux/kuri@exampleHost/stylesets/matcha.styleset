@@ -1,0 +1,79 @@
+# aerc styleset — Matcha
+# pour me@friloux.me · placer dans ~/.config/aerc/stylesets/ puis [ui] styleset-name=matcha
+
+*.default = true
+*.selected.reverse = false
+*.selected.fg = #151a14
+*.selected.bg = #a3d96b
+
+default.fg = #e4ead9
+default.bg = #151a14
+
+title.fg = #151a14
+title.bg = #a3d96b
+title.bold = true
+
+header.fg = #c2e87a
+header.bold = true
+
+*error.fg = #d96c5e
+*warning.fg = #dcc56a
+*success.fg = #8fd36a
+
+# liste des messages
+msglist_default.fg = #e4ead9
+msglist_unread.fg = #8be0b0
+msglist_unread.bold = true
+msglist_read.fg = #818f76
+msglist_flagged.fg = #e0b34a
+msglist_deleted.fg = #818f76
+msglist_marked.fg = #151a14
+msglist_marked.bg = #a3d96b
+msglist_result.fg = #dcc56a
+
+# arborescence des dossiers
+dirlist_default.fg = #8fbf5a
+dirlist_unread.fg = #c2e87a
+dirlist_unread.bold = true
+dirlist_recent.fg = #8fd36a
+
+# barre de statut
+statusline_default.fg = #151a14
+statusline_default.bg = #a3d96b
+statusline_error.fg = #d96c5e
+statusline_error.bg = #1d241b
+statusline_success.fg = #8fd36a
+statusline_success.bg = #1d241b
+
+# complétions
+completion_default.fg = #e4ead9
+completion_default.bg = #1d241b
+completion_gutter.bg = #1d241b
+completion_pill.bg = #a3d96b
+completion_pill.fg = #151a14
+
+# bordures & sélecteurs
+border.fg = #36402f
+selector_default.fg = #e4ead9
+selector_focused.fg = #151a14
+selector_focused.bg = #a3d96b
+selector_chooser.bold = true
+
+# corps des mails (lecture)
+[viewer]
+header.fg = #c2e87a
+header.bold = true
+url.fg = #8be0b0
+url.underline = true
+signature.fg = #818f76
+signature.dim = true
+quote_1.fg = #8fd36a
+quote_2.fg = #8be0b0
+quote_3.fg = #dcc56a
+quote_4.fg = #d96c5e
+quote_x.fg = #818f76
+diff_meta.fg = #a3d96b
+diff_meta.bold = true
+diff_chunk.fg = #8be0b0
+diff_add.fg = #8fd36a
+diff_del.fg = #d96c5e

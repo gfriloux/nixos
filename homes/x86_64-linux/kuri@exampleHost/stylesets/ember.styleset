@@ -1,0 +1,79 @@
+# aerc styleset — Ember
+# pour me@friloux.me · placer dans ~/.config/aerc/stylesets/ puis [ui] styleset-name=ember
+
+*.default = true
+*.selected.reverse = false
+*.selected.fg = #1f1b16
+*.selected.bg = #e8a13c
+
+default.fg = #efe3cf
+default.bg = #1f1b16
+
+title.fg = #1f1b16
+title.bg = #e8a13c
+title.bold = true
+
+header.fg = #e8a13c
+header.bold = true
+
+*error.fg = #cc5544
+*warning.fg = #e0b94a
+*success.fg = #9bb066
+
+# liste des messages
+msglist_default.fg = #efe3cf
+msglist_unread.fg = #f0c674
+msglist_unread.bold = true
+msglist_read.fg = #968974
+msglist_flagged.fg = #e07856
+msglist_deleted.fg = #968974
+msglist_marked.fg = #1f1b16
+msglist_marked.bg = #e8a13c
+msglist_result.fg = #e0b94a
+
+# arborescence des dossiers
+dirlist_default.fg = #d8a05a
+dirlist_unread.fg = #f0b860
+dirlist_unread.bold = true
+dirlist_recent.fg = #9bb066
+
+# barre de statut
+statusline_default.fg = #1f1b16
+statusline_default.bg = #e8a13c
+statusline_error.fg = #cc5544
+statusline_error.bg = #2a241d
+statusline_success.fg = #9bb066
+statusline_success.bg = #2a241d
+
+# complétions
+completion_default.fg = #efe3cf
+completion_default.bg = #2a241d
+completion_gutter.bg = #2a241d
+completion_pill.bg = #e8a13c
+completion_pill.fg = #1f1b16
+
+# bordures & sélecteurs
+border.fg = #4a3f30
+selector_default.fg = #efe3cf
+selector_focused.fg = #1f1b16
+selector_focused.bg = #e8a13c
+selector_chooser.bold = true
+
+# corps des mails (lecture)
+[viewer]
+header.fg = #e8a13c
+header.bold = true
+url.fg = #9bb066
+url.underline = true
+signature.fg = #968974
+signature.dim = true
+quote_1.fg = #9bb066
+quote_2.fg = #e0b94a
+quote_3.fg = #e07856
+quote_4.fg = #cc5544
+quote_x.fg = #968974
+diff_meta.fg = #e8a13c
+diff_meta.bold = true
+diff_chunk.fg = #e0b94a
+diff_add.fg = #9bb066
+diff_del.fg = #cc5544

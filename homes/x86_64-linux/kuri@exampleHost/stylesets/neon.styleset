@@ -1,0 +1,79 @@
+# aerc styleset — Neon Grid
+# pour me@friloux.me · placer dans ~/.config/aerc/stylesets/ puis [ui] styleset-name=neon
+
+*.default = true
+*.selected.reverse = false
+*.selected.fg = #100e1a
+*.selected.bg = #ff2e88
+
+default.fg = #f1ebff
+default.bg = #100e1a
+
+title.fg = #100e1a
+title.bg = #ff2e88
+title.bold = true
+
+header.fg = #2de2e6
+header.bold = true
+
+*error.fg = #ff4d6d
+*warning.fg = #ffd166
+*success.fg = #5cff9d
+
+# liste des messages
+msglist_default.fg = #f1ebff
+msglist_unread.fg = #2de2e6
+msglist_unread.bold = true
+msglist_read.fg = #6f6690
+msglist_flagged.fg = #ffd166
+msglist_deleted.fg = #6f6690
+msglist_marked.fg = #100e1a
+msglist_marked.bg = #ff2e88
+msglist_result.fg = #ffd166
+
+# arborescence des dossiers
+dirlist_default.fg = #b967ff
+dirlist_unread.fg = #2de2e6
+dirlist_unread.bold = true
+dirlist_recent.fg = #5cff9d
+
+# barre de statut
+statusline_default.fg = #100e1a
+statusline_default.bg = #ff2e88
+statusline_error.fg = #ff4d6d
+statusline_error.bg = #181527
+statusline_success.fg = #5cff9d
+statusline_success.bg = #181527
+
+# complétions
+completion_default.fg = #f1ebff
+completion_default.bg = #181527
+completion_gutter.bg = #181527
+completion_pill.bg = #ff2e88
+completion_pill.fg = #100e1a
+
+# bordures & sélecteurs
+border.fg = #3a2f5c
+selector_default.fg = #f1ebff
+selector_focused.fg = #100e1a
+selector_focused.bg = #ff2e88
+selector_chooser.bold = true
+
+# corps des mails (lecture)
+[viewer]
+header.fg = #2de2e6
+header.bold = true
+url.fg = #2de2e6
+url.underline = true
+signature.fg = #6f6690
+signature.dim = true
+quote_1.fg = #5cff9d
+quote_2.fg = #2de2e6
+quote_3.fg = #ffd166
+quote_4.fg = #ff2e88
+quote_x.fg = #6f6690
+diff_meta.fg = #b967ff
+diff_meta.bold = true
+diff_chunk.fg = #2de2e6
+diff_add.fg = #5cff9d
+diff_del.fg = #ff4d6d

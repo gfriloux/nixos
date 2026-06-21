@@ -1,0 +1,79 @@
+# aerc styleset — Carbon
+# pour me@friloux.me · placer dans ~/.config/aerc/stylesets/ puis [ui] styleset-name=carbon
+
+*.default = true
+*.selected.reverse = false
+*.selected.fg = #131313
+*.selected.bg = #ffb000
+
+default.fg = #e6e6e6
+default.bg = #131313
+
+title.fg = #131313
+title.bg = #ffb000
+title.bold = true
+
+header.fg = #ffb000
+header.bold = true
+
+*error.fg = #ff5c57
+*warning.fg = #ffb000
+*success.fg = #6fcf6f
+
+# liste des messages
+msglist_default.fg = #e6e6e6
+msglist_unread.fg = #ffffff
+msglist_unread.bold = true
+msglist_read.fg = #777777
+msglist_flagged.fg = #ffb000
+msglist_deleted.fg = #777777
+msglist_marked.fg = #131313
+msglist_marked.bg = #ffb000
+msglist_result.fg = #ffb000
+
+# arborescence des dossiers
+dirlist_default.fg = #b0b0b0
+dirlist_unread.fg = #ffffff
+dirlist_unread.bold = true
+dirlist_recent.fg = #6fcf6f
+
+# barre de statut
+statusline_default.fg = #131313
+statusline_default.bg = #ffb000
+statusline_error.fg = #ff5c57
+statusline_error.bg = #1b1b1b
+statusline_success.fg = #6fcf6f
+statusline_success.bg = #1b1b1b
+
+# complétions
+completion_default.fg = #e6e6e6
+completion_default.bg = #1b1b1b
+completion_gutter.bg = #1b1b1b
+completion_pill.bg = #ffb000
+completion_pill.fg = #131313
+
+# bordures & sélecteurs
+border.fg = #313131
+selector_default.fg = #e6e6e6
+selector_focused.fg = #131313
+selector_focused.bg = #ffb000
+selector_chooser.bold = true
+
+# corps des mails (lecture)
+[viewer]
+header.fg = #ffb000
+header.bold = true
+url.fg = #6fcf6f
+url.underline = true
+signature.fg = #777777
+signature.dim = true
+quote_1.fg = #6fcf6f
+quote_2.fg = #9a9a9a
+quote_3.fg = #ffb000
+quote_4.fg = #ff5c57
+quote_x.fg = #777777
+diff_meta.fg = #ffb000
+diff_meta.bold = true
+diff_chunk.fg = #6fcf6f
+diff_add.fg = #6fcf6f
+diff_del.fg = #ff5c57
