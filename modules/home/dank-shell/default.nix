@@ -12,11 +12,19 @@
 }: let
   cfg = config.kuri.dank-shell;
 in {
-  imports = [inputs.dms.homeModules.dank-material-shell];
+  imports = [
+    inputs.dms.homeModules.dank-material-shell
+    inputs.astropath.homeModules.default
+  ];
 
   options.kuri.dank-shell.enable = lib.mkEnableOption "DankMaterialShell desktop bar";
 
   config = lib.mkIf cfg.enable {
+    # Plugin mail notmuch — déposé dans ~/.config/DankMaterialShell/plugins/,
+    # à activer ensuite dans DMS (Settings → Plugins → Astropath). L'état
+    # d'activation va dans plugin_settings.json (séparé du settings.json figé).
+    programs.astropath.enable = true;
+
     programs.dank-material-shell = {
       enable = true;
       systemd.enable = true;

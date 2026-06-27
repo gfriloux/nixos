@@ -23,6 +23,27 @@
         "type": "github"
       }
     },
+    "astropath": {
+      "inputs": {
+        "flake-parts": "flake-parts",
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1782567364,
+        "narHash": "sha256-aM3//spsS+sTDc/snG73tgq82c6y52Xr/su7auPuNko=",
+        "owner": "gfriloux",
+        "repo": "astropath",
+        "rev": "dae0401243c9a6f797ef975e9b5704371aece405",
+        "type": "github"
+      },
+      "original": {
+        "owner": "gfriloux",
+        "repo": "astropath",
+        "type": "github"
+      }
+    },
     "catppuccin": {
       "inputs": {
         "nixpkgs": [
@@ -188,6 +209,27 @@
       }
     },
     "flake-parts": {
+      "inputs": {
+        "nixpkgs-lib": [
+          "astropath",
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1778716662,
+        "narHash": "sha256-m1Yf0wZ8j1OHjTc2UwHwyQRSnNeSgLJOd7q5Y45hzi4=",
+        "owner": "hercules-ci",
+        "repo": "flake-parts",
+        "rev": "f7c1a2d347e4c52d5fb8d10cb4d94b5884e546fb",
+        "type": "github"
+      },
+      "original": {
+        "owner": "hercules-ci",
+        "repo": "flake-parts",
+        "type": "github"
+      }
+    },
+    "flake-parts_2": {
       "inputs": {
         "nixpkgs-lib": [
           "stc",
@@ -609,6 +651,7 @@
     },
     "root": {
       "inputs": {
+        "astropath": "astropath",
         "disko": "disko",
         "dms": "dms",
         "home-manager": "home-manager",
@@ -761,7 +804,7 @@
         "ansible-recap": "ansible-recap",
         "catppuccin": "catppuccin",
         "disko": "disko_2",
-        "flake-parts": "flake-parts",
+        "flake-parts": "flake-parts_2",
         "gitflow-toolkit": "gitflow-toolkit",
         "home-manager": [
           "home-manager"
