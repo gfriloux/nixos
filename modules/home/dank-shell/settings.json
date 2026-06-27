@@ -483,6 +483,10 @@
           "size": 20
         },
         {
+          "id": "astropath",
+          "enabled": true
+        },
+        {
           "id": "notificationButton",
           "enabled": true
         },
