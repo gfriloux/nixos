@@ -215,6 +215,7 @@ in {
           notmuch tag +inbox +unread -new -- tag:new
           notmuch tag -new -unread +sent -- from:$(cat ${config.sops.secrets."mail/address".path})
           notmuch tag +EGIT -new -unread -inbox -- 'to:git@lists.enlightenment.org'
+          notmuch tag +github -- from:notifications@github.com and tag:new
         '';
       };
     };
