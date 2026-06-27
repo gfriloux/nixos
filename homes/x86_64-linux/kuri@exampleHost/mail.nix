@@ -210,12 +210,15 @@ in {
           xargs -P 5 -I {} notmuch tag +ml -- tag:unread {} < ${config.sops.secrets."mail/tags/mailinglist".path}
           xargs -P 5 -I {} notmuch tag +spam +killed -new -- tag:new {} < ${config.sops.secrets."mail/tags/spam".path}
           xargs -P 5 -I {} notmuch tag +achats -new -- tag:new {} < ${config.sops.secrets."mail/tags/achats".path}
-          xargs -P 5 -I {} notmuch tag +job -new -- tag:new {} < ${config.sops.secrets."mail/tags/job".path}
-          xargs -P 5 -I {} notmuch tag +humanite -new -- tag:new {} < ${config.sops.secrets."mail/tags/humanite".path}
+          xargs -P 5 -I {} notmuch tag +job -- tag:new {} < ${config.sops.secrets."mail/tags/job".path}
+          xargs -P 5 -I {} notmuch tag +humanite -- tag:new {} < ${config.sops.secrets."mail/tags/humanite".path}
+          xargs -P 5 -I {} notmuch tag +creditagricole -- tag:new {} < ${config.sops.secrets."mail/tags/creditagricole".path}
           notmuch tag +inbox +unread -new -- tag:new
           notmuch tag -new -unread +sent -- from:$(cat ${config.sops.secrets."mail/address".path})
-          notmuch tag +EGIT -new -unread -inbox -- 'to:git@lists.enlightenment.org'
-          notmuch tag +github -- from:notifications@github.com and tag:new
+          notmuch tag +EGIT -inbox -- 'to:git@lists.enlightenment.org'
+          notmuch tag +github -- from:notifications@github.com and tag:inbox
+          notmuch tag '+oss-security' 'subject:\[oss-security\]' and tag:inbox
+          notmuch tag +free -- 'from:freemobile@free-mobile.fr' and tag:inbox
         '';
       };
     };
