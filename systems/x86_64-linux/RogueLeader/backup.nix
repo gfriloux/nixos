@@ -24,6 +24,7 @@
       "/srv/docker/crowdsec.rogueleader.home"
       "/srv/docker/status.friloux.me"
       "/srv/docker/cuisine.home.friloux.me"
+      "/srv/docker/docs.friloux.me"
     ];
     repo = "ssh://backup@storage2.friloux.me/~/rogueleader.friloux.me";
 
