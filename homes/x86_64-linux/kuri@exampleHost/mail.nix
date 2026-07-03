@@ -31,6 +31,7 @@ in {
       "mail/tags/achats" = {};
       "mail/tags/mailinglist" = {};
       "mail/tags/spam" = {};
+      "mail/tags/creditagricole" = {};
     };
   };
 
