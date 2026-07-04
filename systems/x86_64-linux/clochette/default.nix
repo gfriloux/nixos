@@ -7,7 +7,6 @@
     inputs.sops-nix.nixosModules.sops
     ./hardware-configuration.nix
     ./docker-immich.nix
-    ./docker-wow-cp.nix
     ./backup.nix
     ./network.nix
     ./users.nix
