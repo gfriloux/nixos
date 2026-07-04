@@ -171,7 +171,7 @@ BORG_RSH="ssh -i /run/secrets/services/borg/key/private" \
 borg list ssh://backup@storage2.friloux.me/~/rogueleader.friloux.me
 
 # Stop daemons
-systemctl stop docker-uptime-kuma docker-mealie docker-borg-ui
+systemctl stop docker-papra docker-uptime-kuma docker-mealie docker-borg-ui
 
 # Restore from /
 cd /
@@ -181,7 +181,7 @@ borg extract --progress \
   ssh://backup@storage2.friloux.me/~/rogueleader.friloux.me::ARCHIVE_NAME
 
 # Restart services
-systemctl start docker-uptime-kuma docker-mealie docker-borg-ui
+systemctl start docker-papra docker-uptime-kuma docker-mealie docker-borg-ui
 ```
 
 ## Step 9 — Final Verification

@@ -11,7 +11,6 @@ VPS Scaleway hébergeant les services web personnels, exposés publiquement via 
 |---|---|---|
 | traefik | — | Reverse proxy, TLS Let's Encrypt |
 | crowdsec | — | WAF, protection DDoS, plugin Traefik |
-| papra | docs.friloux.me | Gestion documentaire |
 | wow-cp-bookstack | wow-cp.friloux.me | Wiki |
 | wow-cp-mariadb | — | Base MariaDB pour BookStack |
 | wow-cp-mysqldump | — | Dump SQL quotidien |
@@ -39,7 +38,6 @@ Toutes les données persistantes des containers sont sous `/srv/docker/` :
 │   ├── conf/         # traefik.yml (symlink Nix), traefik_dynamic.yml (sops)
 │   ├── acme.json     # Certificats Let's Encrypt
 │   └── logs/         # Logs d'accès (rotatés quotidiennement)
-├── docs.friloux.me/  # Données Papra
 ├── wow-cp.friloux.me/
 │   ├── data/         # Fichiers BookStack
 │   ├── db/           # Données MariaDB
@@ -55,7 +53,7 @@ Toutes les données persistantes des containers sont sous `/srv/docker/` :
 
 Borg backup quotidien vers `ssh://backup@storage2.friloux.me/~/clochette.friloux.me`.
 
-Chemins sauvegardés : `/srv/docker/traefik`, `docs.friloux.me`, `wow-cp.friloux.me`,
+Chemins sauvegardés : `/srv/docker/traefik`, `wow-cp.friloux.me`,
 `crowdsec*.`, `photos.friloux.me/upload`, `/home/weechat/.config/weechat`.
 
 :::note[Marginalia]

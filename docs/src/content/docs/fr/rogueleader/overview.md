@@ -1,6 +1,6 @@
 ---
 title: rogueleader — Serveur Dédié
-description: Configuration du serveur dédié domestique — services Docker internes, backup.
+description: Configuration du serveur dédié domestique — services Docker internes, Papra public via Traefik, backup.
 ---
 
 Serveur dédié domestique hébergeant les services internes : monitoring de disponibilité, gestion de recettes, interface backup.
@@ -20,13 +20,25 @@ Serveur dédié domestique hébergeant les services internes : monitoring de dis
 
 | Container | Rôle |
 |---|---|
+| `traefik` | Reverse proxy + TLS (Let's Encrypt) |
+| `crowdsec` | WAF / protection DDoS |
 | `borg-ui` | Interface web Borg backup |
 | `mealie` | Gestionnaire de recettes |
 | `uptime-kuma` | Monitoring de disponibilité externe |
+| `papra` | Gestion documentaire (docs.friloux.me) |
+
+## Exposition Publique
+
+Papra (`docs.friloux.me`) est servi vers la noosphère via Traefik + CrowdSec,
+exactement comme sur clochette. RogueLeader étant sur le réseau local, la box
+redirige les ports 80/443 vers `192.168.0.10` ; les certificats Let's Encrypt
+sont émis via le challenge TLS-ALPN-01 sur le port 443. Les autres services
+restent internes.
 
 ## Backup
 
 Configuré avec borgbackup vers `storage2.friloux.me` (même pattern que clochette).
+Les données Papra (`/srv/docker/docs.friloux.me`) sont incluses dans le backup.
 
 ## Notes Importantes
 

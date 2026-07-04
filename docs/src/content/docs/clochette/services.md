@@ -50,8 +50,8 @@ The `env` file contains plain `KEY=value` pairs (decrypted by sops-nix).
 Rootless containers have a dedicated system user declared in the same file:
 
 ```nix
-users.users.papra = { uid = 65001; isSystemUser = true; group = "papra"; ... };
-users.groups.papra = { gid = 65001; };
+users.users.wow-cp = { uid = 65002; isSystemUser = true; group = "wow-cp"; ... };
+users.groups.wow-cp = { gid = 65002; };
 ```
 
 Data directories are created with correct ownership via `systemd.tmpfiles.rules`.

@@ -29,7 +29,7 @@ docker ps --format "table {{.Names}}\t{{.Status}}\t{{.RunningFor}}"
 docker inspect --format='{{.Name}} : {{.State.Health.Status}}' traefik
 
 # Santé de tous les containers surveillés
-for c in traefik crowdsec papra wow-cp-bookstack wow-cp-mariadb immich-server immich-postgres; do
+for c in traefik crowdsec wow-cp-bookstack wow-cp-mariadb immich-server immich-postgres; do
   echo "$c : $(docker inspect --format='{{.State.Health.Status}}' $c 2>/dev/null || echo 'not found')"
 done
 ```
@@ -40,7 +40,6 @@ done
 |---|---|
 | traefik | `curl -s http://127.0.0.1:8080/ping` |
 | crowdsec | `curl -s http://localhost:8080/health` |
-| papra | `curl -s http://localhost:1221/api/health` |
 | bookstack | `curl -s http://localhost/status` |
 | mariadb | `docker exec wow-cp-mariadb mysqladmin ping -h localhost --silent` |
 | immich | `curl -s http://localhost:2283/api/server/ping` |
@@ -80,7 +79,7 @@ systemctl start borgbackup-check
 ```bash
 # Logs d'un service Docker via journald
 journalctl -u docker-traefik -f
-journalctl -u docker-papra --since "1 hour ago"
+journalctl -u docker-wow-cp-bookstack --since "1 hour ago"
 
 # Logs applicatifs Traefik (fichier rotaté)
 tail -f /srv/docker/traefik/logs/traefik.log

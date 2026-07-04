@@ -1,6 +1,6 @@
 ---
 title: RogueLeader — The Home-Shrine
-description: Domestic dedicated server with Borg, Mealie, and Uptime Kuma on the local network.
+description: Domestic dedicated server with Borg, Mealie, Uptime Kuma, and Papra (public via Traefik).
 ---
 
 Behold RogueLeader — the home-shrine, tending the domestic sanctuary on the local network frontier at `192.168.0.10`.
@@ -20,13 +20,24 @@ Behold RogueLeader — the home-shrine, tending the domestic sanctuary on the lo
 
 | Daemon | Role |
 |---|---|
+| `traefik` | Reverse proxy + TLS (Let's Encrypt) |
+| `crowdsec` | WAF / DDoS guard |
 | `borg-ui` | Borg backup web interface |
 | `mealie` | Recipe manager |
 | `uptime-kuma` | External availability monitoring |
+| `papra` | Document management (docs.friloux.me) |
+
+## Public Exposure
+
+Papra (`docs.friloux.me`) is served to the noosphere through Traefik + CrowdSec,
+exactly like on clochette. Since RogueLeader sits on the local network, the box
+port-forwards 80/443 to `192.168.0.10`; Let's Encrypt certificates are issued via
+the TLS-ALPN-01 challenge on port 443. The remaining daemons stay internal.
 
 ## Archive & Backup
 
 Configured with borgbackup toward `storage2.friloux.me` (same pattern as clochette).
+Papra data (`/srv/docker/docs.friloux.me`) is included in the backup set.
 
 ## Important Notes
 

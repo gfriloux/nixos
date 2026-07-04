@@ -50,8 +50,8 @@ Le fichier `env` contient des paires `CLE=valeur` en clair (déchiffrées par so
 Les containers rootless ont un utilisateur système dédié déclaré dans le même fichier :
 
 ```nix
-users.users.papra = { uid = 65001; isSystemUser = true; group = "papra"; ... };
-users.groups.papra = { gid = 65001; };
+users.users.wow-cp = { uid = 65002; isSystemUser = true; group = "wow-cp"; ... };
+users.groups.wow-cp = { gid = 65002; };
 ```
 
 Les répertoires de données sont créés avec le bon propriétaire via `systemd.tmpfiles.rules`.

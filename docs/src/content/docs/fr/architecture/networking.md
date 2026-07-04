@@ -3,7 +3,7 @@ title: Réseau & Noosphère
 description: Topologie du réseau — Tailscale, DNS, réseaux Docker, pare-feu.
 ---
 
-L'infrastructure se connecte à Internet via clochette seul ; tous les accès inter-machines passent par la noosphère Tailscale.
+L'infrastructure s'expose à Internet via clochette et via RogueLeader (redirection de port de la box) ; tous les accès inter-machines passent par la noosphère Tailscale.
 
 ## Topologie
 
@@ -12,9 +12,13 @@ Internet
     │
     ├── clochette (51.159.34.135)
     │       └── Traefik :80/:443
-    │               ├── docs.friloux.me      → papra
     │               ├── wow-cp.friloux.me    → bookstack
     │               └── photos.friloux.me    → immich
+    │
+    ├── box maison (redirection de port :80/:443)
+    │       └── RogueLeader (192.168.0.10)
+    │               └── Traefik :80/:443
+    │                       └── docs.friloux.me  → papra
     │
     └── Tailscale (100.x.x.x)
             ├── exampleHost

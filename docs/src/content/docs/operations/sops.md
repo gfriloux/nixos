@@ -90,8 +90,6 @@ services:
             traefik_dynamic.yml: "..."
     crowdsec:
         env: "..."
-    papra:
-        env: "..."
     wow-cp:
         env_bookstack: "..."
         env_mariadb: "..."

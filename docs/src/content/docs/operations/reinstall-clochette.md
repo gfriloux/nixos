@@ -265,7 +265,7 @@ Restore the most recent archive:
 
 ```bash
 # Stop daemons before restoration
-systemctl stop docker-papra docker-wow-cp-bookstack docker-wow-cp-mariadb \
+systemctl stop docker-wow-cp-bookstack docker-wow-cp-mariadb \
                 docker-immich-server docker-immich-postgres
 
 # Restore (from /)
@@ -276,7 +276,7 @@ borg extract --progress \
   ssh://backup@storage2.friloux.me/~/clochette.friloux.me::clochette-2025-05-16T03:00:01
 
 # Restart services
-systemctl start docker-papra docker-wow-cp-bookstack docker-wow-cp-mariadb \
+systemctl start docker-wow-cp-bookstack docker-wow-cp-mariadb \
                 docker-immich-server docker-immich-postgres
 ```
 
@@ -288,7 +288,7 @@ docker ps --format "table {{.Names}}\t{{.Status}}"
 
 # Health of each daemon
 docker inspect --format='{{.Name}} → {{.State.Health.Status}}' \
-  traefik crowdsec papra wow-cp-bookstack wow-cp-mariadb immich-server immich-postgres
+  traefik crowdsec wow-cp-bookstack wow-cp-mariadb immich-server immich-postgres
 
 # Traefik certificates — Let's Encrypt active
 docker exec traefik traefik healthcheck
@@ -302,6 +302,5 @@ systemctl status borgbackup-job-remote
 
 Verify externally: access from a browser:
 
-- `https://docs.friloux.me` (Papra)
 - `https://wow-cp.friloux.me` (BookStack)
 - `https://photos.friloux.me` (Immich)

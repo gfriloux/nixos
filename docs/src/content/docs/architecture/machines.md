@@ -46,7 +46,6 @@ Behold the three shrines that form the KURI Forge: the workstation where the Tec
 |---|---|---|
 | traefik | — | Reverse proxy, TLS (Let's Encrypt) |
 | crowdsec | — | WAF / DDoS guard |
-| papra | docs.friloux.me | Document management |
 | wow-cp-bookstack | wow-cp.friloux.me | Wiki |
 | wow-cp-mariadb | — | BookStack database |
 | wow-cp-mysqldump | — | Database backup cron |
@@ -66,4 +65,6 @@ Behold the three shrines that form the KURI Forge: the workstation where the Tec
 | sops | Age key derived from SSH host key |
 | stateVersion | `25.11` |
 
-**Bound daemons:** borg-ui, mealie, uptime-kuma.
+**Bound daemons:** borg-ui, mealie, uptime-kuma, and papra
+(docs.friloux.me — exposed publicly through Traefik + CrowdSec, reached
+via a box port-forward of 80/443 to 192.168.0.10).

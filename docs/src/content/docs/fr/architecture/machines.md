@@ -46,7 +46,6 @@ Services Docker :
 |---|---|---|
 | traefik | — | Reverse proxy + TLS Let's Encrypt |
 | crowdsec | — | WAF / protection DDoS |
-| papra | docs.friloux.me | Gestion documentaire |
 | wow-cp-bookstack | wow-cp.friloux.me | Wiki |
 | wow-cp-mariadb | — | Base de données BookStack |
 | wow-cp-mysqldump | — | Backup SQL cron |
@@ -66,4 +65,6 @@ Services Docker :
 | sops | Clé age dérivée de la clé SSH host |
 | stateVersion | `25.11` |
 
-Services Docker : borg-ui, mealie, uptime-kuma.
+Services Docker : borg-ui, mealie, uptime-kuma, et papra
+(docs.friloux.me — exposé publiquement via Traefik + CrowdSec, atteint
+par une redirection de port 80/443 de la box vers 192.168.0.10).
