@@ -13,6 +13,7 @@
     ./docker-uptime-kuma.nix
     ./docker-mealie.nix
     ./docker-papra.nix
+    ./docker-wow-cp.nix
     ./users.nix
   ];
 
