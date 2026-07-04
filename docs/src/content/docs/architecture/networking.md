@@ -12,13 +12,13 @@ Internet
     │
     ├── clochette (51.159.34.135)
     │       └── Traefik :80/:443
-    │               ├── wow-cp.friloux.me    → bookstack
     │               └── photos.friloux.me    → immich
     │
     ├── home box (port-forward :80/:443)
     │       └── RogueLeader (192.168.0.10)
     │               └── Traefik :80/:443
-    │                       └── docs.friloux.me  → papra
+    │                       ├── docs.friloux.me    → papra
+    │                       └── wow-cp.friloux.me  → bookstack
     │
     └── Tailscale (100.x.x.x)
             ├── exampleHost
@@ -55,7 +55,6 @@ DNS       : 51.159.47.28, 51.159.47.26  (Scaleway nameservers)
 | Network | Purpose |
 |---|---|
 | `web` | Shared: Traefik ↔ exposed daemons |
-| `wow-cp` | Internal: BookStack ↔ MariaDB ↔ mysqldump |
 | `immich` | Internal: Immich ↔ PostgreSQL ↔ Redis |
 
 ## Open Ports on clochette

@@ -1,6 +1,6 @@
 ---
 title: rogueleader — Serveur Dédié
-description: Configuration du serveur dédié domestique — services Docker internes, Papra public via Traefik, backup.
+description: Configuration du serveur dédié domestique — services Docker internes, Papra et BookStack publics via Traefik, backup.
 ---
 
 Serveur dédié domestique hébergeant les services internes : monitoring de disponibilité, gestion de recettes, interface backup.
@@ -26,14 +26,17 @@ Serveur dédié domestique hébergeant les services internes : monitoring de dis
 | `mealie` | Gestionnaire de recettes |
 | `uptime-kuma` | Monitoring de disponibilité externe |
 | `papra` | Gestion documentaire (docs.friloux.me) |
+| `wow-cp-bookstack` | Wiki BookStack (wow-cp.friloux.me) |
+| `wow-cp-mariadb` | MariaDB pour BookStack |
+| `wow-cp-mysqldump` | Dump SQL cron |
 
 ## Exposition Publique
 
-Papra (`docs.friloux.me`) est servi vers la noosphère via Traefik + CrowdSec,
-exactement comme sur clochette. RogueLeader étant sur le réseau local, la box
-redirige les ports 80/443 vers `192.168.0.10` ; les certificats Let's Encrypt
-sont émis via le challenge TLS-ALPN-01 sur le port 443. Les autres services
-restent internes.
+Papra (`docs.friloux.me`) et BookStack (`wow-cp.friloux.me`) sont servis vers la
+noosphère via Traefik + CrowdSec, exactement comme sur clochette. RogueLeader étant
+sur le réseau local, la box redirige les ports 80/443 vers `192.168.0.10` ; les
+certificats Let's Encrypt sont émis via le challenge TLS-ALPN-01 sur le port 443.
+Les autres services restent internes.
 
 ## Backup
 

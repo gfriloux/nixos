@@ -268,8 +268,7 @@ Restaurer l'archive la plus récente :
 
 ```bash
 # Arrêter les containers avant restauration
-systemctl stop docker-wow-cp-bookstack docker-wow-cp-mariadb \
-                docker-immich-server docker-immich-postgres
+systemctl stop docker-immich-server docker-immich-postgres
 
 # Restaurer (depuis /)
 cd /
@@ -279,8 +278,7 @@ borg extract --progress \
   ssh://backup@storage2.friloux.me/~/clochette.friloux.me::clochette-2025-05-16T03:00:01
 
 # Redémarrer les services
-systemctl start docker-wow-cp-bookstack docker-wow-cp-mariadb \
-                docker-immich-server docker-immich-postgres
+systemctl start docker-immich-server docker-immich-postgres
 ```
 
 ## Étape 11 — Vérification Finale
@@ -291,7 +289,7 @@ docker ps --format "table {{.Names}}\t{{.Status}}"
 
 # Santé de chaque container
 docker inspect --format='{{.Name}} → {{.State.Health.Status}}' \
-  traefik crowdsec wow-cp-bookstack wow-cp-mariadb immich-server immich-postgres
+  traefik crowdsec immich-server immich-postgres immich-redis
 
 # Certificats Traefik — Let's Encrypt actif
 docker exec traefik traefik healthcheck
@@ -305,5 +303,4 @@ systemctl status borgbackup-job-remote
 
 Vérification externe : accéder depuis un navigateur à :
 
-- `https://wow-cp.friloux.me` (BookStack)
 - `https://photos.friloux.me` (Immich)

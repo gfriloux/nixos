@@ -11,9 +11,6 @@ Behold clochette — the VPS-shrine exposed to the noosphere, where bound daemon
 |---|---|---|
 | traefik | — | Reverse proxy, TLS (Let's Encrypt) |
 | crowdsec | — | WAF, DDoS guard, Traefik plugin |
-| wow-cp-bookstack | wow-cp.friloux.me | Wiki |
-| wow-cp-mariadb | — | MariaDB for BookStack |
-| wow-cp-mysqldump | — | SQL backup cron |
 | immich-server | photos.friloux.me | Photo gallery (self-hosted) |
 | immich-postgres | — | PostgreSQL for Immich |
 | immich-redis | — | Redis cache for Immich |
@@ -38,10 +35,6 @@ All persistent bound daemon data resides beneath `/srv/docker/`:
 │   ├── conf/         # traefik.yml (Nix symlink), traefik_dynamic.yml (sops)
 │   ├── acme.json     # Let's Encrypt certificates
 │   └── logs/         # Access logs (rotated daily)
-├── wow-cp.friloux.me/
-│   ├── data/         # BookStack files
-│   ├── db/           # MariaDB data
-│   └── dumps/        # mysqldump SQL backups
 ├── photos.friloux.me/
 │   ├── upload/       # Immich photos
 │   └── db/           # PostgreSQL data
@@ -53,7 +46,7 @@ All persistent bound daemon data resides beneath `/srv/docker/`:
 
 Daily Borg backup to `ssh://backup@storage2.friloux.me/~/clochette.friloux.me`.
 
-Backed-up paths: `/srv/docker/traefik`, `wow-cp.friloux.me`,
+Backed-up paths: `/srv/docker/traefik`,
 `crowdsec*.`, `photos.friloux.me/upload`, `/home/weechat/.config/weechat`.
 
 :::note[Marginalia]

@@ -3,7 +3,7 @@ title: BookStack
 description: Wiki personnel — stack Docker, données, health checks, backup/restauration.
 ---
 
-Wiki personnel exposé à <https://wow-cp.friloux.me>.
+Wiki personnel, chronique du savoir et des lores. Tourne sur RogueLeader, exposé publiquement à <https://wow-cp.friloux.me> via Traefik + CrowdSec (redirection de port 80/443 de la box vers `192.168.0.10`).
 
 ## Stack
 

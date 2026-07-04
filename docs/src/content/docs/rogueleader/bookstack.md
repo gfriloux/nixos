@@ -3,7 +3,7 @@ title: BookStack — The Personal Wiki
 description: Wiki service at wow-cp.friloux.me with MariaDB backend and automated backups.
 ---
 
-BookStack is the personal wiki, a chronicle of lore and knowledge. Accessible at <https://wow-cp.friloux.me>.
+BookStack is the personal wiki, a chronicle of lore and knowledge. Runs on RogueLeader, exposed publicly at <https://wow-cp.friloux.me> through Traefik + CrowdSec (box port-forward of 80/443 to `192.168.0.10`).
 
 ## Stack
 

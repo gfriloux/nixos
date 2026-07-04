@@ -46,9 +46,6 @@ Services Docker :
 |---|---|---|
 | traefik | — | Reverse proxy + TLS Let's Encrypt |
 | crowdsec | — | WAF / protection DDoS |
-| wow-cp-bookstack | wow-cp.friloux.me | Wiki |
-| wow-cp-mariadb | — | Base de données BookStack |
-| wow-cp-mysqldump | — | Backup SQL cron |
 | immich-server | photos.friloux.me | Galerie photos |
 | immich-postgres | — | Base de données Immich |
 | immich-redis | — | Cache Immich |
@@ -65,6 +62,8 @@ Services Docker :
 | sops | Clé age dérivée de la clé SSH host |
 | stateVersion | `25.11` |
 
-Services Docker : borg-ui, mealie, uptime-kuma, et papra
-(docs.friloux.me — exposé publiquement via Traefik + CrowdSec, atteint
-par une redirection de port 80/443 de la box vers 192.168.0.10).
+Services Docker : borg-ui, mealie, uptime-kuma, papra
+(docs.friloux.me), ainsi que la stack BookStack wow-cp (wow-cp.friloux.me —
+bookstack + mariadb + mysqldump). papra et BookStack sont tous deux exposés
+publiquement via Traefik + CrowdSec, atteints par une redirection de port
+80/443 de la box vers 192.168.0.10.

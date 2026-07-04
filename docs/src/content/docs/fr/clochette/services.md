@@ -26,8 +26,8 @@ Les containers à usage interne (bases de données) ont leur propre réseau isol
 
 ```nix
 networks = ["web"];          # exposé Traefik
-networks = ["wow-cp"];       # interne seulement
-networks = ["wow-cp" "web"]; # interne + Traefik
+networks = ["immich"];       # interne seulement
+networks = ["immich" "web"]; # interne + Traefik
 ```
 
 Les réseaux sont créés par des services systemd `docker-network-<nom>`
@@ -50,8 +50,8 @@ Le fichier `env` contient des paires `CLE=valeur` en clair (déchiffrées par so
 Les containers rootless ont un utilisateur système dédié déclaré dans le même fichier :
 
 ```nix
-users.users.wow-cp = { uid = 65002; isSystemUser = true; group = "wow-cp"; ... };
-users.groups.wow-cp = { gid = 65002; };
+users.users.immich-postgres = { uid = 999; isSystemUser = true; group = "immich-postgres"; ... };
+users.groups.immich-postgres = { gid = 999; };
 ```
 
 Les répertoires de données sont créés avec le bon propriétaire via `systemd.tmpfiles.rules`.
@@ -61,8 +61,8 @@ Les répertoires de données sont créés avec le bon propriétaire via `systemd
 Les dépendances inter-containers sont déclarées avec `dependsOn` :
 
 ```nix
-"wow-cp-bookstack" = {
-  dependsOn = ["wow-cp-mariadb"];
+"immich-server" = {
+  dependsOn = ["immich-postgres" "immich-redis"];
   ...
 };
 ```

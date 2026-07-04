@@ -90,10 +90,6 @@ services:
             traefik_dynamic.yml: "..."
     crowdsec:
         env: "..."
-    wow-cp:
-        env_bookstack: "..."
-        env_mariadb: "..."
-        env_mysqldump: "..."
     immich:
         env: "..."
     borg:

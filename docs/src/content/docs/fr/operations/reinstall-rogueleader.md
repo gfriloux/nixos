@@ -173,7 +173,8 @@ BORG_RSH="ssh -i /run/secrets/services/borg/key/private" \
 borg list ssh://backup@storage2.friloux.me/~/rogueleader.friloux.me
 
 # Arrêter les containers
-systemctl stop docker-papra docker-uptime-kuma docker-mealie docker-borg-ui
+systemctl stop docker-papra docker-uptime-kuma docker-mealie docker-borg-ui \
+                docker-wow-cp-bookstack docker-wow-cp-mariadb docker-wow-cp-mysqldump
 
 # Restaurer depuis /
 cd /
@@ -183,7 +184,8 @@ borg extract --progress \
   ssh://backup@storage2.friloux.me/~/rogueleader.friloux.me::ARCHIVE_NAME
 
 # Redémarrer les services
-systemctl start docker-papra docker-uptime-kuma docker-mealie docker-borg-ui
+systemctl start docker-papra docker-uptime-kuma docker-mealie docker-borg-ui \
+                docker-wow-cp-bookstack docker-wow-cp-mariadb docker-wow-cp-mysqldump
 ```
 
 ## Étape 9 — Vérification Finale
