@@ -3,3 +3,6 @@
 .pre-commit-config.yaml
 result
 docs/book/
+docs/node_modules/
+docs/dist/
+docs/.astro/

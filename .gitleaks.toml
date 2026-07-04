@@ -1,0 +1,16 @@
+# Gitleaks config for the gitleaks purity seal (stc.lib.puritySeals.<system>.gitleaks).
+# Keep the upstream ruleset, allowlist only values that are public by design or
+# documentation placeholders — verified non-sensitive.
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Public keys and documentation placeholders — not secrets."
+regexes = [
+  # Placeholder age secret key used in the reinstall/backup docs (all-X body).
+  '''AGE-SECRET-KEY-1X+''',
+  # age public recipient keys — public by design (sops recipients, doc examples).
+  '''age1[0-9a-z]{58}''',
+  # Guillaume's GPG signing key ID (public fingerprint, git commit signing).
+  '''52381C92A5071464F3160D257D4216D8BDDA9A09''',
+]

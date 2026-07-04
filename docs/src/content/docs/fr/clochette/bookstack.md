@@ -17,7 +17,7 @@ Réseau interne dédié `wow-cp` + réseau `web` pour l'exposition Traefik.
 
 ## Données
 
-```
+```text
 /srv/docker/wow-cp.friloux.me/
 ├── data/    # Fichiers BookStack (uploads, config linuxserver)
 ├── db/      # Données MariaDB
@@ -63,6 +63,7 @@ systemctl start docker-wow-cp-bookstack
 ## Secrets
 
 Trois fichiers env séparés :
+
 - `services/wow-cp/env_bookstack` : config BookStack (APP_KEY, DB_HOST, DB_PASSWORD…)
 - `services/wow-cp/env_mariadb` : MYSQL_ROOT_PASSWORD, MYSQL_DATABASE…
 - `services/wow-cp/env_mysqldump` : credentials mysqldump

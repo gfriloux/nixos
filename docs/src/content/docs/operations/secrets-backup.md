@@ -67,7 +67,7 @@ age-keygen -y /etc/sops/age/keys.txt
 
 Expected output:
 
-```
+```text
 age1xr32hdvanup0zk63v8hrcv2u2c09wplz6fd42w47mkjrd49j39xqaqqckq
 ```
 
@@ -81,7 +81,7 @@ sudo cat /etc/sops/age/keys.txt
 
 Content looks like:
 
-```
+```text
 # created: 2024-01-01T00:00:00+01:00
 # public key: age1xr32hdvanup0zk63v8hrcv2u2c09wplz6fd42w47mkjrd49j39xqaqqckq
 AGE-SECRET-KEY-1XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
@@ -120,14 +120,14 @@ These must execute without error. If sops returns `could not decrypt`, the key i
 
 Situation: exampleHost was reinstalled, `/etc/sops/age/keys.txt` no longer exists.
 
-**1. Create the directory**
+## 1. Create the directory
 
 ```bash
 sudo mkdir -p /etc/sops/age
 sudo chmod 750 /etc/sops/age
 ```
 
-**2. Restore the key from backup**
+## 2. Restore the key from backup
 
 Paste the complete backup content (full private key) into the file:
 
@@ -141,14 +141,14 @@ AGE-SECRET-KEY-1XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 EOF
 ```
 
-**3. Correct permissions**
+## 3. Correct permissions
 
 ```bash
 sudo chmod 640 /etc/sops/age/keys.txt
 sudo chown root:users /etc/sops/age/keys.txt
 ```
 
-**4. Verify**
+## 4. Verify
 
 ```bash
 age-keygen -y /etc/sops/age/keys.txt
@@ -158,7 +158,7 @@ sops -d secrets/kuri_exampleHost.yaml
 # Must display decrypted content without error
 ```
 
-**5. Redeploy NixOS**
+## 5. Redeploy NixOS
 
 ```bash
 just install_examplehost --ask-sudo-password
@@ -183,7 +183,7 @@ nix run nixpkgs#ssh-to-age -- -i /etc/ssh/ssh_host_ed25519_key.pub
 
 Example output:
 
-```
+```text
 age18594hnd4mk3736a36a5fqc5w55sanac86tv8du0hz67rfk558srs3y9jwa
 ```
 

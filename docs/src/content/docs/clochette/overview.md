@@ -33,7 +33,7 @@ SSH accepts ed25519 and sk-ssh-ed25519 (YubiKey) keys.
 
 All persistent bound daemon data resides beneath `/srv/docker/`:
 
-```
+```text
 /srv/docker/
 ├── traefik/
 │   ├── conf/         # traefik.yml (Nix symlink), traefik_dynamic.yml (sops)

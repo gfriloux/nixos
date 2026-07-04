@@ -7,7 +7,7 @@ L'infrastructure se connecte à Internet via clochette seul ; tous les accès in
 
 ## Topologie
 
-```
+```text
 Internet
     │
     ├── clochette (51.159.34.135)
@@ -42,7 +42,7 @@ ce qui ouvre tous les ports depuis la noosphère Tailscale.
 
 Configuration statique (pas de DHCP) :
 
-```
+```text
 IP       : 51.159.34.135 / 24
 Passerelle: 51.159.34.1
 DNS      : 51.159.47.28, 51.159.47.26  (Scaleway)

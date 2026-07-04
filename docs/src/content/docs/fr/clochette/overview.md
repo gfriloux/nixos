@@ -33,7 +33,7 @@ SSH accepte les clés ed25519 et sk-ssh-ed25519 (YubiKey).
 
 Toutes les données persistantes des containers sont sous `/srv/docker/` :
 
-```
+```text
 /srv/docker/
 ├── traefik/
 │   ├── conf/         # traefik.yml (symlink Nix), traefik_dynamic.yml (sops)

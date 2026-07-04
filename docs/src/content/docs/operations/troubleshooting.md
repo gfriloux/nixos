@@ -90,22 +90,26 @@ sops or missing type errors are usually explicit.
 Verification order:
 
 1. Is Tailscale active on both shrines?
+
    ```bash
    tailscale status  # from exampleHost
    ```
 
 2. Is clochette reachable via Tailscale ping?
+
    ```bash
    tailscale ping clochette
    ```
 
 3. Is the SSH daemon running on clochette?
    Use Scaleway serial console:
+
    ```bash
    systemctl status sshd
    ```
 
 4. Is the firewall rule in place?
+
    ```bash
    sudo nft list ruleset | grep 100.64
    ```
@@ -144,6 +148,7 @@ borg info ssh://backup@storage2.friloux.me/~/clochette.friloux.me
 ```
 
 Common causes:
+
 - Backup server SSH host key changed → update `backup.nix` `knownHostsFiles`
 - Backup server disk full
 - Borg lock held: `borg break-lock ssh://backup@storage2.friloux.me/~/clochette.friloux.me`

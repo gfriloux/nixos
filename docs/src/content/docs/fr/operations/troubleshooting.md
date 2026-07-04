@@ -90,22 +90,26 @@ les erreurs sops ou de type manquant sont souvent explicites.
 Ordre de vérification :
 
 1. Tailscale est-il actif sur les deux machines ?
+
    ```bash
    tailscale status  # depuis exampleHost
    ```
 
 2. clochette est-elle joignable via ping Tailscale ?
+
    ```bash
    tailscale ping clochette
    ```
 
 3. Le démon SSH tourne-t-il sur clochette ?
    Utiliser la console série Scaleway pour vérifier :
+
    ```bash
    systemctl status sshd
    ```
 
 4. La règle firewall est-elle en place ?
+
    ```bash
    sudo nft list ruleset | grep 100.64
    ```
@@ -144,6 +148,7 @@ borg info ssh://backup@storage2.friloux.me/~/clochette.friloux.me
 ```
 
 Causes fréquentes :
+
 - Clé SSH du serveur de backup changée → mettre à jour `backup.nix` `knownHostsFiles`
 - Espace disque plein sur le serveur de backup
 - Verrou Borg bloqué : `borg break-lock ssh://backup@storage2.friloux.me/~/clochette.friloux.me`

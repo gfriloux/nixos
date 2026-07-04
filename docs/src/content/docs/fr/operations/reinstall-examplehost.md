@@ -101,10 +101,12 @@ cd /tmp/nixos
 :::note[Marginalia]
 Si le dépôt est privé ou GitHub inaccessible, brancher une USB contenant
 une copie du dépôt et monter-la :
+
 ```bash
 mount /dev/sdX1 /mnt/usb
 cp -r /mnt/usb/nixos /tmp/nixos
 ```
+
 :::
 
 ## Étape 4 — Partitionnement et Formatage avec disko
@@ -121,6 +123,7 @@ sudo nix run github:nix-community/disko/latest -- \
 ```
 
 disko va :
+
 1. Effacer et repartitionner les deux Samsung NVMe
 2. Créer les pools ZFS `bpool` et `rpool` en miroir
 3. Créer les datasets ZFS
@@ -153,7 +156,7 @@ sudo nano /mnt/etc/sops/age/keys.txt
 
 Format attendu :
 
-```
+```text
 # created: 2024-01-01T00:00:00+01:00
 # public key: age1xr32hdvanup0zk63v8hrcv2u2c09wplz6fd42w47mkjrd49j39xqaqqckq
 AGE-SECRET-KEY-1XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
@@ -203,6 +206,7 @@ Retirer la clé USB au redémarrage. Le système doit booter sur GRUB → NixOS.
 Chercher une entrée "UEFI OS" ou le nom des Samsung NVMe.
 
 Au premier démarrage, les éléments suivants se lancent automatiquement :
+
 - sddm (écran de connexion Plasma 6)
 - Tailscale (démon, pas encore connecté)
 - pipewire, NetworkManager, Docker

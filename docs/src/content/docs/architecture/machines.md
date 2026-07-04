@@ -20,6 +20,7 @@ Behold the three shrines that form the KURI Forge: the workstation where the Tec
 | stateVersion | `24.11` |
 
 **Notable bound daemons and services:**
+
 - Docker (storage driver: ZFS)
 - zrepl (pulls snapshots from storage2.retrohive.fr)
 - Tailscale

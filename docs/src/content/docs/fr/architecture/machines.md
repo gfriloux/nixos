@@ -20,6 +20,7 @@ L'infrastructure consiste en trois hôtes consacrés, chacun ayant un rôle dist
 | stateVersion | `24.11` |
 
 Services système notables :
+
 - Docker (storage driver ZFS)
 - zrepl (tir de backups depuis storage2.retrohive.fr)
 - Tailscale

@@ -79,7 +79,7 @@ blkid /dev/sda1 /dev/sda2 /dev/sda3
 
 Example output:
 
-```
+```text
 /dev/sda1: LABEL="boot" UUID="AAAA-BBBB-..." TYPE="ext2"
 /dev/sda2: LABEL="swap" UUID="CCCC-DDDD-..." TYPE="swap"
 /dev/sda3: LABEL="root" UUID="EEEE-FFFF-..." TYPE="ext4"
@@ -256,7 +256,7 @@ borg list ssh://backup@storage2.friloux.me/~/clochette.friloux.me
 
 Example output:
 
-```
+```text
 clochette-2025-05-16T03:00:01      Fri, 2025-05-16 03:00:05 [...]
 clochette-2025-05-15T03:00:01      Thu, 2025-05-15 03:00:04 [...]
 ```
@@ -301,6 +301,7 @@ systemctl status borgbackup-job-remote
 ```
 
 Verify externally: access from a browser:
+
 - `https://docs.friloux.me` (Papra)
 - `https://wow-cp.friloux.me` (BookStack)
 - `https://photos.friloux.me` (Immich)

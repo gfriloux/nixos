@@ -17,7 +17,7 @@ This Codex chronicles the KURI Forge: the sacred configuration that consecrates 
 
 The complete consecration is versioned in a snowfall-lib NixOS flake.
 
-```
+```text
 systems/x86_64-linux/
 ├── exampleHost/   # The workstation-shrine's configuration
 ├── clochette/     # The VPS-shrine's configuration

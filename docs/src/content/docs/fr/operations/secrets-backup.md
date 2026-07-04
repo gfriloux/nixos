@@ -73,7 +73,7 @@ age-keygen -y /etc/sops/age/keys.txt
 
 Résultat attendu :
 
-```
+```text
 age1xr32hdvanup0zk63v8hrcv2u2c09wplz6fd42w47mkjrd49j39xqaqqckq
 ```
 
@@ -87,7 +87,7 @@ sudo cat /etc/sops/age/keys.txt
 
 Le contenu ressemble à :
 
-```
+```text
 # created: 2024-01-01T00:00:00+01:00
 # public key: age1xr32hdvanup0zk63v8hrcv2u2c09wplz6fd42w47mkjrd49j39xqaqqckq
 AGE-SECRET-KEY-1XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
@@ -126,14 +126,14 @@ Ces commandes doivent s'exécuter sans erreur. Si sops retourne `could not decry
 
 Situation : exampleHost a été réinstallé, la clé `/etc/sops/age/keys.txt` n'existe plus.
 
-**1. Créer le Répertoire**
+## 1. Créer le Répertoire
 
 ```bash
 sudo mkdir -p /etc/sops/age
 sudo chmod 750 /etc/sops/age
 ```
 
-**2. Restaurer la Clé depuis la Sauvegarde**
+## 2. Restaurer la Clé depuis la Sauvegarde
 
 Coller le contenu sauvegardé (clé privée complète) dans le fichier :
 
@@ -147,14 +147,14 @@ AGE-SECRET-KEY-1XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 EOF
 ```
 
-**3. Corriger les Permissions**
+## 3. Corriger les Permissions
 
 ```bash
 sudo chmod 640 /etc/sops/age/keys.txt
 sudo chown root:users /etc/sops/age/keys.txt
 ```
 
-**4. Vérifier**
+## 4. Vérifier
 
 ```bash
 age-keygen -y /etc/sops/age/keys.txt
@@ -164,7 +164,7 @@ sops -d secrets/kuri_exampleHost.yaml
 # Doit afficher le contenu déchiffré sans erreur
 ```
 
-**5. Relancer le Déploiement NixOS**
+## 5. Relancer le Déploiement NixOS
 
 ```bash
 just install
@@ -189,7 +189,7 @@ nix run nixpkgs#ssh-to-age -- -i /etc/ssh/ssh_host_ed25519_key.pub
 
 Exemple de résultat :
 
-```
+```text
 age18594hnd4mk3736a36a5fqc5w55sanac86tv8du0hz67rfk558srs3y9jwa
 ```
 

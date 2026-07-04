@@ -7,7 +7,7 @@ Gestionnaire de documents auto-hébergé exposé à <https://docs.friloux.me>.
 
 ## Données
 
-```
+```text
 /srv/docker/docs.friloux.me/data/
 ├── db/         # Base de données SQLite
 └── documents/  # Fichiers PDF et documents

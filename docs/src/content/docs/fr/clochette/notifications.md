@@ -38,7 +38,7 @@ extraOptions = lib.kuri.docker.mkHealthCheck {
 
 ## Flux de Notification
 
-```
+```text
 Container → unhealthy
     └── docker-health-watch@ → docker kill <container>
             └── systemd détecte la mort → restart

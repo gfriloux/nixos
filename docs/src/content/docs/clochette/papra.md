@@ -3,11 +3,11 @@ title: Papra — Document Management
 description: Self-hosted document vault accessible at docs.friloux.me.
 ---
 
-Papra keeps personal documents safe in a sealed vault. Accessible at https://docs.friloux.me.
+Papra keeps personal documents safe in a sealed vault. Accessible at <https://docs.friloux.me>.
 
 ## Data Vault
 
-```
+```text
 /srv/docker/docs.friloux.me/data/
 ├── db/         # SQLite database
 └── documents/  # PDF and document files

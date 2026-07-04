@@ -437,7 +437,7 @@
     },
     "flake-utils_6": {
       "inputs": {
-        "systems": "systems_7"
+        "systems": "systems_6"
       },
       "locked": {
         "lastModified": 1694529238,
@@ -522,29 +522,6 @@
       "original": {
         "owner": "nix-community",
         "repo": "impermanence",
-        "type": "github"
-      }
-    },
-    "nix-checks": {
-      "inputs": {
-        "nixpkgs": [
-          "stc",
-          "nixpkgs"
-        ],
-        "systems": "systems_6",
-        "utils": "utils"
-      },
-      "locked": {
-        "lastModified": 1772550532,
-        "narHash": "sha256-80ZaLpw+ZzyUSh/bn+W6eqAOlr0Q+XTX6DSjjxRUfvg=",
-        "owner": "gfriloux",
-        "repo": "nix-checks",
-        "rev": "e4f49ad9d663537329d628bc2ef43faac4db054b",
-        "type": "github"
-      },
-      "original": {
-        "owner": "gfriloux",
-        "repo": "nix-checks",
         "type": "github"
       }
     },
@@ -810,7 +787,6 @@
           "home-manager"
         ],
         "impermanence": "impermanence",
-        "nix-checks": "nix-checks",
         "nixpkgs": [
           "nixpkgs"
         ],
@@ -820,11 +796,11 @@
         "zen-browser": "zen-browser"
       },
       "locked": {
-        "lastModified": 1780897977,
-        "narHash": "sha256-0EeuqB0jlRc0PA6XMdpw4qE8ptnVFbmAcZkJiAN5+LA=",
+        "lastModified": 1783102727,
+        "narHash": "sha256-bJo3tq2MhQzVO0Y26YOv30kqNN6rLintMhCrxHqSjd0=",
         "owner": "gfriloux",
         "repo": "stc",
-        "rev": "d255765ac0aeb7d6d21dc25e85cfb68950b0eee1",
+        "rev": "04496d386d8f8a1ca7d53ec3bbe2858f41dfb5ef",
         "type": "github"
       },
       "original": {
@@ -910,21 +886,6 @@
     },
     "systems_6": {
       "locked": {
-        "lastModified": 1680978846,
-        "narHash": "sha256-Gtqg8b/v49BFDpDetjclCYXm8mAnTrUzR0JnE2nv5aw=",
-        "owner": "nix-systems",
-        "repo": "x86_64-linux",
-        "rev": "2ecfcac5e15790ba6ce360ceccddb15ad16d08a8",
-        "type": "github"
-      },
-      "original": {
-        "owner": "nix-systems",
-        "repo": "x86_64-linux",
-        "type": "github"
-      }
-    },
-    "systems_7": {
-      "locked": {
         "lastModified": 1681028828,
         "narHash": "sha256-Vy1rq5AaRuLzOxct8nz4T6wlgyUR7zLU309k9mBC768=",
         "owner": "nix-systems",
@@ -961,28 +922,6 @@
       "original": {
         "owner": "gfriloux",
         "repo": "television-ssh-flake",
-        "type": "github"
-      }
-    },
-    "utils": {
-      "inputs": {
-        "systems": [
-          "stc",
-          "nix-checks",
-          "systems"
-        ]
-      },
-      "locked": {
-        "lastModified": 1731533236,
-        "narHash": "sha256-l0KFg5HjrsfsO/JpG+r7fRrqm12kzFHyUHqHCVpMMbI=",
-        "owner": "numtide",
-        "repo": "flake-utils",
-        "rev": "11707dc2f618dd54ca8739b309ec4fc024de578b",
-        "type": "github"
-      },
-      "original": {
-        "owner": "numtide",
-        "repo": "flake-utils",
         "type": "github"
       }
     },

@@ -119,6 +119,7 @@ sudo nix run github:nix-community/disko/latest -- \
 ```
 
 disko will:
+
 1. Erase and repartition both Samsung NVMe
 2. Create ZFS pools `bpool` and `rpool` in mirror
 3. Create ZFS datasets
@@ -151,7 +152,7 @@ sudo nano /mnt/etc/sops/age/keys.txt
 
 Expected format:
 
-```
+```text
 # created: 2024-01-01T00:00:00+01:00
 # public key: age1xr32hdvanup0zk63v8hrcv2u2c09wplz6fd42w47mkjrd49j39xqaqqckq
 AGE-SECRET-KEY-1XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
@@ -201,6 +202,7 @@ Remove the USB at restart. System should boot into GRUB → NixOS.
 Look for "UEFI OS" or the Samsung NVMe names.
 
 At first boot, these start automatically:
+
 - sddm (Plasma 6 login screen)
 - Tailscale (daemon, not yet connected)
 - pipewire, NetworkManager, Docker

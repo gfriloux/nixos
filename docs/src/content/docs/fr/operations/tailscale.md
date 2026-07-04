@@ -35,7 +35,7 @@ sudo tailscale up
 
 Tailscale affiche une URL d'authentification :
 
-```
+```text
 To authenticate, visit:
 
         https://login.tailscale.com/a/XXXXXXXXXX

@@ -45,7 +45,7 @@ cscli collections list
 
 ## Données Persistantes
 
-```
+```text
 /srv/docker/crowdsec.clochette.friloux.me/
 ├── data/    # Base de données SQLite, GeoIP
 └── etc/     # Configuration, parseurs, scénarios, décisions

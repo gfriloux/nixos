@@ -3,7 +3,7 @@ title: BookStack — The Personal Wiki
 description: Wiki service at wow-cp.friloux.me with MariaDB backend and automated backups.
 ---
 
-BookStack is the personal wiki, a chronicle of lore and knowledge. Accessible at https://wow-cp.friloux.me.
+BookStack is the personal wiki, a chronicle of lore and knowledge. Accessible at <https://wow-cp.friloux.me>.
 
 ## Stack
 
@@ -17,7 +17,7 @@ Dedicated internal network `wow-cp` + `web` network for Traefik exposure.
 
 ## Data Vault
 
-```
+```text
 /srv/docker/wow-cp.friloux.me/
 ├── data/    # BookStack files (uploads, linuxserver config)
 ├── db/      # MariaDB data
@@ -63,6 +63,7 @@ systemctl start docker-wow-cp-bookstack
 ## Secrets
 
 Three separate env files:
+
 - `services/wow-cp/env_bookstack`: BookStack config (APP_KEY, DB_HOST, DB_PASSWORD, etc.)
 - `services/wow-cp/env_mariadb`: MYSQL_ROOT_PASSWORD, MYSQL_DATABASE, etc.
 - `services/wow-cp/env_mysqldump`: mysqldump credentials

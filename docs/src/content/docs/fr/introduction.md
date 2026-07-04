@@ -19,7 +19,7 @@ La configuration complète est versionnée dans un flake NixOS utilisant [snowfa
 
 Structure de la Forge :
 
-```
+```text
 systems/x86_64-linux/
 ├── exampleHost/   # Config système du sanctuaire de travail
 ├── clochette/     # Config système du VPS

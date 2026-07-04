@@ -7,7 +7,7 @@ The Forge connects its shrines across the noosphere through Tailscale, DNS, and 
 
 ## Topology
 
-```
+```text
 Internet
     │
     ├── clochette (51.159.34.135)
@@ -40,7 +40,7 @@ The Tailscale interface (`tailscale0`) is listed in `trustedInterfaces`, opening
 
 Static assignment (no DHCP):
 
-```
+```text
 IP        : 51.159.34.135 / 24
 Gateway   : 51.159.34.1
 DNS       : 51.159.47.28, 51.159.47.26  (Scaleway nameservers)
