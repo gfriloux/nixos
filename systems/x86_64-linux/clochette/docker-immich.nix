@@ -1,6 +1,6 @@
 {
   config,
-  lib,
+  inputs,
   pkgs,
   ...
 }: {
@@ -58,7 +58,7 @@
         POSTGRES_INITDB_ARGS = "--data-checksums";
       };
 
-      extraOptions = lib.kuri.docker.mkHealthCheck {
+      extraOptions = inputs.stc.lib.docker.mkHealthCheck {
         cmd = "pg_isready -U immich -d immich";
         startPeriod = "30s";
       };
@@ -79,7 +79,7 @@
       image = "redis:8-alpine"; # renovate
       serviceName = "immich-redis";
 
-      extraOptions = lib.kuri.docker.mkHealthCheck {
+      extraOptions = inputs.stc.lib.docker.mkHealthCheck {
         cmd = "redis-cli ping";
         startPeriod = "10s";
       };
@@ -97,7 +97,7 @@
     services."docker-immich-postgres".serviceConfig.TimeoutStartSec = "300";
 
     services."docker-network-immich" =
-      lib.kuri.docker.mkNetwork pkgs "immich"
+      inputs.stc.lib.docker.mkNetwork pkgs "immich"
       // {
         wantedBy = [
           "immich-server.service"
