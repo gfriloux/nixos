@@ -7,6 +7,7 @@
   imports = [
     inputs.sops-nix.nixosModules.sops
     inputs.stc.nixosModules.relics-docker-traefik
+    inputs.stc.nixosModules.relics-docker-socket-proxy
     inputs.stc.nixosModules.relics-docker-crowdsec
     inputs.stc.nixosModules.relics-docker-notify
     ./hardware-configuration.nix
@@ -24,6 +25,10 @@
       acme.email = "guillaume+letsencrypt@friloux.me";
       enableDashboard = true;
       dynamicConfigFile = config.sops.secrets."services/traefik/conf/traefik_dynamic.yml".path;
+    };
+    socketProxy = {
+      enable = true;
+      image = "tecnativa/docker-socket-proxy:0.3.0"; # renovate
     };
     crowdsec = {
       enable = true;
