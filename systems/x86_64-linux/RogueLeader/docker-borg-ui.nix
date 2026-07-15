@@ -29,11 +29,11 @@
         "traefik.enable" = "true";
         "traefik.http.routers.borg-ui.rule" = "Host(`borg-ui.friloux.me`)";
         "traefik.http.routers.borg-ui.tls" = "true";
-        "traefik.http.routers.borg-ui.tls.certresolver" = "lets-encrypt";
+        "traefik.http.routers.borg-ui.tls.certresolver" = "letsencrypt";
         "traefik.docker.network" = "web";
         "traefik.http.services.borg-ui.loadbalancer.server.port" = "8081";
         "traefik.http.routers.borg-ui.middlewares" = "crowdsec@file,rate-limit@file,security-headers@file";
-        "friloux.me/health-watch" = "true";
+        "stc.docker/health-watch" = "true";
       };
 
       networks = ["borg-ui" "web"];
@@ -50,7 +50,7 @@
 
       labels = {
         "traefik.enable" = "false";
-        "friloux.me/health-watch" = "true";
+        "stc.docker/health-watch" = "true";
       };
 
       networks = ["borg-ui"];

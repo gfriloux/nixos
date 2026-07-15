@@ -32,13 +32,13 @@ in {
       "traefik.enable" = "true";
       "traefik.http.routers.papra.rule" = "Host(`docs.friloux.me`)";
       "traefik.http.routers.papra.tls" = "true";
-      "traefik.http.routers.papra.tls.certresolver" = "lets-encrypt";
+      "traefik.http.routers.papra.tls.certresolver" = "letsencrypt";
       "traefik.docker.network" = "web";
       "traefik.http.services.papra.loadbalancer.server.port" = "1221";
       "traefik.http.routers.papra.middlewares" = "crowdsec@file,rate-limit@file,security-headers@file";
       "traefik.http.routers.papra-login.rule" = "Host(`docs.friloux.me`) && Path(`/login`)";
       "traefik.http.routers.papra-login.middlewares" = "crowdsec@file,rate-limit-strict@file,security-headers@file";
-      "friloux.me/health-watch" = "true";
+      "stc.docker/health-watch" = "true";
     };
 
     extraOptions = inputs.stc.lib.docker.mkHealthCheck {

@@ -34,11 +34,11 @@
       "traefik.enable" = "true";
       "traefik.http.routers.mealie.rule" = "Host(`cuisine.home.friloux.me`)";
       "traefik.http.routers.mealie.tls" = "true";
-      "traefik.http.routers.mealie.tls.certresolver" = "lets-encrypt";
+      "traefik.http.routers.mealie.tls.certresolver" = "letsencrypt";
       "traefik.docker.network" = "web";
       "traefik.http.services.mealie.loadbalancer.server.port" = "9000";
       "traefik.http.routers.mealie.middlewares" = "crowdsec@file,rate-limit@file,security-headers@file";
-      "friloux.me/health-watch" = "true";
+      "stc.docker/health-watch" = "true";
     };
 
     networks = [

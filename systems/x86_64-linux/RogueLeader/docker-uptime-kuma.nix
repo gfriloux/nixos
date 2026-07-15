@@ -15,11 +15,11 @@
       "traefik.enable" = "true";
       "traefik.http.routers.uptime-kuma.rule" = "Host(`status.friloux.me`)";
       "traefik.http.routers.uptime-kuma.tls" = "true";
-      "traefik.http.routers.uptime-kuma.tls.certresolver" = "lets-encrypt";
+      "traefik.http.routers.uptime-kuma.tls.certresolver" = "letsencrypt";
       "traefik.docker.network" = "web";
       "traefik.http.services.uptime-kuma.loadbalancer.server.port" = "3001";
       "traefik.http.routers.uptime-kuma.middlewares" = "crowdsec@file,rate-limit@file,security-headers@file";
-      "friloux.me/health-watch" = "true";
+      "stc.docker/health-watch" = "true";
     };
 
     networks = [

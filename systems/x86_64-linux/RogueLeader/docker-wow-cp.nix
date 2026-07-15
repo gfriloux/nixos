@@ -31,12 +31,12 @@
         "traefik.enable" = "true";
         "traefik.http.routers.wowcp.rule" = "Host(`wow-cp.friloux.me`)";
         "traefik.http.routers.wowcp.tls" = "true";
-        "traefik.http.routers.wowcp.tls.certresolver" = "lets-encrypt";
+        "traefik.http.routers.wowcp.tls.certresolver" = "letsencrypt";
         "traefik.docker.network" = "web";
         "traefik.http.routers.wowcp.middlewares" = "crowdsec@file,rate-limit@file,security-headers@file";
         "traefik.http.routers.wowcp-login.rule" = "Host(`wow-cp.friloux.me`) && Path(`/login`)";
         "traefik.http.routers.wowcp-login.middlewares" = "crowdsec@file,rate-limit-strict@file,security-headers@file";
-        "friloux.me/health-watch" = "true";
+        "stc.docker/health-watch" = "true";
       };
       networks = [
         "wow-cp"
@@ -57,7 +57,7 @@
       };
       labels = {
         "traefik.enable" = "false";
-        "friloux.me/health-watch" = "true";
+        "stc.docker/health-watch" = "true";
       };
       networks = [
         "wow-cp"
@@ -75,7 +75,7 @@
       ];
       labels = {
         "traefik.enable" = "false";
-        "friloux.me/health-watch" = "true";
+        "stc.docker/health-watch" = "true";
       };
       networks = [
         "wow-cp"
