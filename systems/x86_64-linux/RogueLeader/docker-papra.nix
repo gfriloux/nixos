@@ -1,7 +1,7 @@
 {
   pkgs,
   config,
-  lib,
+  inputs,
   ...
 }: let
   healthCmd = "bash -c 'exec 3<>/dev/tcp/127.0.0.1/1221 && printf \"GET /api/health HTTP/1.0\\r\\n\\r\\n\" >&3 && cat <&3 | grep -q isEverythingOk'";
@@ -41,7 +41,7 @@ in {
       "friloux.me/health-watch" = "true";
     };
 
-    extraOptions = lib.kuri.docker.mkHealthCheck {
+    extraOptions = inputs.stc.lib.docker.mkHealthCheck {
       cmd = healthCmd;
     };
 

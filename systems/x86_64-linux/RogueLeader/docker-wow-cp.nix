@@ -1,7 +1,7 @@
 {
   pkgs,
   config,
-  lib,
+  inputs,
   ...
 }: {
   sops = {
@@ -23,7 +23,7 @@
       volumes = [
         "/srv/docker/wow-cp.friloux.me/data:/config"
       ];
-      extraOptions = lib.kuri.docker.mkHealthCheck {
+      extraOptions = inputs.stc.lib.docker.mkHealthCheck {
         cmd = "curl -fs http://localhost/status | grep -q '\"database\":true'";
         startPeriod = "300s";
       };
@@ -52,7 +52,7 @@
       volumes = [
         "/srv/docker/wow-cp.friloux.me/db:/config"
       ];
-      extraOptions = lib.kuri.docker.mkHealthCheck {
+      extraOptions = inputs.stc.lib.docker.mkHealthCheck {
         cmd = "mysqladmin ping -h localhost --silent";
       };
       labels = {
@@ -96,7 +96,7 @@
 
   systemd = {
     services."docker-network-wow-cp" =
-      lib.kuri.docker.mkNetwork pkgs "wow-cp"
+      inputs.stc.lib.docker.mkNetwork pkgs "wow-cp"
       // {
         wantedBy = [
           "wow-cp-bookstack.service"

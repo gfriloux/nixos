@@ -1,5 +1,5 @@
 {
-  lib,
+  inputs,
   pkgs,
   ...
 }: {
@@ -43,7 +43,7 @@
       image = "redis:8-alpine"; # renovate
       serviceName = "borg-redis";
 
-      extraOptions = lib.kuri.docker.mkHealthCheck {
+      extraOptions = inputs.stc.lib.docker.mkHealthCheck {
         cmd = "redis-cli ping";
         startPeriod = "10s";
       };
@@ -70,7 +70,7 @@
 
   systemd = {
     services."docker-network-borg-ui" =
-      lib.kuri.docker.mkNetwork pkgs "borg-ui"
+      inputs.stc.lib.docker.mkNetwork pkgs "borg-ui"
       // {
         wantedBy = [
           "borg-ui.service"

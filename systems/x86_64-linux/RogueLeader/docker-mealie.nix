@@ -1,4 +1,4 @@
-{lib, ...}: {
+{inputs, ...}: {
   virtualisation.oci-containers.containers."mealie" = {
     image = "hkotel/mealie:v3.20.1"; # renovate
     serviceName = "mealie";
@@ -26,7 +26,7 @@
         "--dns=8.8.8.8"
         "--dns=1.1.1.1"
       ]
-      ++ lib.kuri.docker.mkHealthCheck {
+      ++ inputs.stc.lib.docker.mkHealthCheck {
         cmd = "curl -f http://localhost:9000/api/app/about";
       };
 

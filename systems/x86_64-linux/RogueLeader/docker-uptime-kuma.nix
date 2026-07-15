@@ -1,4 +1,4 @@
-{lib, ...}: {
+{inputs, ...}: {
   virtualisation.oci-containers.containers."uptime-kuma" = {
     image = "louislam/uptime-kuma:2.4.0"; # renovate
     serviceName = "uptime-kuma";
@@ -7,7 +7,7 @@
       "/srv/docker/status.friloux.me/data:/app/data"
     ];
 
-    extraOptions = lib.kuri.docker.mkHealthCheck {
+    extraOptions = inputs.stc.lib.docker.mkHealthCheck {
       cmd = "curl -f http://localhost:3001/api/entry-page";
     };
 
