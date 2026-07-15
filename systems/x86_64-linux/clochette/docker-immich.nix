@@ -33,11 +33,11 @@
         "traefik.enable" = "true";
         "traefik.http.routers.immich.rule" = "Host(`photos.friloux.me`)";
         "traefik.http.routers.immich.tls" = "true";
-        "traefik.http.routers.immich.tls.certresolver" = "lets-encrypt";
+        "traefik.http.routers.immich.tls.certresolver" = "letsencrypt";
         "traefik.docker.network" = "web";
         "traefik.http.services.immich.loadbalancer.server.port" = "2283";
         "traefik.http.routers.immich.middlewares" = "crowdsec@file,rate-limit@file,security-headers@file";
-        "friloux.me/health-watch" = "true";
+        "stc.docker/health-watch" = "true";
       };
 
       networks = ["immich" "web"];
@@ -69,7 +69,7 @@
 
       labels = {
         "traefik.enable" = "false";
-        "friloux.me/health-watch" = "true";
+        "stc.docker/health-watch" = "true";
       };
 
       networks = ["immich"];
@@ -86,7 +86,7 @@
 
       labels = {
         "traefik.enable" = "false";
-        "friloux.me/health-watch" = "true";
+        "stc.docker/health-watch" = "true";
       };
 
       networks = ["immich"];

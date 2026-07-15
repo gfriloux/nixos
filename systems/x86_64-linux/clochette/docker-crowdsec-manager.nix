@@ -32,9 +32,9 @@ _: {
   };
 
   systemd = {
-    services."docker-crowdsec-manager" = {
-      after = ["docker-crowdsec.service"];
-      requires = ["docker-crowdsec.service"];
+    services."crowdsec-manager" = {
+      after = ["crowdsec.service"];
+      requires = ["crowdsec.service"];
     };
     tmpfiles.rules = [
       "d /srv/docker/crowdsec-manager 0750 0 0 -"
