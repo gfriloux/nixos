@@ -211,6 +211,13 @@
       };
     };
     gpg.enable = true;
+    gh = {
+      enable = true;
+      settings = {
+        git_protocol = "ssh";
+        prompt = "enabled";
+      };
+    };
     git = {
       signing = {
         key = "52381C92A5071464F3160D257D4216D8BDDA9A09";
