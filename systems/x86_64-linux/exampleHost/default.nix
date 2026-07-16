@@ -7,9 +7,8 @@
     inputs.sops-nix.nixosModules.sops
     inputs.disko.nixosModules.disko
     inputs.stc.nixosModules.relics-zfs
-    inputs.stc.nixosModules.cogitator-plasma
+    inputs.stc.nixosModules.cogitator-workstation
     inputs.stc.nixosModules.cogitator-gaming
-    inputs.stc.nixosModules.relics-yubikey-system
     ./boot.nix
     ./disko.nix
     ./services.nix
@@ -57,9 +56,15 @@
         sddmTheme = "catppuccin-mocha-mauve";
       };
       amdGpu.initrd = true;
-      yubikey.enable = true;
     };
-    cogitator.plasma.enable = true;
+    # Workstation profile: Plasma desktop + hardening (kernel/network/modules) +
+    # YubiKey. Filesystem hardening stays off — hidepid=2 / /tmp noexec would
+    # break KDE polkit and Steam/Proton on this gaming desktop.
+    cogitator.workstation = {
+      enable = true;
+      desktop = "plasma";
+      hardening.filesystem.enable = false;
+    };
     cogitator.gaming.enable = true;
   };
 
