@@ -64,7 +64,7 @@
       ];
     };
     "wow-cp-mysqldump" = {
-      image = "fradelg/mysql-cron-backup:1.14.2"; # renovate
+      image = "fradelg/mysql-cron-backup:1.15.0"; # renovate
       serviceName = "wow-cp-mysqldump";
       dependsOn = ["wow-cp-mariadb"];
       environmentFiles = [
