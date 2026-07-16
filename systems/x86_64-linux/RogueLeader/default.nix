@@ -32,7 +32,7 @@
     };
     socketProxy = {
       enable = true;
-      image = "tecnativa/docker-socket-proxy:0.3.0"; # renovate
+      image = "tecnativa/docker-socket-proxy:v0.4.2"; # renovate
     };
     crowdsec = {
       enable = true;
