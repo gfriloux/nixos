@@ -209,10 +209,8 @@ in {
         postNew = ''
           xargs -P 5 -I {} notmuch tag +ml -- tag:new {} < ${config.sops.secrets."mail/tags/mailinglist".path}
           xargs -P 5 -I {} notmuch tag +ml -- tag:unread {} < ${config.sops.secrets."mail/tags/mailinglist".path}
-          xargs -P 5 -I {} notmuch tag +spam +killed -new -- tag:new {} < ${config.sops.secrets."mail/tags/spam".path}
           xargs -P 5 -I {} notmuch tag +achats -new -- tag:new {} < ${config.sops.secrets."mail/tags/achats".path}
           xargs -P 5 -I {} notmuch tag +job -- tag:new {} < ${config.sops.secrets."mail/tags/job".path}
-          xargs -P 5 -I {} notmuch tag +humanite -- tag:new {} < ${config.sops.secrets."mail/tags/humanite".path}
           xargs -P 5 -I {} notmuch tag +creditagricole -- tag:new {} < ${config.sops.secrets."mail/tags/creditagricole".path}
           notmuch tag +inbox +unread -new -- tag:new
           notmuch tag -new -unread +sent -- from:$(cat ${config.sops.secrets."mail/address".path})
@@ -220,6 +218,13 @@ in {
           notmuch tag +github -- from:notifications@github.com and tag:inbox
           notmuch tag '+oss-security' 'subject:\[oss-security\]' and tag:inbox
           notmuch tag +free -- 'from:freemobile@free-mobile.fr' and tag:inbox
+          notmuch tag +cgt -- 'from:ne-pas-repondre@cgt.fr' and tag:inbox
+          notmuch tag +indeed +travail -- 'from:donotreply@match.indeed.com' and tag:inbox
+          notmuch tag +paypal -- 'from:noreply@news.paypal.com' and tag:inbox
+          notmuch tag +mutuelle -- 'from:cotisations@sidecare.com' and tag:inbox
+
+          xargs -P 5 -I {} notmuch tag +humanite -- tag:inbox {} < ${config.sops.secrets."mail/tags/humanite".path}
+          xargs -P 5 -I {} notmuch tag +spam +killed -new -inbox -unread -- tag:inbox {} < ${config.sops.secrets."mail/tags/spam".path}
         '';
       };
     };
