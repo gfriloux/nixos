@@ -15,19 +15,10 @@
     };
   };
 
+  # Connection multiplexing (Host *) and enable/enableDefaultConfig come from
+  # stc cogitator-enginseer. Only host-specific blocks remain here.
   programs.ssh = {
-    enable = true;
-    enableDefaultConfig = false;
-
     matchBlocks = {
-      "*" = {
-        controlMaster = "auto";
-        controlPath = "~/.ssh/sockets/%r@%h:%p";
-        controlPersist = "60m";
-        setEnv = {
-          TERM = "xterm-256color";
-        };
-      };
       "arthur.home" = {
         hostname = "192.168.0.153";
         user = "arthur";
