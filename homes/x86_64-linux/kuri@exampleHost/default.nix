@@ -95,10 +95,6 @@
       cargo-binstall
       kooha
       gparted
-      ouch
-      aria2
-      htop
-      unzip
       cmatrix
       flameshot
       rustup
@@ -130,7 +126,6 @@
     ];
 
     file.".mailcap".source = ./mailcap;
-    file.".ssh/sockets/.keep".text = "";
   };
 
   fonts = {
@@ -171,32 +166,11 @@
 
   services = {
     network-manager-applet.enable = true;
-    gpg-agent = {
-      enable = true;
-      pinentry.package = lib.mkForce pkgs.pinentry-qt;
-      enableSshSupport = false;
-      enableFishIntegration = true;
-    };
   };
 
   programs = {
-    micro = {
-      settings = {
-        tabsize = 2;
-        tabstospaces = true;
-        autoindent = true;
-        ruler = true;
-        savecursor = true;
-        mouse = true;
-        "lsp.server" = "nix:nixd";
-      };
-    };
     claude-code = {
       enable = true;
-    };
-    nix-search-tv = {
-      enable = true;
-      enableTelevisionIntegration = true;
     };
     home-manager.enable = true;
     plasma = {
@@ -208,14 +182,6 @@
           theme = "Catppuccin-Mocha-Dark-Cursors";
           size = 24;
         };
-      };
-    };
-    gpg.enable = true;
-    gh = {
-      enable = true;
-      settings = {
-        git_protocol = "ssh";
-        prompt = "enabled";
       };
     };
     git = {
