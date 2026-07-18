@@ -18,37 +18,37 @@
   # Connection multiplexing (Host *) and enable/enableDefaultConfig come from
   # stc cogitator-enginseer. Only host-specific blocks remain here.
   programs.ssh = {
-    matchBlocks = {
+    settings = {
       "arthur.home" = {
-        hostname = "192.168.0.153";
-        user = "arthur";
+        HostName = "192.168.0.153";
+        User = "arthur";
       };
       "baptiste.home" = {
-        hostname = "192.168.0.211";
-        user = "baptiste";
+        HostName = "192.168.0.211";
+        User = "baptiste";
       };
       "rogueleader.home" = {
-        hostname = "192.168.0.10";
-        user = "guillaume";
-        identityFile = config.sops.secrets."ssh/keys/root@rogueleader".path;
+        HostName = "192.168.0.10";
+        User = "guillaume";
+        IdentityFile = config.sops.secrets."ssh/keys/root@rogueleader".path;
       };
       "clochette.friloux.me" = {
-        hostname = "clochette";
-        user = "guillaume";
-        identityFile = config.sops.secrets."ssh/keys/guillaume@clochette".path;
+        HostName = "clochette";
+        User = "guillaume";
+        IdentityFile = config.sops.secrets."ssh/keys/guillaume@clochette".path;
       };
       "irc.friloux.me" = {
-        hostname = "clochette";
-        user = "weechat";
-        identityFile = config.sops.secrets."ssh/keys/weechat@clochette".path;
+        HostName = "clochette";
+        User = "weechat";
+        IdentityFile = config.sops.secrets."ssh/keys/weechat@clochette".path;
       };
       "storage2.friloux.me" = {
-        user = "kuri";
-        identityFile = config.sops.secrets."ssh/keys/kuri@storage2".path;
+        User = "kuri";
+        IdentityFile = config.sops.secrets."ssh/keys/kuri@storage2".path;
       };
       "github.com" = {
-        user = "git";
-        identityFile = config.sops.secrets."ssh/keys/github".path;
+        User = "git";
+        IdentityFile = config.sops.secrets."ssh/keys/github".path;
       };
     };
   };
