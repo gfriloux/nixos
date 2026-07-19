@@ -47,6 +47,19 @@ in {
   programs = {
     alot = {
       enable = true;
+      # Thèmes portés des stylesets aerc vers le format alot (cf. ./themes/*).
+      # alot ne gère que 1/16/256 couleurs : la palette hex est mappée sur le
+      # plus proche index xterm-256. Changer de thème = éditer theme ci-dessous
+      # puis rebuild (alot ne recharge pas à chaud, contrairement à aerc).
+      # settings est redéclaré en entier car y définir une seule clé écraserait
+      # les valeurs par défaut du module (initial_command, prefer_plaintext…).
+      settings = {
+        initial_command = "search tag:inbox AND NOT tag:killed";
+        auto_remove_unread = true;
+        handle_mouse = true;
+        prefer_plaintext = true;
+        theme = "frappe";
+      };
     };
     aerc = {
       enable = true;
@@ -229,6 +242,11 @@ in {
       };
     };
   };
+
+  # Thèmes alot (portés des stylesets aerc). Le thème actif est choisi par
+  # programs.alot.settings.theme ci-dessus ; changer de thème = éditer cette clé
+  # puis rebuild (alot ne recharge pas les thèmes à chaud, contrairement à aerc).
+  xdg.configFile."alot/themes".source = ./themes;
 
   # Vues notmuch pour aerc, alimentées par les tags posés dans les hooks
   # notmuch ci-dessus (programs.notmuch.hooks.postNew).

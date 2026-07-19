@@ -1,0 +1,124 @@
+# alot theme - Glacier
+# Portage du styleset aerc « glacier » vers alot.
+# alot ne gere que 1/16/256 couleurs : palette hex mappee sur le plus proche
+# index xterm-256 (hN) + repli 16 couleurs par nom. Genere depuis le styleset.
+#
+# Chaque attribut : 'fg-mono','bg-mono','fg16','bg16','fg256','bg256'.
+
+# Repli 16 couleurs (noms urwid).
+c16_bg      = 'black'
+c16_surface = 'dark gray'
+c16_fg      = 'white'
+c16_muted   = 'dark gray'
+c16_border  = 'dark gray'
+c16_purple  = 'light gray'
+c16_pink    = 'light gray'
+c16_cyan    = 'light gray'
+c16_green   = 'light gray'
+c16_orange  = 'yellow'
+c16_yellow  = 'yellow'
+c16_red     = 'light red'
+
+# Palette 256 (plus proche index xterm-256 ; source hex en commentaire).
+c_bg      = 'h235'   # #232831 fond
+c_surface = 'h236'   # #2b313c surface
+c_fg      = 'h255'   # #e5e9f0 texte
+c_muted   = 'h243'   # #6b7488 attenue
+c_border  = 'h239'   # #3f4757 bordures
+c_purple  = 'h110'   # #88c0d0 accent / selection
+c_pink    = 'h109'   # #81a1c1 en-tetes
+c_cyan    = 'h109'   # #8fbcbb non-lus / valeurs
+c_green   = 'h144'   # #a3be8c succes / recent
+c_orange  = 'h186'   # #ebcb8b flagge / pieces jointes
+c_yellow  = 'h186'   # #ebcb8b resultats / dates
+c_red     = 'h131'   # #bf616a erreurs
+
+[global]
+    body         = 'default','default','%(c16_fg)s','%(c16_bg)s','%(c_fg)s','%(c_bg)s'
+    footer       = 'standout','default','%(c16_bg)s','%(c16_purple)s','%(c_bg)s','%(c_purple)s'
+    notify_error = 'standout','default','%(c16_fg)s','%(c16_red)s','%(c_fg)s','%(c_red)s'
+    notify_normal = 'default','default','%(c16_cyan)s','%(c16_bg)s','%(c_cyan)s','%(c_bg)s'
+    prompt       = 'default','default','%(c16_fg)s','%(c16_surface)s','%(c_fg)s','%(c_surface)s'
+    tag          = 'default','default','%(c16_purple)s','%(c16_bg)s','%(c_purple)s','%(c_bg)s'
+    tag_focus    = 'standout','default','%(c16_bg)s','%(c16_purple)s','%(c_bg)s','%(c_purple)s'
+
+[help]
+    text    = 'default','default','%(c16_fg)s','%(c16_bg)s','%(c_fg)s','%(c_bg)s'
+    section = 'underline','default','%(c16_cyan)s,bold','%(c16_bg)s','%(c_cyan)s,bold','%(c_bg)s'
+    title   = 'standout','default','%(c16_bg)s','%(c16_purple)s','%(c_bg)s','%(c_purple)s'
+
+[bufferlist]
+    line_even  = 'default','default','%(c16_fg)s','%(c16_bg)s','%(c_fg)s','%(c_bg)s'
+    line_odd   = 'default','default','%(c16_fg)s','%(c16_surface)s','%(c_fg)s','%(c_surface)s'
+    line_focus = 'standout','default','%(c16_bg)s','%(c16_purple)s','%(c_bg)s','%(c_purple)s'
+
+[taglist]
+    line_even  = 'default','default','%(c16_fg)s','%(c16_bg)s','%(c_fg)s','%(c_bg)s'
+    line_odd   = 'default','default','%(c16_fg)s','%(c16_surface)s','%(c_fg)s','%(c_surface)s'
+    line_focus = 'standout','default','%(c16_bg)s','%(c16_purple)s','%(c_bg)s','%(c_purple)s'
+
+[namedqueries]
+    line_even  = 'default','default','%(c16_fg)s','%(c16_bg)s','%(c_fg)s','%(c_bg)s'
+    line_odd   = 'default','default','%(c16_fg)s','%(c16_surface)s','%(c_fg)s','%(c_surface)s'
+    line_focus = 'standout','default','%(c16_bg)s','%(c16_purple)s','%(c_bg)s','%(c_purple)s'
+
+[thread]
+    arrow_heads      = 'default','default','%(c16_purple)s','%(c16_bg)s','%(c_purple)s','%(c_bg)s'
+    arrow_bars       = 'default','default','%(c16_border)s','%(c16_bg)s','%(c_border)s','%(c_bg)s'
+    attachment       = 'default','default','%(c16_orange)s','%(c16_bg)s','%(c_orange)s','%(c_bg)s'
+    attachment_focus = 'standout','default','%(c16_bg)s','%(c16_orange)s','%(c_bg)s','%(c_orange)s'
+    body             = 'default','default','%(c16_fg)s','%(c16_bg)s','%(c_fg)s','%(c_bg)s'
+    body_focus       = 'default','default','%(c16_fg)s','%(c16_surface)s','%(c_fg)s','%(c_surface)s'
+    header           = 'default','default','%(c16_fg)s','%(c16_surface)s','%(c_fg)s','%(c_surface)s'
+    header_key       = 'bold','default','%(c16_pink)s,bold','%(c16_surface)s','%(c_pink)s,bold','%(c_surface)s'
+    header_value     = 'default','default','%(c16_cyan)s','%(c16_surface)s','%(c_cyan)s','%(c_surface)s'
+    [[summary]]
+        even  = 'default','default','%(c16_fg)s','%(c16_bg)s','%(c_fg)s','%(c_bg)s'
+        odd   = 'default','default','%(c16_fg)s','%(c16_surface)s','%(c_fg)s','%(c_surface)s'
+        focus = 'standout','default','%(c16_bg)s','%(c16_purple)s','%(c_bg)s','%(c_purple)s'
+
+[envelope]
+    body         = 'default','default','%(c16_fg)s','%(c16_bg)s','%(c_fg)s','%(c_bg)s'
+    header       = 'default','default','%(c16_fg)s','%(c16_surface)s','%(c_fg)s','%(c_surface)s'
+    header_key   = 'bold','default','%(c16_pink)s,bold','%(c16_surface)s','%(c_pink)s,bold','%(c_surface)s'
+    header_value = 'default','default','%(c16_cyan)s','%(c16_surface)s','%(c_cyan)s','%(c_surface)s'
+
+[search]
+    [[threadline]]
+        normal = 'default','default','%(c16_fg)s','%(c16_bg)s','%(c_fg)s','%(c_bg)s'
+        focus  = 'standout','default','%(c16_bg)s','%(c16_purple)s','%(c_bg)s','%(c_purple)s'
+        parts = date,mailcount,tags,authors,subject
+        [[[date]]]
+            normal = 'default','default','%(c16_yellow)s','%(c16_bg)s','%(c_yellow)s','%(c_bg)s'
+            focus  = 'standout','default','%(c16_bg)s','%(c16_purple)s','%(c_bg)s','%(c_purple)s'
+            alignment = right
+            width = fit, 10, 10
+        [[[mailcount]]]
+            normal = 'default','default','%(c16_cyan)s','%(c16_bg)s','%(c_cyan)s','%(c_bg)s'
+            focus  = 'standout','default','%(c16_bg)s','%(c16_purple)s','%(c_bg)s','%(c_purple)s'
+        [[[tags]]]
+            normal = 'default','default','%(c16_purple)s','%(c16_bg)s','%(c_purple)s','%(c_bg)s'
+            focus  = 'standout','default','%(c16_bg)s','%(c16_purple)s','%(c_bg)s','%(c_purple)s'
+        [[[authors]]]
+            normal = 'default','default','%(c16_muted)s','%(c16_bg)s','%(c_muted)s','%(c_bg)s'
+            focus  = 'standout','default','%(c16_bg)s','%(c16_purple)s','%(c_bg)s','%(c_purple)s'
+            width = fit, 0, 30
+        [[[subject]]]
+            normal = 'default','default','%(c16_fg)s','%(c16_bg)s','%(c_fg)s','%(c_bg)s'
+            focus  = 'standout','default','%(c16_bg)s','%(c16_purple)s','%(c_bg)s','%(c_purple)s'
+            width = weight, 1
+    [[threadline-unread]]
+        tagged_with = 'unread'
+        normal = 'bold','default','%(c16_cyan)s,bold','%(c16_bg)s','%(c_cyan)s,bold','%(c_bg)s'
+        [[[date]]]
+            normal = 'bold','default','%(c16_yellow)s,bold','%(c16_bg)s','%(c_yellow)s,bold','%(c_bg)s'
+        [[[subject]]]
+            normal = 'bold','default','%(c16_cyan)s,bold','%(c16_bg)s','%(c_cyan)s,bold','%(c_bg)s'
+    [[threadline-flagged]]
+        tagged_with = 'flagged'
+        normal = 'default','default','%(c16_orange)s','%(c16_bg)s','%(c_orange)s','%(c_bg)s'
+        [[[subject]]]
+            normal = 'default','default','%(c16_orange)s','%(c16_bg)s','%(c_orange)s','%(c_bg)s'
+    [[threadline-killed]]
+        tagged_with = 'killed'
+        normal = 'default','default','%(c16_muted)s','%(c16_bg)s','%(c_muted)s','%(c_bg)s'
