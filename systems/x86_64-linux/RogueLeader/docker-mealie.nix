@@ -1,6 +1,6 @@
 {inputs, ...}: {
   virtualisation.oci-containers.containers."mealie" = {
-    image = "hkotel/mealie:v3.20.1"; # renovate
+    image = "hkotel/mealie:v3.22.0"; # renovate
     serviceName = "mealie";
 
     environment = {
