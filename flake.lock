@@ -31,11 +31,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1782578553,
-        "narHash": "sha256-DlK0tG6dW4t4WufigR88rjvXGIkkGEbP702erXq3ZwI=",
+        "lastModified": 1784455690,
+        "narHash": "sha256-2KfRZ/YsvG7b5fgqOAriA0Sib9ay50+x9hKrLn+qT7U=",
         "owner": "gfriloux",
         "repo": "astropath",
-        "rev": "4aa8e40fca97c256aa17c62fe427306dbcb9384e",
+        "rev": "e8e87e6aa191072d5e9de1d483dd47999c88f642",
         "type": "github"
       },
       "original": {
