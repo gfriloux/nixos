@@ -34,6 +34,7 @@
       url = "github:gfriloux/astropath";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    noosphere.url = "github:gfriloux/noosphere";
   };
 
   outputs = inputs:

@@ -232,6 +232,27 @@
     "flake-parts_2": {
       "inputs": {
         "nixpkgs-lib": [
+          "noosphere",
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1785627969,
+        "narHash": "sha256-4dtXQk/NMePegK/nWp5NSeuZKLATItOq61lpEvmXqGw=",
+        "owner": "hercules-ci",
+        "repo": "flake-parts",
+        "rev": "427bf4bd9435fdf21321c8cc628c24efc14c0f7a",
+        "type": "github"
+      },
+      "original": {
+        "owner": "hercules-ci",
+        "repo": "flake-parts",
+        "type": "github"
+      }
+    },
+    "flake-parts_3": {
+      "inputs": {
+        "nixpkgs-lib": [
           "stc",
           "nixpkgs"
         ]
@@ -557,6 +578,41 @@
         "type": "github"
       }
     },
+    "nixpkgs_2": {
+      "locked": {
+        "lastModified": 1785967620,
+        "narHash": "sha256-IItrdb7Puk05RqOBWZYFC5X6Wl1sJmCfh5MWVHw5iMM=",
+        "owner": "nixos",
+        "repo": "nixpkgs",
+        "rev": "b7c2ada94fe99c15b0dbcf4d11fd7850b957a436",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nixos",
+        "ref": "nixos-unstable",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
+    "noosphere": {
+      "inputs": {
+        "flake-parts": "flake-parts_2",
+        "nixpkgs": "nixpkgs_2"
+      },
+      "locked": {
+        "lastModified": 1786192305,
+        "narHash": "sha256-WPa4HdH6FU/3bLOV+q7BoAyzEP/Hk+4hZMbcGjxsbNI=",
+        "owner": "gfriloux",
+        "repo": "noosphere",
+        "rev": "0b76fb315957e313480a86b9cf979cea39273602",
+        "type": "github"
+      },
+      "original": {
+        "owner": "gfriloux",
+        "repo": "noosphere",
+        "type": "github"
+      }
+    },
     "pgpilot": {
       "inputs": {
         "nixpkgs": [
@@ -633,6 +689,7 @@
         "dms": "dms",
         "home-manager": "home-manager",
         "nixpkgs": "nixpkgs",
+        "noosphere": "noosphere",
         "pgpilot": "pgpilot",
         "snowfall-lib": "snowfall-lib_2",
         "sops-nix": "sops-nix",
@@ -781,7 +838,7 @@
         "ansible-recap": "ansible-recap",
         "catppuccin": "catppuccin",
         "disko": "disko_2",
-        "flake-parts": "flake-parts_2",
+        "flake-parts": "flake-parts_3",
         "gitflow-toolkit": "gitflow-toolkit",
         "home-manager": [
           "home-manager"

@@ -12,6 +12,7 @@
     inputs.sops-nix.homeManagerModules.sops
     inputs.pgpilot.homeModules.pgpilot
     inputs.stc.homeModules.relics-plasma-manager
+    inputs.noosphere.homeModules.default
     ./ssh.nix
     ./mail.nix
   ];
@@ -169,6 +170,7 @@
   };
 
   programs = {
+    noosphere.enable = true;
     claude-code = {
       enable = true;
     };
