@@ -483,6 +483,10 @@
           "size": 20
         },
         {
+          "id": "noosphere",
+          "enabled": true
+        },
+        {
           "id": "astropath",
           "enabled": true
         },
