@@ -81,7 +81,7 @@
       pinentry-gtk2
       ffmpeg
       dosbox-x
-      transmission_4-qt6
+      transmission_4-qt
       heroic
       scummvm
       ryubing

@@ -1,11 +1,11 @@
 {
   inputs,
   mkShell,
-  system,
+  stdenv,
   ...
 }: let
   pkgs = import inputs.nixpkgs {
-    inherit system;
+    inherit (stdenv.hostPlatform) system;
     config.allowUnfree = true;
   };
 in
