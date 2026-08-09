@@ -37,7 +37,12 @@
 
   hardware.firmware = [pkgs.linux-firmware];
 
-  nixpkgs.config.allowUnfree = true;
+  nixpkgs = {
+    # Les autres hôtes l'héritent de leur hardware-configuration.nix ;
+    # exampleHost n'en a pas (disko), d'où la déclaration explicite.
+    hostPlatform = "x86_64-linux";
+    config.allowUnfree = true;
+  };
 
   programs.fish.enable = true;
 

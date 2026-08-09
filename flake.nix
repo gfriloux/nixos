@@ -1,6 +1,13 @@
 {
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    # Pinné au 2026-08-05. Depuis f13ff45 (2026-08-07), nixpkgs.config est un
+    # deferredModule et interdit toute définition de nixpkgs.config quand
+    # nixpkgs.pkgs est défini — or flake-utils-plus (embarqué dans snowfall-lib)
+    # pose systématiquement les deux. Suivi amont :
+    #   https://github.com/gytis-ivaskevicius/flake-utils-plus/issues/162
+    #   https://github.com/snowfallorg/lib/issues/192
+    # Dépinner une fois le correctif FUP publié et snowfall-lib rebumpé.
+    nixpkgs.url = "github:nixos/nixpkgs/b7c2ada94fe99c15b0dbcf4d11fd7850b957a436";
     home-manager = {
       url = "github:nix-community/home-manager/master";
       inputs.nixpkgs.follows = "nixpkgs";
