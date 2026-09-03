@@ -36,7 +36,7 @@
     };
     crowdsec = {
       enable = true;
-      image = "crowdsecurity/crowdsec:v1.7.8"; # renovate
+      image = "crowdsecurity/crowdsec:v1.8.1"; # renovate
       dataDir = "/srv/docker/crowdsec.rogueleader.home";
       envFile = config.sops.secrets."services/crowdsec/env".path;
     };
