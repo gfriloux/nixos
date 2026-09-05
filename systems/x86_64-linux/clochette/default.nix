@@ -21,7 +21,7 @@
   stc.relics.docker = {
     traefik = {
       enable = true;
-      image = "traefik:v3.7.8"; # renovate
+      image = "traefik:v3.7.13"; # renovate
       acme.email = "guillaume+letsencrypt@friloux.me";
       enableDashboard = true;
       dynamicConfigFile = config.sops.secrets."services/traefik/conf/traefik_dynamic.yml".path;
