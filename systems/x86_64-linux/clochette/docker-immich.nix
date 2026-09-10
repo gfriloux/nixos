@@ -8,7 +8,7 @@
 
   virtualisation.oci-containers.containers = {
     "immich-server" = {
-      image = "altran1502/immich-server:v3.0.3"; # renovate
+      image = "altran1502/immich-server:v3.2.0"; # renovate
       serviceName = "immich-server";
       dependsOn = ["immich-postgres" "immich-redis"];
 
