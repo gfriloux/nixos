@@ -14,6 +14,7 @@
   };
 
   services = {
+    udev.packages = [pkgs.platformio-core.udev];
     flatpak.enable = true;
     zrepl = {
       enable = true;
