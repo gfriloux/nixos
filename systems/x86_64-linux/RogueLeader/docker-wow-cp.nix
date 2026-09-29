@@ -14,7 +14,7 @@
 
   virtualisation.oci-containers.containers = {
     "wow-cp-bookstack" = {
-      image = "linuxserver/bookstack:26.09.20260924"; # renovate
+      image = "linuxserver/bookstack:26.09.20260929"; # renovate
       serviceName = "wow-cp-bookstack";
       dependsOn = ["wow-cp-mariadb"];
       environmentFiles = [
