@@ -98,10 +98,11 @@
   networking.firewall.trustedInterfaces = ["tailscale0"];
 
   virtualisation = {
-    docker = {
-      enable = true;
-      autoPrune.enable = true;
-    };
+    # Pas d'autoPrune : son timer hebdo est Persistent, donc il rattrape au boot
+    # un créneau manqué et lance `docker system prune -f` avant que les
+    # conteneurs aient rejoint leurs réseaux. Les réseaux sont alors unused et
+    # supprimés, et tout ce qui les utilise échoue sur "network not found".
+    docker.enable = true;
     oci-containers.backend = "docker";
   };
 
