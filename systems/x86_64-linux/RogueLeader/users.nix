@@ -18,5 +18,21 @@
       ];
       shell = pkgs.fish;
     };
+
+    # Compte dédié et restreint pour les audits Nix automatisés (Hermes Agent).
+    # Clé publique uniquement, pas de mot de passe, pas de groupe privilégié.
+    # Contexte : https://github.com/gfriloux/nixos/issues/70
+    users.hermes-audit = {
+      createHome = true;
+      isNormalUser = true;
+      home = "/home/hermes-audit";
+      description = "Hermes Agent — audits Nix automatisés (lecture/build seulement)";
+      extraGroups = [];
+      hashedPassword = "!"; # login par mot de passe explicitement désactivé
+      openssh.authorizedKeys.keys = [
+        "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOYskA7bsGIgqPo3ef5Z+6HC3jfn4AZ2gISEnasWvTqr hermes-agent-audit@friloux.me"
+      ];
+      shell = pkgs.bash;
+    };
   };
 }

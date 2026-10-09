@@ -85,7 +85,7 @@
       MaxAuthTries = 3;
       LoginGraceTime = "30s";
       X11Forwarding = false;
-      AllowUsers = ["guillaume"];
+      AllowUsers = ["guillaume" "hermes-audit"];
     };
   };
 
