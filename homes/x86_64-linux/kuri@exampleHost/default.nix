@@ -78,7 +78,7 @@
       catppuccin-kde
       dconf
       dconf-editor
-      pinentry-gtk2
+      pinentry-qt
       ffmpeg
       dosbox-x
       transmission_4-qt

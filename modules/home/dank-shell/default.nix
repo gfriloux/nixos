@@ -32,6 +32,13 @@ in {
       # Moniteur système (CPU / température) fourni en natif — pas de plugin.
       enableSystemMonitoring = true;
 
+      # Agenda DMS désactivé : il tire `khal`, qui ne build plus dans nixpkgs
+      # (sphinxHook ne produit plus l'output `man` depuis Sphinx 9). Aucun
+      # calendrier n'est configuré ici de toute façon (pas de programs.khal ni
+      # d'accounts.calendar) : la fonction était inerte. Repasser à true une
+      # fois khal réparé amont, si on veut des événements dans la barre.
+      enableCalendarEvents = false;
+
       # On garde Catppuccin Mocha fixe : on coupe le theming dynamique
       # (Matugen, dérivé du wallpaper).
       enableDynamicTheming = false;
