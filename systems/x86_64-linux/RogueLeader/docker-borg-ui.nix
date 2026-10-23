@@ -33,6 +33,8 @@
         "traefik.docker.network" = "web";
         "traefik.http.services.borg-ui.loadbalancer.server.port" = "8081";
         "traefik.http.routers.borg-ui.middlewares" = "crowdsec@file,rate-limit@file,security-headers@file";
+        # ainullcode/borg-ui declares its own HEALTHCHECK (curl on $PORT)
+        "stc.docker/health-cmd-in-image" = "true";
         "stc.docker/health-watch" = "true";
       };
 

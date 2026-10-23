@@ -75,6 +75,8 @@
       ];
       labels = {
         "traefik.enable" = "false";
+        # fradelg/mysql-cron-backup declares its own HEALTHCHECK
+        "stc.docker/health-cmd-in-image" = "true";
         "stc.docker/health-watch" = "true";
       };
       networks = [
