@@ -124,6 +124,9 @@
         rbw config set base_url "$RBW_SERVER"
         exec ${pkgs.rbw}/bin/rbw "$@"
       '')
+
+      # claude plugins
+      nodejs_22
     ];
 
     file.".mailcap".source = ./mailcap;
