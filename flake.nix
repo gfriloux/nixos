@@ -44,6 +44,11 @@
 
       src = ./.;
 
+      # Steam on exampleHost is unfree. The system sets nixpkgs.config itself,
+      # but the standalone homeConfigurations get pkgs from snowfall's channels
+      # and never see it; CI evaluates them on their own.
+      channels-config.allowUnfree = true;
+
       snowfall = {
         root = ./.;
 
