@@ -11,6 +11,7 @@
     inputs.stc.nixosModules.relics-docker-socket-proxy
     inputs.stc.nixosModules.relics-docker-crowdsec
     inputs.stc.nixosModules.relics-docker-notify
+    inputs.stc.nixosModules.relics-hardening-ssh
     ./hardware-configuration.nix
     ./disko.nix
     ./backup.nix
@@ -76,18 +77,10 @@
 
   nix.settings.trusted-users = ["root" "guillaume"];
 
-  services.openssh = {
-    enable = true;
-    settings = {
-      PasswordAuthentication = false;
-      PermitRootLogin = "no";
-      KbdInteractiveAuthentication = false;
-      MaxAuthTries = 3;
-      LoginGraceTime = "30s";
-      X11Forwarding = false;
-      AllowUsers = ["guillaume"];
-    };
-  };
+  # No fail2ban: SSH is LAN-only here, and the relic's PerSourcePenalties
+  # already blocks sources that fail auth, inside sshd itself.
+  stc.relics.hardening.ssh.enable = true;
+  services.openssh.settings.AllowUsers = ["guillaume"];
 
   virtualisation = {
     # Pas d'autoPrune : son timer hebdo est Persistent, donc il rattrape au boot
