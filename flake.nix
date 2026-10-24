@@ -49,17 +49,6 @@
 
         namespace = "kuri";
 
-        systems.modules = with inputs; [
-          sops-nix.nixosModules.sops
-        ];
-
-        homes.modules = with inputs; [
-          inputs.stc.homeModules.cogitator-enginseer
-          inputs.stc.homeModules.cogitator-desktop
-          inputs.sops-nix.homeManagerModules.sops
-          inputs.pgpilot-flake.homeModules.pgpilot
-        ];
-
         meta = {
           name = "kuri";
           title = "Adeptus Mechanicus";
