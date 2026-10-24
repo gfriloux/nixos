@@ -9,10 +9,5 @@
       ],
       "datasourceTemplate": "docker"
     }
-  ],
-  "packageRules": [
-    {
-      "matchDatasources": ["docker"]
-    }
-  ],
+  ]
 }
