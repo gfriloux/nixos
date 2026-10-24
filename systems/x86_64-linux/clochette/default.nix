@@ -74,7 +74,7 @@
 
   i18n.defaultLocale = "fr_FR.UTF-8";
 
-  nix.settings.trusted-users = ["root" "guillaume" "clochette"];
+  nix.settings.trusted-users = ["root" "guillaume"];
 
   services = {
     openssh = {
