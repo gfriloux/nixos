@@ -20,6 +20,12 @@ in {
       TRAEFIK_STATIC_CONFIG = "/etc/traefik/traefik.yml";
     };
 
+    # Accepted risk: raw socket, not the socket-proxy. crowdsec-manager execs
+    # into containers (incl. a web shell), copies files in, restarts them and
+    # recreates them (pull + create) for updates. The proxy would need
+    # CONTAINERS+EXEC+IMAGES+POST, which is root on the host anyway. The UI has
+    # no authentication, so the real boundary is the Tailscale-only port below:
+    # never publish it anywhere else.
     volumes = [
       "/run/docker.sock:/var/run/docker.sock"
       "/srv/docker/crowdsec-manager/data:/app/data"
