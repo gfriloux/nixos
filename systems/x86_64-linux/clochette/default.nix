@@ -84,8 +84,10 @@
       openFirewall = false;
       settings.AllowUsers = ["guillaume" "weechat"];
     };
+    # No fail2ban: its only jail was sshd, which is reachable from the
+    # tailnet only, and the ssh relic's PerSourcePenalties already blocks
+    # failing sources inside sshd. The web side is covered by CrowdSec.
     tailscale.enable = true;
-    fail2ban.enable = true;
   };
 
   networking.firewall.trustedInterfaces = ["tailscale0"];
