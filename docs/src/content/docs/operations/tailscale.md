@@ -50,6 +50,10 @@ tailscale status
 # The shrine should appear in the list with a 100.x.x.x address
 ```
 
+### clochette: update the Tailscale IP
+
+A re-enrolled node gets a new `100.x.x.x` address. clochette's CrowdSec Manager UI is published on that address only, so update `tailscaleIp` in `systems/x86_64-linux/clochette/docker-crowdsec-manager.nix` with the output of `tailscale ip -4`, then redeploy. Until then the container fails to start (its `preStart` waits 60s for the old address, then gives up).
+
 ## Re-enrollment Without Browser (authkey)
 
 If the server has no graphical interface and the serial console cannot easily display the URL, generate an authkey from the panel:
