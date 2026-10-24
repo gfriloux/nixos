@@ -29,6 +29,15 @@
         "/etc/localtime:/etc/localtime:ro"
       ];
 
+      # L'image ne déclare aucun HEALTHCHECK (vérifié avec `skopeo inspect
+      # --config`), donc sans ça le health-watch ne surveille rien. curl est
+      # présent dans l'image (/usr/bin/curl) et /api/server/ping ne demande
+      # pas d'authentification.
+      extraOptions = inputs.stc.lib.docker.mkHealthCheck {
+        cmd = "curl -f http://localhost:2283/api/server/ping";
+        startPeriod = "60s";
+      };
+
       labels = {
         "traefik.enable" = "true";
         "traefik.http.routers.immich.rule" = "Host(`photos.friloux.me`)";
