@@ -10,6 +10,7 @@
     inputs.stc.nixosModules.relics-docker-socket-proxy
     inputs.stc.nixosModules.relics-docker-crowdsec
     inputs.stc.nixosModules.relics-docker-notify
+    inputs.stc.nixosModules.relics-hardening-ssh
     ./hardware-configuration.nix
     ./docker-immich.nix
     ./backup.nix
@@ -76,20 +77,12 @@
 
   nix.settings.trusted-users = ["root" "guillaume"];
 
+  stc.relics.hardening.ssh.enable = true;
+
   services = {
     openssh = {
-      enable = true;
       openFirewall = false;
-
-      settings = {
-        PasswordAuthentication = false;
-        PermitRootLogin = "no";
-        KbdInteractiveAuthentication = false;
-        MaxAuthTries = 3;
-        LoginGraceTime = "30s";
-        X11Forwarding = false;
-        AllowUsers = ["guillaume" "weechat"];
-      };
+      settings.AllowUsers = ["guillaume" "weechat"];
     };
     tailscale.enable = true;
     fail2ban.enable = true;
