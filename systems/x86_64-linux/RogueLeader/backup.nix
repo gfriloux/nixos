@@ -26,11 +26,41 @@
       "/srv/docker/cuisine.home.friloux.me"
       "/srv/docker/docs.friloux.me"
       "/srv/docker/wow-cp.friloux.me"
+      "/srv/docker/sqlite-snapshots"
     ];
-    # wow-cp's live MariaDB datadir: a file-by-file copy of a running server
-    # is not restorable. The consistent copy is dumps/ (wow-cp-mysqldump,
-    # nightly, last 15 kept): restore from there, not from db/.
-    exclude = ["/srv/docker/wow-cp.friloux.me/db"];
+    # Live databases are not restorable from a file-by-file copy, and borg
+    # fails the job when one changes under it (kuma.db-wal, 2026-10-25).
+    # - wow-cp's MariaDB datadir: restore from dumps/ (wow-cp-mysqldump,
+    #   nightly, last 15 kept), not from db/.
+    # - SQLite (-wal/-shm included): restore from sqlite-snapshots/, taken by
+    #   preHook below.
+    exclude = [
+      "/srv/docker/wow-cp.friloux.me/db"
+      "/srv/docker/status.friloux.me/data/kuma.db*"
+      "/srv/docker/docs.friloux.me/data/db/db.sqlite*"
+      "/srv/docker/cuisine.home.friloux.me/data/mealie.db*"
+    ];
+    # sqlite3's .backup goes through SQLite's backup API: a consistent copy of
+    # a database that is being written to, WAL included. set -e in the job
+    # script turns a failed snapshot into a failed (and notified) backup.
+    # The job runs with ProtectSystem=strict: it writes the snapshots, and
+    # SQLite needs write access next to a WAL database (-shm) even to read it.
+    readWritePaths = [
+      "/srv/docker/sqlite-snapshots"
+      "/srv/docker/status.friloux.me/data"
+      "/srv/docker/docs.friloux.me/data/db"
+      "/srv/docker/cuisine.home.friloux.me/data"
+    ];
+    preHook = ''
+      snapshots=/srv/docker/sqlite-snapshots
+      for db in \
+        uptime-kuma:/srv/docker/status.friloux.me/data/kuma.db \
+        papra:/srv/docker/docs.friloux.me/data/db/db.sqlite \
+        mealie:/srv/docker/cuisine.home.friloux.me/data/mealie.db; do
+        ${pkgs.sqlite}/bin/sqlite3 -cmd ".timeout 30000" "''${db#*:}" \
+          ".backup '$snapshots/''${db%%:*}.db'"
+      done
+    '';
     repo = "ssh://backup@storage2.friloux.me/~/rogueleader.friloux.me";
 
     encryption.mode = "repokey-blake2";
@@ -62,31 +92,38 @@
     '';
   };
 
-  systemd.services.borgbackup-check = {
-    description = "Vérification d'intégrité Borg";
-    unitConfig.OnFailure = "stc-notify-failure@%p.service";
-    serviceConfig = {
-      Type = "oneshot";
-      ExecStart = pkgs.writeShellScript "borgbackup-check" ''
-        export BORG_PASSPHRASE=$(cat ${config.sops.secrets."services/borg/passphrase".path})
-        export BORG_RSH="ssh -i ${config.sops.secrets."services/borg/key/private".path}"
-        ${pkgs.borgbackup}/bin/borg check --verify-data \
-          'ssh://backup@storage2.friloux.me/~/rogueleader.friloux.me'
-        NTFY_TOPIC=$(cat ${config.sops.secrets."services/ntfy/topic".path})
-        ${pkgs.curl}/bin/curl -s -o /dev/null \
-          -H "Title: [RogueLeader] Intégrité Borg OK" \
-          -d "Vérification hebdomadaire des données Borg réussie" \
-          "https://ntfy.sh/$NTFY_TOPIC"
-      '';
+  systemd = {
+    services.borgbackup-check = {
+      description = "Vérification d'intégrité Borg";
+      unitConfig.OnFailure = "stc-notify-failure@%p.service";
+      serviceConfig = {
+        Type = "oneshot";
+        ExecStart = pkgs.writeShellScript "borgbackup-check" ''
+          export BORG_PASSPHRASE=$(cat ${config.sops.secrets."services/borg/passphrase".path})
+          export BORG_RSH="ssh -i ${config.sops.secrets."services/borg/key/private".path}"
+          ${pkgs.borgbackup}/bin/borg check --verify-data \
+            'ssh://backup@storage2.friloux.me/~/rogueleader.friloux.me'
+          NTFY_TOPIC=$(cat ${config.sops.secrets."services/ntfy/topic".path})
+          ${pkgs.curl}/bin/curl -s -o /dev/null \
+            -H "Title: [RogueLeader] Intégrité Borg OK" \
+            -d "Vérification hebdomadaire des données Borg réussie" \
+            "https://ntfy.sh/$NTFY_TOPIC"
+        '';
+      };
     };
-  };
 
-  systemd.timers.borgbackup-check = {
-    description = "Timer vérification hebdomadaire Borg";
-    wantedBy = ["timers.target"];
-    timerConfig = {
-      OnCalendar = "weekly";
-      Persistent = true;
+    timers.borgbackup-check = {
+      description = "Timer vérification hebdomadaire Borg";
+      wantedBy = ["timers.target"];
+      timerConfig = {
+        OnCalendar = "weekly";
+        Persistent = true;
+      };
     };
+
+    # Must exist before the job starts, as one of its ReadWritePaths.
+    tmpfiles.rules = [
+      "d /srv/docker/sqlite-snapshots 0700 root root -"
+    ];
   };
 }
