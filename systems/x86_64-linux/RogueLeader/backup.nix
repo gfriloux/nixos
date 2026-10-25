@@ -27,13 +27,19 @@
       "/srv/docker/docs.friloux.me"
       "/srv/docker/wow-cp.friloux.me"
     ];
+    # wow-cp's live MariaDB datadir: a file-by-file copy of a running server
+    # is not restorable. The consistent copy is dumps/ (wow-cp-mysqldump,
+    # nightly, last 15 kept): restore from there, not from db/.
+    exclude = ["/srv/docker/wow-cp.friloux.me/db"];
     repo = "ssh://backup@storage2.friloux.me/~/rogueleader.friloux.me";
 
     encryption.mode = "repokey-blake2";
     encryption.passCommand = "cat ${config.sops.secrets."services/borg/passphrase".path}";
     compression = "auto,zstd";
 
-    startAt = "daily";
+    # After wow-cp's dump, which runs at 03:00 UTC (04:00 or 05:00 here), so
+    # each archive carries that night's dump instead of the previous day's.
+    startAt = "*-*-* 06:00:00";
 
     environment.BORG_RSH = "ssh -i ${config.sops.secrets."services/borg/key/private".path}";
 
