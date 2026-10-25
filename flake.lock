@@ -864,11 +864,11 @@
         "zen-browser": "zen-browser"
       },
       "locked": {
-        "lastModified": 1792357401,
-        "narHash": "sha256-dSwHjGqArPErA7IMDxpDBtqKDt48PcjBDgCJptBlqC0=",
+        "lastModified": 1792936015,
+        "narHash": "sha256-2DzYoVqM//BCnpgIaMa3A0QP0EdgJfMaC26x2X6jbB8=",
         "owner": "gfriloux",
         "repo": "stc",
-        "rev": "2315ca7ea04f2a009637b7cc30c7aee73624b3b3",
+        "rev": "1725e49bfd594d36d3a59539608eddf8d1982bc3",
         "type": "github"
       },
       "original": {
