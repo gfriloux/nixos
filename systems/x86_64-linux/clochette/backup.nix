@@ -28,13 +28,19 @@
       "/srv/docker/photos.friloux.me"
       "/home/weechat/.config/weechat"
     ];
+    # Immich's live PostgreSQL datadir: a file-by-file copy of a running
+    # cluster is not restorable. The consistent copy is Immich's own nightly
+    # pg_dumpall (02:00, last 14 kept) in upload/backups/, which is backed up.
+    exclude = ["/srv/docker/photos.friloux.me/db"];
     repo = "ssh://backup@storage2.friloux.me/~/clochette.friloux.me";
 
     encryption.mode = "repokey-blake2";
     encryption.passCommand = "cat ${config.sops.secrets."services/borg/passphrase".path}";
     compression = "auto,zstd";
 
-    startAt = "daily";
+    # After Immich's 02:00 database dump, so each archive carries that night's
+    # dump instead of the previous day's.
+    startAt = "*-*-* 03:00:00";
 
     environment.BORG_RSH = "ssh -i ${config.sops.secrets."services/borg/key/private".path}";
 
