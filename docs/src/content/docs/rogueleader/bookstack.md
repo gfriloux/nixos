@@ -49,16 +49,9 @@ docker exec wow-cp-mariadb mysqldump \
 
 ## Database Restoration
 
-```bash
-# Stop BookStack
-systemctl stop docker-wow-cp-bookstack
-
-# Restore from a dump
-docker exec -i wow-cp-mariadb mysql -u root < /srv/docker/wow-cp.friloux.me/dumps/dump.sql
-
-# Restart
-systemctl start docker-wow-cp-bookstack
-```
+See [Rite of Restoration](../operations/restore.md#bookstack-rogueleader):
+the dump needs its first line dropped before a 10.5 client accepts it, and the
+database must be created first.
 
 ## Secrets
 

@@ -50,6 +50,7 @@ Backed-up paths: `/srv/docker/traefik`,
 `crowdsec*.`, `photos.friloux.me/upload`, `/home/weechat/.config/weechat`.
 
 :::note[Marginalia]
-Immich PostgreSQL data (`photos.friloux.me/db`) is included in Borg backup.
-For clean Immich restoration, consider a pg_dump before Borg restore.
+Immich's live PostgreSQL datadir (`photos.friloux.me/db`) is excluded from Borg.
+The database is backed up through Immich's nightly dump in `upload/backups/`:
+see [Rite of Restoration](../operations/restore.md#immich-clochette).
 :::

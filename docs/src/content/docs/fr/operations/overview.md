@@ -19,6 +19,7 @@ Cette section regroupe toutes les procédures opérationnelles de la Forge.
 | Tâche | Page |
 |---|---|
 | Sauvegarder/restaurer les clés age | [Sauvegarde & Restauration des Secrets](secrets-backup.md) |
+| Restaurer les données des services depuis Borg | [Restauration des Données depuis Borg](restore.md) |
 | Réinstaller exampleHost | [Réinstallation exampleHost](reinstall-examplehost.md) |
 | Réinstaller clochette | [Réinstallation clochette](reinstall-clochette.md) |
 | Ré-enrôler Tailscale | [Tailscale — Ré-enrôlement](tailscale.md) |

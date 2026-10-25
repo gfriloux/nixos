@@ -163,30 +163,10 @@ just home_rogueleader
 
 ## Étape 8 — Restauration des Données depuis Borg (si Nécessaire)
 
-```bash
-# Depuis RogueLeader en root
-sudo -i
-
-# Lister les archives
-BORG_PASSPHRASE=$(cat /run/secrets/services/borg/passphrase) \
-BORG_RSH="ssh -i /run/secrets/services/borg/key/private" \
-borg list ssh://backup@storage2.friloux.me/~/rogueleader.friloux.me
-
-# Arrêter les containers
-systemctl stop docker-papra docker-uptime-kuma docker-mealie docker-borg-ui \
-                docker-wow-cp-bookstack docker-wow-cp-mariadb docker-wow-cp-mysqldump
-
-# Restaurer depuis /
-cd /
-BORG_PASSPHRASE=$(cat /run/secrets/services/borg/passphrase) \
-BORG_RSH="ssh -i /run/secrets/services/borg/key/private" \
-borg extract --progress \
-  ssh://backup@storage2.friloux.me/~/rogueleader.friloux.me::ARCHIVE_NAME
-
-# Redémarrer les services
-systemctl start docker-papra docker-uptime-kuma docker-mealie docker-borg-ui \
-                docker-wow-cp-bookstack docker-wow-cp-mariadb docker-wow-cp-mysqldump
-```
+Suivre [Restauration des Données depuis Borg](restore.md). L'archive ne
+contient aucune base vivante : après l'extraction, la base de BookStack doit
+être chargée depuis son dump, et celles des services SQLite remises en place
+depuis `sqlite-snapshots/`, sinon elles démarrent vides.
 
 ## Étape 9 — Vérification Finale
 

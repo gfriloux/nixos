@@ -50,6 +50,7 @@ Chemins sauvegardés : `/srv/docker/traefik`,
 `crowdsec*.`, `photos.friloux.me/upload`, `/home/weechat/.config/weechat`.
 
 :::note[Marginalia]
-Les données PostgreSQL Immich (`photos.friloux.me/db`) sont **incluses** dans le backup.
-Pour une restauration propre d'Immich, préférer un dump pg_dump avant restauration Borg.
+Le datadir PostgreSQL vivant d'Immich (`photos.friloux.me/db`) est **exclu** de Borg.
+La base est sauvegardée via le dump nocturne d'Immich dans `upload/backups/` :
+voir [Restauration des Données depuis Borg](../operations/restore.md#immich-clochette).
 :::

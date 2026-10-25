@@ -244,42 +244,10 @@ et active la surveillance de santé Docker.
 
 ## Étape 10 — Restauration des Données depuis Borg
 
-Si les données des services doivent être restaurées (cas d'une vraie perte) :
-
-```bash
-# Se connecter en tant que root sur clochette
-ssh guillaume@clochette.friloux.me
-sudo -i
-
-# Lister les archives disponibles
-BORG_PASSPHRASE=$(cat /run/secrets/services/borg/passphrase) \
-BORG_RSH="ssh -i /run/secrets/services/borg/key/private" \
-borg list ssh://backup@storage2.friloux.me/~/clochette.friloux.me
-```
-
-Exemple de sortie :
-
-```text
-clochette-2025-05-16T03:00:01      Fri, 2025-05-16 03:00:05 [...]
-clochette-2025-05-15T03:00:01      Thu, 2025-05-15 03:00:04 [...]
-```
-
-Restaurer l'archive la plus récente :
-
-```bash
-# Arrêter les containers avant restauration
-systemctl stop docker-immich-server docker-immich-postgres
-
-# Restaurer (depuis /)
-cd /
-BORG_PASSPHRASE=$(cat /run/secrets/services/borg/passphrase) \
-BORG_RSH="ssh -i /run/secrets/services/borg/key/private" \
-borg extract --progress \
-  ssh://backup@storage2.friloux.me/~/clochette.friloux.me::clochette-2025-05-16T03:00:01
-
-# Redémarrer les services
-systemctl start docker-immich-server docker-immich-postgres
-```
+Si les données des services doivent être restaurées (cas d'une vraie perte),
+suivre [Restauration des Données depuis Borg](restore.md). L'archive ne contient
+aucune base vivante : l'extraire ne suffit pas, la base d'Immich doit ensuite
+être chargée depuis son dump, sinon elle démarre vide.
 
 ## Étape 11 — Vérification Finale
 

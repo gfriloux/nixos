@@ -49,16 +49,9 @@ docker exec wow-cp-mariadb mysqldump \
 
 ## Restauration de la Base de Données
 
-```bash
-# Arrêter BookStack
-systemctl stop docker-wow-cp-bookstack
-
-# Restaurer depuis un dump
-docker exec -i wow-cp-mariadb mysql -u root < /srv/docker/wow-cp.friloux.me/dumps/dump.sql
-
-# Redémarrer
-systemctl start docker-wow-cp-bookstack
-```
+Voir [Restauration des Données depuis Borg](../operations/restore.md#bookstack-rogueleader) :
+le dump doit perdre sa première ligne pour qu'un client 10.5 l'accepte, et la
+base doit être créée avant.
 
 ## Secrets
 

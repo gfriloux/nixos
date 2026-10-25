@@ -241,42 +241,10 @@ and activates Docker health watch.
 
 ## Step 10 — Data Restoration from Borg
 
-If service data must be restored (real loss scenario):
-
-```bash
-# SSH as root to clochette
-ssh guillaume@clochette.friloux.me
-sudo -i
-
-# List available archives
-BORG_PASSPHRASE=$(cat /run/secrets/services/borg/passphrase) \
-BORG_RSH="ssh -i /run/secrets/services/borg/key/private" \
-borg list ssh://backup@storage2.friloux.me/~/clochette.friloux.me
-```
-
-Example output:
-
-```text
-clochette-2025-05-16T03:00:01      Fri, 2025-05-16 03:00:05 [...]
-clochette-2025-05-15T03:00:01      Thu, 2025-05-15 03:00:04 [...]
-```
-
-Restore the most recent archive:
-
-```bash
-# Stop daemons before restoration
-systemctl stop docker-immich-server docker-immich-postgres
-
-# Restore (from /)
-cd /
-BORG_PASSPHRASE=$(cat /run/secrets/services/borg/passphrase) \
-BORG_RSH="ssh -i /run/secrets/services/borg/key/private" \
-borg extract --progress \
-  ssh://backup@storage2.friloux.me/~/clochette.friloux.me::clochette-2025-05-16T03:00:01
-
-# Restart services
-systemctl start docker-immich-server docker-immich-postgres
-```
+If service data must be restored (real loss scenario), follow
+[Rite of Restoration](restore.md). The archive holds no live database:
+extracting it is not enough, Immich's database must then be loaded from its
+dump, or it starts empty.
 
 ## Step 11 — Final Verification
 
