@@ -70,6 +70,12 @@
       environmentFiles = [
         config.sops.secrets."services/wow-cp/env_mysqldump".path
       ];
+      # The image's MariaDB client requires TLS by default, which
+      # linuxserver/mariadb 10.5 does not offer: every dump since mid-July
+      # failed with "SSL is required, but the server does not support it"
+      # while the container stayed healthy. Plain TCP stays on the private
+      # wow-cp network.
+      environment.MYSQL_SSL_OPTS = "--skip-ssl";
       volumes = [
         "/srv/docker/wow-cp.friloux.me/dumps:/backup"
       ];
