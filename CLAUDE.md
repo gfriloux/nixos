@@ -84,8 +84,6 @@ Each monitored container only needs the label `"stc.docker/health-watch" = "true
 
 Container-specific `systemd.services` overrides (e.g. `after`/`requires` dependencies) can still be declared in `docker-*.nix` — NixOS will merge them with the generated block.
 
-**SMTP on Scaleway**: outbound ports 465 and 587 are blocked by default. Direct Gmail sending does not work. Use ntfy.sh (HTTPS) as the sole notification channel.
-
 **Log rotation**: Traefik's access log is rotated by STC's traefik relic (rename + `USR1`). For anything else, `services.logrotate.settings.<name>`.
 
 **Users**: `users.mutableUsers = false` on all systems — fully declarative, NixOS owns `/etc/shadow`.
@@ -115,3 +113,23 @@ clochette SSH is accessible **only via Tailscale** (`100.64.0.0/10`). RogueLeade
 - Do not factor out repeated label patterns into helper functions — explicit repetition is preferred for readability.
 - `nix flake check` runs STC's **purity seals** (`stc.lib.puritySeals.<system>`), one per `checks/` subdir: `nix` (deadnix + statix + alejandra), `gitleaks` (secret scan, allowlist in `.gitleaks.toml`), `markdown` (rumdl, `-d MD013,MD033`). Do not re-add per-tool `checks/` dirs — the `nix` seal already bundles the three linters. STC must be recent enough to expose `puritySeals` (it replaced the old `nix-checks` input). The pre-commit hook keeps its own local nix linters (generated in `shells/default/default.nix`) as a fast pre-commit gate.
 - The `weechat` user has a shell (fish) and SSH access intentionally — it's used to attach to a persistent zellij/weechat IRC session.
+
+## Deliberate omissions
+
+Things that are absent on purpose. Each was evaluated, often tried, and
+rejected for a cost that was measured. Do not "fix" one of them without
+reading its row first. When something is removed after being tried, add a
+row.
+
+| Absent | Why | Cost if reintroduced |
+|---|---|---|
+| `virtualisation.docker.autoPrune` | Its weekly timer is `Persistent`, so it catches up at boot, before the containers have joined their networks (`ef217e6`) | Networks deleted, every container fails with "network not found" |
+| `services.borgbackup.jobs.*.prune.keep` | storage2 prunes the repositories itself | A compromised client could rewrite its backup history through prune |
+| A host key as recipient of another host's sops file | Each host key opens its own file only; admin keys are the YubiKey and the offline rescue key (#94) | One key on one disk opens every host's secrets again |
+| Secrets in GitHub Actions | `check.yml` runs on `pull_request` only, with `contents: read` | A pull request could exfiltrate them |
+| Outbound SMTP (465, 587) on clochette | Blocked by Scaleway; direct Gmail sending does not work. ntfy.sh over HTTPS is the only notification channel | Mails silently never leave |
+| crowdsec-manager on a public route | Stays Tailscale-only until the pangolin gateway exists | The WAF admin UI exposed to the internet |
+
+Not an omission but a deliberate choice that looks like one:
+`neededForBoot = true` on every ZFS dataset, `/home` included, on exampleHost.
+Uniformity was preferred over the strict minimum.
