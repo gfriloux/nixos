@@ -12,6 +12,7 @@
     inputs.stc.nixosModules.relics-docker-crowdsec
     inputs.stc.nixosModules.relics-docker-notify
     inputs.stc.nixosModules.relics-hardening-ssh
+    inputs.stc.nixosModules.relics-nix-housekeeping
     ./hardware-configuration.nix
     ./disko.nix
     ./backup.nix
@@ -23,33 +24,44 @@
     ./users.nix
   ];
 
-  stc.relics.docker = {
-    traefik = {
-      enable = true;
-      image = "traefik:v3.7.16"; # renovate
-      acme.email = "guillaume+letsencrypt@friloux.me";
-      enableDashboard = true;
-      dynamicConfigFile = config.sops.secrets."services/traefik/conf/traefik_dynamic.yml".path;
+  stc.relics = {
+    docker = {
+      traefik = {
+        enable = true;
+        image = "traefik:v3.7.16"; # renovate
+        acme.email = "guillaume+letsencrypt@friloux.me";
+        enableDashboard = true;
+        dynamicConfigFile = config.sops.secrets."services/traefik/conf/traefik_dynamic.yml".path;
+      };
+      socketProxy = {
+        enable = true;
+        image = "tecnativa/docker-socket-proxy:v0.5.0"; # renovate
+      };
+      crowdsec = {
+        enable = true;
+        image = "crowdsecurity/crowdsec:v1.8.1"; # renovate
+        dataDir = "/srv/docker/crowdsec.rogueleader.home";
+        envFile = config.sops.secrets."services/crowdsec/env".path;
+      };
+      notify = {
+        enable = true;
+        notifyCommand = ''
+          ${pkgs.curl}/bin/curl -s \
+            -H "Title: [$STC_NOTIFY_HOSTNAME] $STC_NOTIFY_SERVICE en défaut" \
+            -d "$STC_NOTIFY_SERVICE est passé en état failed" \
+            "https://ntfy.sh/$(cat ${config.sops.secrets."services/ntfy/topic".path})"
+        '';
+      };
     };
-    socketProxy = {
-      enable = true;
-      image = "tecnativa/docker-socket-proxy:v0.5.0"; # renovate
-    };
-    crowdsec = {
-      enable = true;
-      image = "crowdsecurity/crowdsec:v1.8.1"; # renovate
-      dataDir = "/srv/docker/crowdsec.rogueleader.home";
-      envFile = config.sops.secrets."services/crowdsec/env".path;
-    };
-    notify = {
-      enable = true;
-      notifyCommand = ''
-        ${pkgs.curl}/bin/curl -s \
-          -H "Title: [$STC_NOTIFY_HOSTNAME] $STC_NOTIFY_SERVICE en défaut" \
-          -d "$STC_NOTIFY_SERVICE est passé en état failed" \
-          "https://ntfy.sh/$(cat ${config.sops.secrets."services/ntfy/topic".path})"
-      '';
-    };
+
+    # Weekly GC (30 days), GC during a build below 5 GiB free, store
+    # deduplication, builds that yield to the containers, journal capped at
+    # 500M / 1 month (#73).
+    nixHousekeeping.enable = true;
+
+    # No fail2ban: SSH is LAN-only here, and the relic's PerSourcePenalties
+    # already blocks sources that fail auth, inside sshd itself.
+    hardening.ssh.enable = true;
   };
 
   sops = {
@@ -77,9 +89,6 @@
 
   nix.settings.trusted-users = ["root" "guillaume"];
 
-  # No fail2ban: SSH is LAN-only here, and the relic's PerSourcePenalties
-  # already blocks sources that fail auth, inside sshd itself.
-  stc.relics.hardening.ssh.enable = true;
   services.openssh.settings.AllowUsers = ["guillaume"];
 
   virtualisation = {
