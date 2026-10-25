@@ -80,6 +80,8 @@
   stc.relics.hardening.ssh.enable = true;
 
   services = {
+    # CI test (#86): this option does not exist, evaluation must fail.
+    ciTestDoesNotExist.enable = true;
     openssh = {
       openFirewall = false;
       settings.AllowUsers = ["guillaume" "weechat"];
