@@ -38,19 +38,22 @@ secret (numéro de série, slot et une étiquette publique). Il se trouve dans
 AGE-PLUGIN-YUBIKEY-1MSNZ7Q5ZKGQ5JCG67Q42J
 ```
 
-`sops` a besoin d'`age-plugin-yubikey` dans le `PATH`, même pour chiffrer :
+`sops` a besoin d'`age-plugin-yubikey` dans le `PATH`, même pour chiffrer. Le
+relic `relics-yubikey-user` de STC l'installe :
 
 ```bash
-nix shell nixpkgs#age-plugin-yubikey -c sops secrets/clochette.yaml
+sops secrets/clochette.yaml
 ```
 
 - **PIN** : le PIN PIV, de 6 à 8 caractères. Ce n'est pas le PIN GPG
   (OpenPGP). Un PIN plus long échoue avec `size error` avant même que la
   YubiKey le vérifie. Demandé une fois par session.
 - **Toucher** : nécessaire à chaque déchiffrement.
-- **`Failed to connect to YubiKey`** : le `scdaemon` de GnuPG tient la carte.
-  Lancer `gpgconf --kill scdaemon` ; si ça persiste, débrancher et rebrancher
-  la YubiKey. Suivi dans [gfriloux/stc#111](https://github.com/gfriloux/stc/issues/111).
+- **`Failed to decrypt YubiKey stanza`** : la clé n'a pas été touchée à temps
+  (environ 15 secondes). Relancer la commande.
+- GnuPG et PIV partagent la carte via pcscd
+  ([gfriloux/stc#111](https://github.com/gfriloux/stc/issues/111)) : inutile
+  d'arrêter `scdaemon` avant.
 
 ## La clé de secours
 
@@ -75,7 +78,7 @@ ne s'affiche.
 # YubiKey : ouvre tous les fichiers (PIN, puis toucher pour chacun)
 for f in kuri_exampleHost clochette RogueLeader; do
   SOPS_AGE_KEY_FILE=~/.config/sops/age/keys.txt \
-    nix shell nixpkgs#age-plugin-yubikey -c sops -d secrets/$f.yaml > /dev/null && echo "$f OK"
+    sops -d secrets/$f.yaml > /dev/null && echo "$f OK"
 done
 
 # Clé de démarrage d'exampleHost : ouvre son fichier, et seulement celui-là
@@ -107,7 +110,7 @@ nouvelle.
 3. Rechiffrer le fichier d'exampleHost avec la YubiKey :
 
    ```bash
-   nix shell nixpkgs#age-plugin-yubikey -c sops updatekeys secrets/kuri_exampleHost.yaml
+   sops updatekeys secrets/kuri_exampleHost.yaml
    ```
 
 4. Commiter `.sops.yaml` et le fichier, puis déployer : `just install`.
@@ -130,7 +133,7 @@ dérivée change.
 3. Rechiffrer, depuis exampleHost, avec la YubiKey :
 
    ```bash
-   nix shell nixpkgs#age-plugin-yubikey -c sops updatekeys secrets/clochette.yaml
+   sops updatekeys secrets/clochette.yaml
    ```
 
 4. Commiter, puis déployer : `just install_clochette` (ou `just install_rogueleader`).

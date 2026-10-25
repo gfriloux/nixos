@@ -36,19 +36,22 @@ file**: that would bring back a single key that opens everything.
 AGE-PLUGIN-YUBIKEY-1MSNZ7Q5ZKGQ5JCG67Q42J
 ```
 
-`sops` needs `age-plugin-yubikey` in `PATH`, even to encrypt:
+`sops` needs `age-plugin-yubikey` in `PATH`, even to encrypt. STC's
+`relics-yubikey-user` installs it:
 
 ```bash
-nix shell nixpkgs#age-plugin-yubikey -c sops secrets/clochette.yaml
+sops secrets/clochette.yaml
 ```
 
 - **PIN**: the PIV PIN, 6 to 8 characters. It is not the GPG (OpenPGP) PIN.
   A longer PIN fails with `size error` before the YubiKey even checks it.
   Asked once per session.
 - **Touch**: required for every decryption.
-- **`Failed to connect to YubiKey`**: GnuPG's `scdaemon` holds the card. Run
-  `gpgconf --kill scdaemon`; if it persists, unplug and replug the YubiKey.
-  Tracked in [gfriloux/stc#111](https://github.com/gfriloux/stc/issues/111).
+- **`Failed to decrypt YubiKey stanza`**: the key was not touched in time
+  (about 15 seconds). Run the command again.
+- GnuPG and PIV share the card through pcscd
+  ([gfriloux/stc#111](https://github.com/gfriloux/stc/issues/111)): no need to
+  stop `scdaemon` first.
 
 ## The Rescue Key
 
@@ -70,7 +73,7 @@ Run a few times a year. The output goes to `/dev/null`: no secret is shown.
 # YubiKey: opens every file (PIN, then touch for each)
 for f in kuri_exampleHost clochette RogueLeader; do
   SOPS_AGE_KEY_FILE=~/.config/sops/age/keys.txt \
-    nix shell nixpkgs#age-plugin-yubikey -c sops -d secrets/$f.yaml > /dev/null && echo "$f OK"
+    sops -d secrets/$f.yaml > /dev/null && echo "$f OK"
 done
 
 # exampleHost's boot key: opens its own file, and only that one
@@ -100,7 +103,7 @@ The boot key is no longer precious: a reinstall gets a new one.
 3. Re-encrypt exampleHost's file with the YubiKey:
 
    ```bash
-   nix shell nixpkgs#age-plugin-yubikey -c sops updatekeys secrets/kuri_exampleHost.yaml
+   sops updatekeys secrets/kuri_exampleHost.yaml
    ```
 
 4. Commit `.sops.yaml` and the file, then deploy: `just install`.
@@ -122,7 +125,7 @@ A reinstall generates a **new SSH host key**, so the derived age key changes.
 3. Re-encrypt, from exampleHost, with the YubiKey:
 
    ```bash
-   nix shell nixpkgs#age-plugin-yubikey -c sops updatekeys secrets/clochette.yaml
+   sops updatekeys secrets/clochette.yaml
    ```
 
 4. Commit, then deploy: `just install_clochette` (or `just install_rogueleader`).
