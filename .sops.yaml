@@ -1,19 +1,31 @@
 keys:
+  # Decrypts exampleHost's own secrets at boot (/etc/sops/age/keys.txt).
+  # Deliberately not a recipient of the servers' files: it sits in clear on
+  # disk, and must not unlock every host.
   - &desktop_examplehost age1xr32hdvanup0zk63v8hrcv2u2c09wplz6fd42w47mkjrd49j39xqaqqckq
   - &server_clochette age18594hnd4mk3736a36a5fqc5w55sanac86tv8du0hz67rfk558srs3y9jwa
   - &server_rogueleader age1nttxr633hf6r43szc9ffl2a0avmtmhtl7hhnjjuyd3sc4au705nqffyfwe
+  # Admin keys, for editing with sops; never used at boot.
+  # YubiKey 5 NFC serial 36644572, PIV slot 1 (needs age-plugin-yubikey).
+  - &admin_yubikey age1yubikey1qtsqgx98tq7d005aue4lqth3z5hgu67e9eee490mpf0phfx7znghqr8x67l
+  # Offline rescue key, if the YubiKey is lost: kept off every host.
+  - &admin_rescue age1faz4m9gj9xyz4rm26gndwgjkwrwr9ppnzm48slcrne7uvf3afqcsxtv8hs
 creation_rules:
   - path_regex: secrets/kuri_exampleHost.yaml$
     key_groups:
     - age:
       - *desktop_examplehost
+      - *admin_yubikey
+      - *admin_rescue
   - path_regex: secrets/clochette.yaml
     key_groups:
     - age:
       - *server_clochette
-      - *desktop_examplehost
+      - *admin_yubikey
+      - *admin_rescue
   - path_regex: secrets/RogueLeader.yaml
     key_groups:
     - age:
       - *server_rogueleader
-      - *desktop_examplehost
+      - *admin_yubikey
+      - *admin_rescue
