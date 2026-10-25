@@ -23,7 +23,7 @@ snowfall-lib **ne propage pas** les modules globalement — chaque sanctuaire do
 
 ## Le Reliquaire
 
-Tous les secrets sont scellés avec age + sops-nix. La clé privée age de exampleHost est la clé maîtresse — elle peut sceller tous les reliquaires à travers la Forge.
+Tous les secrets sont scellés avec age + sops-nix. La clé de chaque machine n'ouvre que son propre reliquaire ; l'édition passe par des clés d'administration qui ne sont sur aucune machine (une YubiKey et une clé de secours hors ligne). Voir [Reliquaires de Secrets](secrets.md).
 
 ## Démons Liés — Services Web (clochette)
 

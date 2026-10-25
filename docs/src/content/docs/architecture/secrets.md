@@ -7,22 +7,29 @@ Secrets are sealed with [sops](https://github.com/getsops/sops) and [age](https:
 
 ## The Key Model
 
-Each shrine bears its own age key (private/public pair).
-The private age key of exampleHost is the **master key** — it unseals all reliquaries across the Forge.
+Two kinds of keys, with separate jobs:
 
-| Shrine | Key Type | Private Location |
-|---|---|---|
-| exampleHost | Dedicated age file | `/etc/sops/age/keys.txt` |
-| clochette | Derived from SSH host key | Derived at runtime from `/etc/ssh/ssh_host_ed25519_key` |
-| RogueLeader | Derived from SSH host key | Derived at runtime from `/etc/ssh/ssh_host_ed25519_key` |
+- **Host keys** decrypt a shrine's own file at boot. Each one opens a single
+  file, so a shrine whose disk is read exposes its own secrets, not the
+  others'.
+- **Admin keys** edit the files with `sops`. They are recipients of every
+  file and never sit in clear on a shrine.
+
+| Key | Kind | Private part | Opens |
+|---|---|---|---|
+| exampleHost | Host, dedicated age file | `/etc/sops/age/keys.txt` | `kuri_exampleHost.yaml` |
+| clochette | Host, derived from SSH host key | `/etc/ssh/ssh_host_ed25519_key` | `clochette.yaml` |
+| RogueLeader | Host, derived from SSH host key | `/etc/ssh/ssh_host_ed25519_key` | `RogueLeader.yaml` |
+| YubiKey | Admin, age identity in PIV slot 1 | on the YubiKey, not extractable | all three |
+| Rescue | Admin, plain age key | offline, off every shrine | all three |
 
 ## Sealed Vaults
 
 | File | Unsealable by |
 |---|---|
-| `secrets/kuri_exampleHost.yaml` | exampleHost only |
-| `secrets/clochette.yaml` | clochette + exampleHost |
-| `secrets/RogueLeader.yaml` | RogueLeader + exampleHost |
+| `secrets/kuri_exampleHost.yaml` | exampleHost + YubiKey + rescue |
+| `secrets/clochette.yaml` | clochette + YubiKey + rescue |
+| `secrets/RogueLeader.yaml` | RogueLeader + YubiKey + rescue |
 
 ## Unsealing at Boot
 
@@ -38,6 +45,8 @@ keys:
   - &desktop_examplehost age1xr32hdvanup0zk63v8hrcv2u2c09wplz6fd42w47mkjrd49j39xqaqqckq
   - &server_clochette     age18594hnd4mk3736a36a5fqc5w55sanac86tv8du0hz67rfk558srs3y9jwa
   - &server_rogueleader   age1nttxr633hf6r43szc9ffl2a0avmtmhtl7hhnjjuyd3sc4au705nqffyfwe
+  - &admin_yubikey        age1yubikey1qtsqgx98tq7d005aue4lqth3z5hgu67e9eee490mpf0phfx7znghqr8x67l
+  - &admin_rescue         age1faz4m9gj9xyz4rm26gndwgjkwrwr9ppnzm48slcrne7uvf3afqcsxtv8hs
 ```
 
 Each file's sealing rules are defined under `creation_rules`.
@@ -63,5 +72,5 @@ users.users.kuri.hashedPasswordFile =
 ```
 
 :::caution[Ward]
-This reliquary is sealed for a reason. Mishandle the master key, and all shrines are exposed.
+This reliquary is sealed for a reason. Never make a host key a recipient of another shrine's file: that is how one stolen disk would expose every shrine.
 :::

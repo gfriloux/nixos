@@ -1,277 +1,143 @@
 ---
 title: Reliquary Backup & Restoration — Age Key Management
-description: Safeguarding the master key, recovering from loss, updating keys after reinstall.
+description: Who holds which key, how to edit secrets with the YubiKey, and how to recover from a lost key or a reinstall.
 ---
 
 Secrets are sealed with [sops-nix](https://github.com/Mic92/sops-nix) and [age](https://age-encryption.org/) keys.
-The encrypted files (`.yaml`) are versioned in git — safe to expose without the private key.
-What must be **absolutely** guarded is the master age key of exampleHost.
+The encrypted files (`.yaml`) are versioned in git — safe to expose without the private keys.
+What must be guarded is the **rescue key**, the only key that is not tied to a device.
 
-## Secret Files Overview
+## Key Custody
 
-| File | Encrypted by |
-|---|---|
-| `secrets/kuri_exampleHost.yaml` | exampleHost age key only |
-| `secrets/clochette.yaml` | clochette age key **+** exampleHost age key |
-| `secrets/RogueLeader.yaml` | RogueLeader age key **+** exampleHost age key |
+| Key | Role | Where the private part lives | Opens |
+|---|---|---|---|
+| exampleHost | Boot of exampleHost | `/etc/sops/age/keys.txt` (clear, `0640 root:users`) | `kuri_exampleHost.yaml` |
+| clochette | Boot of clochette | derived from `/etc/ssh/ssh_host_ed25519_key` | `clochette.yaml` |
+| RogueLeader | Boot of RogueLeader | derived from `/etc/ssh/ssh_host_ed25519_key` | `RogueLeader.yaml` |
+| YubiKey | Editing with `sops` | YubiKey 5 NFC (serial 36644572), PIV slot 1 | all three |
+| Rescue | Editing if the YubiKey is lost | offline, off every shrine | all three |
 
-**Critical**: The private age key of exampleHost unseals **all** reliquaries across the Forge.
-Loss of this key renders `kuri_exampleHost.yaml` irrecoverable.
+Public keys and recipients per file are in `.sops.yaml`.
 
-## Age Keys by Shrine
+A host key opens its own file only. Reading exampleHost's disk exposes
+exampleHost's secrets — which include SSH keys to the servers — but not the
+servers' sops files. **Never add a host key as a recipient of another shrine's
+file**: that would bring back a single key that opens everything.
 
-### exampleHost
+## Editing Secrets with the YubiKey
 
-- **Type**: Dedicated age key, manually managed
-- **Location**: `/etc/sops/age/keys.txt`
-- **Permissions**: `0640 root:users` (readable by `users` group)
-- **Public key**: `age1xr32hdvanup0zk63v8hrcv2u2c09wplz6fd42w47mkjrd49j39xqaqqckq`
-
-This is the **only key that must be backed up offline**. See procedure below.
-
-### clochette
-
-- **Type**: Age key derived from SSH host ed25519 key
-- **Source**: `/etc/ssh/ssh_host_ed25519_key` (auto-generated at install)
-- **Public key**: `age18594hnd4mk3736a36a5fqc5w55sanac86tv8du0hz67rfk558srs3y9jwa`
-
-The age private key does not exist as a file — sops-nix derives it on-the-fly from the SSH host key.
-After reinstall, a new SSH host key is generated → age key changes → update `.sops.yaml`.
-
-### RogueLeader
-
-- **Type**: Age key derived from SSH host ed25519 key
-- **Source**: `/etc/ssh/ssh_host_ed25519_key` (explicit in config)
-- **Public key**: `age1nttxr633hf6r43szc9ffl2a0avmtmhtl7hhnjjuyd3sc4au705nqffyfwe`
-
-Same behaviour as clochette.
-
-## What Is Already Backed Up
-
-| Element | Where | Status |
-|---|---|---|
-| Encrypted secret files (`*.yaml`) | git repo | ✅ Auto-versioned |
-| sops config (`.sops.yaml`) | git repo | ✅ Auto-versioned |
-| exampleHost age private key | `/etc/sops/age/keys.txt` | ⚠️ Manual backup required |
-| clochette/RogueLeader SSH host keys | `/etc/ssh/ssh_host_ed25519_key` | ⚠️ Regenerated at each reinstall |
-
-## Backup Procedure — exampleHost Age Key
-
-### Display Public Key (Verification)
-
-From exampleHost:
-
-```bash
-age-keygen -y /etc/sops/age/keys.txt
-```
-
-Expected output:
+`sops` finds the YubiKey through an identity stub, which holds no secret
+(serial, slot, and a public tag). It lives in `~/.config/sops/age/keys.txt`:
 
 ```text
-age1xr32hdvanup0zk63v8hrcv2u2c09wplz6fd42w47mkjrd49j39xqaqqckq
+#       Serial: 36644572, Slot: 1
+#         Name: sops-master
+#    Recipient: age1yubikey1qtsqgx98tq7d005aue4lqth3z5hgu67e9eee490mpf0phfx7znghqr8x67l
+AGE-PLUGIN-YUBIKEY-1MSNZ7Q5ZKGQ5JCG67Q42J
 ```
 
-If this does not match the key in `.sops.yaml`, investigate immediately.
-
-### Display Private Key
+`sops` needs `age-plugin-yubikey` in `PATH`, even to encrypt:
 
 ```bash
-sudo cat /etc/sops/age/keys.txt
+nix shell nixpkgs#age-plugin-yubikey -c sops secrets/clochette.yaml
 ```
 
-Content looks like:
+- **PIN**: the PIV PIN, 6 to 8 characters. It is not the GPG (OpenPGP) PIN.
+  A longer PIN fails with `size error` before the YubiKey even checks it.
+  Asked once per session.
+- **Touch**: required for every decryption.
+- **`Failed to connect to YubiKey`**: GnuPG's `scdaemon` holds the card. Run
+  `gpgconf --kill scdaemon`; if it persists, unplug and replug the YubiKey.
+  Tracked in [gfriloux/stc#111](https://github.com/gfriloux/stc/issues/111).
 
-```text
-# created: 2024-01-01T00:00:00+01:00
-# public key: age1xr32hdvanup0zk63v8hrcv2u2c09wplz6fd42w47mkjrd49j39xqaqqckq
-AGE-SECRET-KEY-1XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+## The Rescue Key
+
+A plain age key, generated on 2026-10-25, stored offline and on no shrine.
+Its public key is `age1faz4m9gj9xyz4rm26gndwgjkwrwr9ppnzm48slcrne7uvf3afqcsxtv8hs`.
+
+To use it, put it in a temporary file, point sops at it, then destroy the file:
+
+```bash
+SOPS_AGE_KEY_FILE=/tmp/rescue.txt sops secrets/clochette.yaml
+shred -u /tmp/rescue.txt
 ```
-
-### Where to Store the Backup
-
-Store the private key in **at least two** of the following:
-
-1. **Password manager** (Bitwarden/rbw): paste full content in a secure note
-2. **Encrypted USB** (LUKS) stored offsite
-3. **Paper** in a safe place (safe deposit box, etc.) — plain text sufficient
-
-Never store the backup only on exampleHost itself.
 
 ## Verification Procedure
 
-Regularly verify the backup can decrypt secrets.
-
-From exampleHost, with the key in place:
+Run a few times a year. The output goes to `/dev/null`: no secret is shown.
 
 ```bash
-# Decrypt clochette.yaml (displays plaintext — do not share terminal)
-sops -d secrets/clochette.yaml
+# YubiKey: opens every file (PIN, then touch for each)
+for f in kuri_exampleHost clochette RogueLeader; do
+  SOPS_AGE_KEY_FILE=~/.config/sops/age/keys.txt \
+    nix shell nixpkgs#age-plugin-yubikey -c sops -d secrets/$f.yaml > /dev/null && echo "$f OK"
+done
 
-# Decrypt kuri_exampleHost.yaml
-sops -d secrets/kuri_exampleHost.yaml
-
-# Decrypt RogueLeader.yaml
-sops -d secrets/RogueLeader.yaml
+# exampleHost's boot key: opens its own file, and only that one
+for f in kuri_exampleHost clochette RogueLeader; do
+  SOPS_AGE_KEY_FILE=/etc/sops/age/keys.txt sops -d secrets/$f.yaml > /dev/null 2>&1 \
+    && echo "$f: opens" || echo "$f: refused"
+done
+# Expected: kuri_exampleHost opens, clochette and RogueLeader refused
 ```
 
-These must execute without error. If sops returns `could not decrypt`, the key is missing or wrong.
+Test the rescue key the same way from its offline copy.
 
-## Restoration Procedure — exampleHost Age Key
+## Reinstalling exampleHost
 
-Situation: exampleHost was reinstalled, `/etc/sops/age/keys.txt` no longer exists.
+The boot key is no longer precious: a reinstall gets a new one.
 
-## 1. Create the directory
+1. Generate it:
 
-```bash
-sudo mkdir -p /etc/sops/age
-sudo chmod 750 /etc/sops/age
-```
+   ```bash
+   sudo mkdir -p /etc/sops/age
+   sudo age-keygen -o /etc/sops/age/keys.txt
+   sudo chown root:users /etc/sops/age/keys.txt && sudo chmod 640 /etc/sops/age/keys.txt
+   sudo age-keygen -y /etc/sops/age/keys.txt    # new public key
+   ```
 
-## 2. Restore the key from backup
+2. In `.sops.yaml`, replace `&desktop_examplehost` with the new public key.
+3. Re-encrypt exampleHost's file with the YubiKey:
 
-Paste the complete backup content (full private key) into the file:
+   ```bash
+   nix shell nixpkgs#age-plugin-yubikey -c sops updatekeys secrets/kuri_exampleHost.yaml
+   ```
 
-```bash
-sudo micro /etc/sops/age/keys.txt
-# or
-sudo tee /etc/sops/age/keys.txt << 'EOF'
-# created: 2024-01-01T00:00:00+01:00
-# public key: age1xr32hdvanup0zk63v8hrcv2u2c09wplz6fd42w47mkjrd49j39xqaqqckq
-AGE-SECRET-KEY-1XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-EOF
-```
+4. Commit `.sops.yaml` and the file, then deploy: `just install`.
 
-## 3. Correct permissions
+The old `keys.txt`, if a backup of it still exists, no longer opens anything
+once `updatekeys` has run: destroy it.
 
-```bash
-sudo chmod 640 /etc/sops/age/keys.txt
-sudo chown root:users /etc/sops/age/keys.txt
-```
+## Reinstalling clochette or RogueLeader
 
-## 4. Verify
+A reinstall generates a **new SSH host key**, so the derived age key changes.
 
-```bash
-age-keygen -y /etc/sops/age/keys.txt
-# Must display: age1xr32hdvanup0zk63v8hrcv2u2c09wplz6fd42w47mkjrd49j39xqaqqckq
+1. Get the new public key, from the reinstalled shrine:
 
-sops -d secrets/kuri_exampleHost.yaml
-# Must display decrypted content without error
-```
+   ```bash
+   nix run nixpkgs#ssh-to-age -- -i /etc/ssh/ssh_host_ed25519_key.pub
+   ```
 
-## 5. Redeploy NixOS
+2. In `.sops.yaml`, replace `&server_clochette` (or `&server_rogueleader`).
+3. Re-encrypt, from exampleHost, with the YubiKey:
 
-```bash
-just install_examplehost --ask-sudo-password
-```
+   ```bash
+   nix shell nixpkgs#age-plugin-yubikey -c sops updatekeys secrets/clochette.yaml
+   ```
 
-sops-nix re-deposits secrets in `/run/secrets` and `/run/user/1000/secrets`.
+4. Commit, then deploy: `just install_clochette` (or `just install_rogueleader`).
 
-## Post-Reinstall Procedure — clochette or RogueLeader
+## Lost Keys
 
-When clochette or RogueLeader is reinstalled, a **new SSH host key** is generated.
-The derived age key changes and no longer matches `.sops.yaml`.
-Update `.sops.yaml` and re-encrypt the affected secrets.
-
-### 1. Obtain the New Age Public Key
-
-From the reinstalled shrine (via Tailscale or console):
-
-```bash
-# Convert SSH host key to age public key
-nix run nixpkgs#ssh-to-age -- -i /etc/ssh/ssh_host_ed25519_key.pub
-```
-
-Example output:
-
-```text
-age18594hnd4mk3736a36a5fqc5w55sanac86tv8du0hz67rfk558srs3y9jwa
-```
-
-### 2. Update `.sops.yaml`
-
-In the git repo, replace the old public key with the new one.
-
-For clochette, edit `.sops.yaml`:
-
-```yaml
-keys:
-  - &server_clochette age1NEW_PUBLIC_KEY_HERE
-```
-
-For RogueLeader:
-
-```yaml
-keys:
-  - &server_rogueleader age1NEW_PUBLIC_KEY_HERE
-```
-
-### 3. Re-encrypt Secret Files
-
-From exampleHost (which can still decrypt via its master key):
-
-```bash
-# For clochette
-sops updatekeys secrets/clochette.yaml
-
-# For RogueLeader
-sops updatekeys secrets/RogueLeader.yaml
-```
-
-`updatekeys` re-encrypts with the keys now defined in `.sops.yaml`.
-Confirm with `y` when sops asks.
-
-### 4. Verify and Commit
-
-```bash
-# Verify files are updated
-git diff secrets/
-
-# Commit
-git add .sops.yaml secrets/clochette.yaml  # or secrets/RogueLeader.yaml
-git commit -m "chore(secrets): rotate age key for clochette after reinstall"
-```
-
-### 5. Deploy
-
-```bash
-just install_clochette --ask-sudo-password
-```
-
-## Catastrophe Scenario — Lost Master Key Without Backup
-
-If the exampleHost private age key is lost **and** no backup exists:
-
-| File | Situation |
-|---|---|
-| `kuri_exampleHost.yaml` | **Irrecoverable** — encrypted only with lost key |
-| `clochette.yaml` | Recoverable from clochette (via its SSH host key) |
-| `RogueLeader.yaml` | Recoverable from RogueLeader (via its SSH host key) |
-
-**For `kuri_exampleHost.yaml`: start from scratch**
-
-```bash
-# Generate a new age key
-age-keygen -o /etc/sops/age/keys.txt
-
-# Display the new public key
-age-keygen -y /etc/sops/age/keys.txt
-
-# Update .sops.yaml with the new public key
-# Replace desktop_examplehost
-
-# Recreate kuri_exampleHost.yaml from scratch
-sops secrets/kuri_exampleHost.yaml
-# Manually enter all secrets (passwords, etc.)
-
-# Re-encrypt clochette.yaml and RogueLeader.yaml with new key
-sops updatekeys secrets/clochette.yaml
-sops updatekeys secrets/RogueLeader.yaml
-
-# Commit
-git add .sops.yaml secrets/
-git commit -m "chore(secrets): rotate all age keys after exampleHost key loss"
-```
+| Lost | Consequence | Recovery |
+|---|---|---|
+| exampleHost's boot key | exampleHost cannot decrypt its secrets at boot | Reinstall procedure above, with the YubiKey |
+| A server's SSH host key | That server cannot decrypt its secrets | Server reinstall procedure above |
+| YubiKey | No more editing with it | Use the rescue key, enrol a new YubiKey, `updatekeys` all three files, remove the old `&admin_yubikey` |
+| Rescue key | No fallback if the YubiKey is lost | Generate a new one, `updatekeys` all three files with the YubiKey |
+| YubiKey **and** rescue key | No admin key left | Each file can still be read on its own shrine with its host key: re-encrypt from there to new admin keys |
 
 :::danger[Interdict]
-This scenario underscores the importance of offline backup of `/etc/sops/age/keys.txt`.
+Losing the YubiKey and the rescue key together leaves no key that opens every file.
+Keep the rescue key offline, away from the YubiKey, and test it.
 :::

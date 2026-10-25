@@ -86,18 +86,21 @@ Deployment goes over SSH as `guillaume`, using `--ask-sudo-password`.
 
 ## Secrets
 
-Three age-encrypted files, one per host. The workstation key is the master — it
-can decrypt all three, so it is the one that matters for backup and restore.
+Three age-encrypted files, one per host. Each host decrypts its own file at
+boot with its own key. Editing goes through two admin keys that never sit in
+clear on a host: an age identity on a YubiKey (PIV slot, PIN and touch) and an
+offline rescue key.
 
 | File | Recipients |
 |---|---|
-| `secrets/kuri_exampleHost.yaml` | workstation |
-| `secrets/clochette.yaml` | clochette + workstation |
-| `secrets/RogueLeader.yaml` | RogueLeader + workstation |
+| `secrets/kuri_exampleHost.yaml` | workstation + YubiKey + rescue |
+| `secrets/clochette.yaml` | clochette + YubiKey + rescue |
+| `secrets/RogueLeader.yaml` | RogueLeader + YubiKey + rescue |
 
-The workstation reads its key from `/etc/sops/age/keys.txt`; the two servers
-derive theirs from their SSH host key. Reinstalling a server changes that host
-key, which means updating `.sops.yaml` and re-running `sops updatekeys`. The
+The workstation reads its boot key from `/etc/sops/age/keys.txt`, which only
+opens its own file; the two servers derive theirs from their SSH host key.
+Reinstalling a host changes its key, which means updating `.sops.yaml` and
+re-running `sops updatekeys` with the YubiKey. The
 [docs](https://gfriloux.github.io/nixos/) walk through the whole procedure.
 
 ## Checks

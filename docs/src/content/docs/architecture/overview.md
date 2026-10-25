@@ -23,7 +23,7 @@ snowfall-lib does **not** propagate modules globally — each shrine must explic
 
 ## The Reliquary
 
-All secrets are sealed with age + sops-nix. The private age key of exampleHost is the master key — it can unseal all reliquaries across the Forge.
+All secrets are sealed with age + sops-nix. Each shrine's key opens only its own reliquary; editing goes through admin keys kept off every shrine (a YubiKey and an offline rescue key). See [The Reliquary](secrets.md).
 
 ## Bound Daemons — Services Web (clochette)
 
