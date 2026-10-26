@@ -217,9 +217,18 @@ in {
   };
 
   systemd = {
+    # IPv6 sur le réseau (préfixe ULA) : Docker publie alors les ports de
+    # gerbil en IPv6 par DNAT ip6tables, qui garde l'adresse du visiteur. Sans
+    # ça, l'IPv6 passe par docker-proxy et traefik voit la passerelle Docker,
+    # une IP privée que crowdsec ignore. Le script ne recrée pas un réseau
+    # existant : changer ces options demande un `docker network rm pangolin`.
     services."docker-network-pangolin" =
       inputs.stc.lib.docker.mkNetwork pkgs "pangolin"
       // {
+        script = ''
+          docker network inspect pangolin \
+            || docker network create --ipv6 --subnet fd49:e7d1:9e38::/64 pangolin
+        '';
         before = ["docker-pangolin.service" "docker-gerbil.service" "crowdsec.service"];
         requiredBy = ["docker-pangolin.service" "docker-gerbil.service" "crowdsec.service"];
       };
@@ -231,7 +240,8 @@ in {
     ];
   };
 
-  # Avec le userland-proxy de Docker, l'IPv6 entre par INPUT : il faut ouvrir.
+  # Ouverts pour les cas où docker-proxy prend la connexion sur l'hôte (INPUT)
+  # plutôt que le DNAT (FORWARD, hors du pare-feu NixOS).
   networking.firewall = {
     allowedTCPPorts = [80 443];
     allowedUDPPorts = [443 51820 21820];
