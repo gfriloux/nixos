@@ -1,9 +1,9 @@
 ---
-title: The Three Machine-Shrines
-description: Details of exampleHost, clochette, and RogueLeader — their hardware, roles, and bound daemons.
+title: The Four Machine-Shrines
+description: Details of exampleHost, clochette, RogueLeader, and skitarii — their hardware, roles, and bound daemons.
 ---
 
-Behold the three shrines that form the KURI Forge: the workstation where the Techpriest labours, the VPS where daemons serve the noosphere, and the home-shrine that tends the archive.
+Behold the four shrines that form the KURI Forge: the workstation where the Techpriest labours, the VPS where daemons serve the noosphere, the home-shrine that tends the archive, and the gate-shrine that will one day guard them all.
 
 ## exampleHost — The Workstation-Shrine
 
@@ -67,3 +67,18 @@ Behold the three shrines that form the KURI Forge: the workstation where the Tec
 bookstack + mariadb + mysqldump). Both papra and BookStack are exposed
 publicly through Traefik + CrowdSec, reached via a box port-forward of
 80/443 to 192.168.0.10.
+
+## skitarii — The Gate-Shrine
+
+| Parameter | Value |
+|---|---|
+| Role | Future gateway (pangolin, gerbil, traefik, crowdsec, crowdsec-manager) |
+| Host | OVH VPS-1 |
+| Public IP | `5.196.4.180`, `2001:41d0:404:200::487d` |
+| OS | NixOS |
+| Storage | `/dev/sda`, ext4 (disko, GPT, BIOS) |
+| SSH Access | Tailscale only |
+| sops | Age key derived from SSH host key |
+| stateVersion | `26.05` |
+
+**Bound daemons:** none yet. See [skitarii](../skitarii/overview.md).

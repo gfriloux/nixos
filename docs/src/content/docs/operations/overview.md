@@ -22,6 +22,7 @@ This section gathers all operational ceremonies — from daily maintenance to em
 | Restore service data from Borg | [Rite of Restoration](restore.md) |
 | Reinstall exampleHost | [Rite of Resurrection: exampleHost](reinstall-examplehost.md) |
 | Reinstall clochette | [Rite of Resurrection: clochette](reinstall-clochette.md) |
+| Reinstall skitarii | [Rite of Resurrection: skitarii](reinstall-skitarii.md) |
 | Re-enroll Tailscale | [Tailscale — Re-enrollment](tailscale.md) |
 
 ## General Principle

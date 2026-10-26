@@ -66,6 +66,11 @@ export default defineConfig({
               translations: { fr: 'RogueLeader' },
               items: [{ autogenerate: { directory: 'rogueleader' } }],
             },
+            {
+              label: 'skitarii',
+              translations: { fr: 'skitarii' },
+              items: [{ autogenerate: { directory: 'skitarii' } }],
+            },
           ],
         },
         {

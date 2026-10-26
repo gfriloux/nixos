@@ -1,9 +1,9 @@
 ---
 title: Sanctuaires-Machines
-description: Spécifications des trois sanctuaires-machines — exampleHost, clochette, RogueLeader.
+description: Spécifications des quatre sanctuaires-machines — exampleHost, clochette, RogueLeader, skitarii.
 ---
 
-L'infrastructure consiste en trois hôtes consacrés, chacun ayant un rôle distinct et une configuration propre.
+L'infrastructure consiste en quatre hôtes consacrés, chacun ayant un rôle distinct et une configuration propre.
 
 ## exampleHost
 
@@ -67,3 +67,18 @@ Services Docker : borg-ui, mealie, uptime-kuma, papra
 bookstack + mariadb + mysqldump). papra et BookStack sont tous deux exposés
 publiquement via Traefik + CrowdSec, atteints par une redirection de port
 80/443 de la box vers 192.168.0.10.
+
+## skitarii
+
+| Paramètre | Valeur |
+|---|---|
+| Rôle | Futur gateway (pangolin, gerbil, traefik, crowdsec, crowdsec-manager) |
+| Hébergeur | OVH VPS-1 |
+| IP publique | `5.196.4.180`, `2001:41d0:404:200::487d` |
+| OS | NixOS |
+| Disque | `/dev/sda`, ext4 (disko, GPT, BIOS) |
+| SSH | Uniquement via Tailscale |
+| sops | Clé age dérivée de la clé SSH host |
+| stateVersion | `26.05` |
+
+Services Docker : aucun pour l'instant. Voir [skitarii](../skitarii/overview.md).

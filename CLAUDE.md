@@ -2,11 +2,12 @@
 
 ## Structure
 
-Snowfall-lib flake with three systems:
+Snowfall-lib flake with four systems:
 
 - `clochette` — VPS (Scaleway), Docker-based services behind Traefik
 - `exampleHost` — desktop workstation (ZFS mirror, AMD GPU, Plasma 6)
 - `RogueLeader` — local dedicated server, Docker-based services
+- `skitarii` — VPS (OVH VPS-1), future pangolin gateway; base system only for now
 
 Two homes on clochette: `guillaume` (admin), `weechat` (IRC session via zellij).
 
@@ -15,6 +16,7 @@ Secrets managed with sops-nix + age encryption:
 - `secrets/clochette.yaml` — encrypted with clochette key + admin keys
 - `secrets/kuri_exampleHost.yaml` — encrypted with exampleHost key + admin keys
 - `secrets/RogueLeader.yaml` — encrypted with RogueLeader key + admin keys
+- `secrets/skitarii.yaml` — encrypted with skitarii key + admin keys
 
 Admin keys (editing only, never at boot): an age identity on the YubiKey (PIV slot 1, needs `age-plugin-yubikey`, PIV PIN ≠ GPG PIN) and an offline rescue key. No host key may be a recipient of another host's file (#94).
 
@@ -23,6 +25,7 @@ Age key locations:
 - exampleHost: `/etc/sops/age/keys.txt` (manually placed, opens `kuri_exampleHost.yaml` only)
 - clochette: derived from `/etc/ssh/ssh_host_ed25519_key` (no explicit keyFile)
 - RogueLeader: derived from `/etc/ssh/ssh_host_ed25519_key` (via `age.sshKeyPaths`)
+- skitarii: same as RogueLeader; the host key is generated on exampleHost before install and passed with `nixos-anywhere --extra-files`
 
 ## Documentation
 
@@ -48,7 +51,7 @@ just docs-preview   # serve the built dist
 
 **CI**: `.github/workflows/docs.yml` — triggers on push to `main` when `docs/**` changes, builds with Node 22, deploys to GitHub Pages via `actions/upload-pages-artifact` + `actions/deploy-pages`.
 
-Covers: reinstallation procedures (all 3 machines), secrets backup/restore, Tailscale re-enrollment, deployment reference, per-service guides, troubleshooting.
+Covers: reinstallation procedures (all 4 machines), secrets backup/restore, Tailscale re-enrollment, deployment reference, per-service guides, troubleshooting.
 
 ## Docker services
 
@@ -101,11 +104,12 @@ just install             # exampleHost (local, nh os switch)
 just install_clochette   # requires --ask-sudo-password
 just install_rogueleader # requires --ask-sudo-password
 just home_rogueleader    # Home Manager only for RogueLeader
+just install_skitarii    # through the tailnet, ssh block pins the key
 ```
 
 The deploy user is `guillaume` via SSH. Always keep a root shell open before applying changes that touch sudo or user config.
 
-clochette SSH is accessible **only via Tailscale** (`100.64.0.0/10`). RogueLeader is accessible on the local network (`192.168.0.10`).
+clochette and skitarii SSH are accessible **only via Tailscale** (`100.64.0.0/10`). skitarii is installed from the OVH rescue (disk is `sdb` there, `sda` in normal boot) — see `docs/src/content/docs/operations/reinstall-skitarii.md`. RogueLeader is accessible on the local network (`192.168.0.10`).
 
 ## Preferences
 
