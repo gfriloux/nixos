@@ -55,13 +55,17 @@ Covers: reinstallation procedures (all 4 machines), secrets backup/restore, Tail
 
 ## Docker services
 
-Both servers run traefik, crowdsec and socket-proxy from STC's docker relics
-(`stc.relics.docker.*`, configured in each host's `default.nix`). On top of that:
+clochette and RogueLeader run traefik, crowdsec and socket-proxy from STC's
+docker relics (`stc.relics.docker.*`, configured in each host's `default.nix`).
+skitarii runs only the crowdsec relic, wired to its local traefik in
+`docker-pangolin.nix`. On top of that:
 
 | Host | Containers | Role |
 |---|---|---|
 | clochette | immich-server, immich-postgres, immich-redis | Photo gallery (photos.friloux.me) |
 | clochette | crowdsec-manager | CrowdSec web UI, Tailscale-only; keeps the raw Docker socket (needs POST) |
+| skitarii | pangolin, gerbil, traefik | Gateway (pangolin.friloux.me); local traefik in gerbil's netns, not STC's relic |
+| skitarii | crowdsec-manager | CrowdSec web UI, published as a pangolin resource (crowdsec.friloux.me) behind pangolin SSO + 2FA; raw Docker socket |
 | RogueLeader | wow-cp-bookstack, wow-cp-mariadb, wow-cp-mysqldump | Wiki (wow-cp.friloux.me) and its nightly DB dump |
 | RogueLeader | uptime-kuma | Status page (status.friloux.me) |
 | RogueLeader | papra | Documents (docs.friloux.me) |
@@ -132,7 +136,7 @@ row.
 | A host key as recipient of another host's sops file | Each host key opens its own file only; admin keys are the YubiKey and the offline rescue key (#94) | One key on one disk opens every host's secrets again |
 | Secrets in GitHub Actions | `check.yml` runs on `pull_request` only, with `contents: read` | A pull request could exfiltrate them |
 | Outbound SMTP (465, 587) on clochette | Blocked by Scaleway; direct Gmail sending does not work. ntfy.sh over HTTPS is the only notification channel | Mails silently never leave |
-| crowdsec-manager on a public route | Stays Tailscale-only until the pangolin gateway exists | The WAF admin UI exposed to the internet |
+| crowdsec-manager on a public route (clochette) | Tailscale-only there. On skitarii it is published, but only as a pangolin resource behind SSO + 2FA — never a bare traefik route or a published port | The WAF admin UI, and through the raw socket root on the host, exposed to the internet |
 
 Not an omission but a deliberate choice that looks like one:
 `neededForBoot = true` on every ZFS dataset, `/home` included, on exampleHost.

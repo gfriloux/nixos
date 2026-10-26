@@ -14,6 +14,7 @@
     ./network.nix
     ./users.nix
     ./docker-pangolin.nix
+    ./docker-crowdsec-manager.nix
   ];
 
   stc.relics = {
