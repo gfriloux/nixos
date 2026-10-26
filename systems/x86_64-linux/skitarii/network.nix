@@ -26,6 +26,9 @@ _: {
     };
   };
 
+  services.tailscale.enable = true;
+  networking.firewall.trustedInterfaces = ["tailscale0"];
+
   # SSH public tant que Tailscale n'est pas en place.
   services.openssh.openFirewall = true;
 }
