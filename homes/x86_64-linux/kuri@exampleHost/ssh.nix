@@ -42,6 +42,13 @@
         User = "weechat";
         IdentityFile = config.sops.secrets."ssh/keys/weechat@clochette".path;
       };
+      # One failed key costs an hour of ban on skitarii (PerSourcePenalties):
+      # offer only this key, through the agent, never everything it holds.
+      "skitarii.friloux.me" = {
+        User = "guillaume";
+        IdentityFile = "~/.ssh/id_ed25519.pub";
+        IdentitiesOnly = true;
+      };
       "storage2.friloux.me" = {
         User = "kuri";
         IdentityFile = config.sops.secrets."ssh/keys/kuri@storage2".path;

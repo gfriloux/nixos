@@ -39,10 +39,8 @@ secrets_rogueleader:
 build_skitarii:
 	nh os build .#skitarii -d never
 
-# One failed key costs an hour of ban on skitarii (PerSourcePenalties), so
-# offer only the right key instead of everything the agent holds.
 install_skitarii:
-	NIX_SSHOPTS="-o IdentitiesOnly=yes -o IdentityFile=$HOME/.ssh/id_ed25519.pub" nixos-rebuild switch --flake .#skitarii --target-host guillaume@5.196.4.180 --sudo --ask-sudo-password
+	nixos-rebuild switch --flake .#skitarii --target-host guillaume@skitarii.friloux.me --sudo --ask-sudo-password
 
 secrets_skitarii:
 	sops secrets/skitarii.yaml
