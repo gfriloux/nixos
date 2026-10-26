@@ -1,7 +1,12 @@
-{inputs, ...}: {
+{
+  config,
+  inputs,
+  ...
+}: {
   imports = [
     inputs.sops-nix.nixosModules.sops
     inputs.disko.nixosModules.disko
+    inputs.stc.nixosModules.relics-docker-crowdsec
     inputs.stc.nixosModules.relics-hardening-ssh
     inputs.stc.nixosModules.relics-nix-housekeeping
     ./hardware-configuration.nix
@@ -12,6 +17,15 @@
   ];
 
   stc.relics = {
+    # Sans la relic traefik : celui de pangolin est local (docker-pangolin.nix),
+    # qui branche aussi crowdsec sur son réseau et ses logs.
+    docker.crowdsec = {
+      enable = true;
+      image = "crowdsecurity/crowdsec:v1.8.1"; # renovate
+      dataDir = "/srv/docker/crowdsec.skitarii.friloux.me";
+      envFile = config.sops.templates."crowdsec.env".path;
+    };
+
     nixHousekeeping.enable = true;
     hardening.ssh.enable = true;
   };
@@ -21,7 +35,16 @@
     # La clé hôte est générée avant l'installation et déposée par
     # nixos-anywhere (--extra-files), pour que sops marche dès le premier boot.
     age.sshKeyPaths = ["/etc/ssh/ssh_host_ed25519_key"];
-    secrets."users/guillaume/hashed-password".neededForUsers = true;
+    secrets = {
+      "users/guillaume/hashed-password".neededForUsers = true;
+      "services/crowdsec/bouncer-key" = {};
+    };
+    # crowdsec enregistre lui-même le bouncer avec cette clé au démarrage ;
+    # traefik lit la même clé dans un fichier (docker-pangolin.nix).
+    templates."crowdsec.env".content = ''
+      COLLECTIONS=crowdsecurity/traefik crowdsecurity/http-cve
+      BOUNCER_KEY_traefik=${config.sops.placeholder."services/crowdsec/bouncer-key"}
+    '';
   };
 
   boot.loader.grub.enable = true;
