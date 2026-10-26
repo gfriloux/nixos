@@ -185,8 +185,9 @@ nc -zv -w 5 5.196.4.180 22    # doit échouer en timeout
 
 Les données de pangolin (`/srv/docker/pangolin.friloux.me`) ne sont **pas
 encore sauvegardées** : après réinstallation, pangolin repart vide. Refaire
-sa configuration initiale (jeton dans `sudo docker logs pangolin`), réactiver
-le TOTP, recréer le site local et les ressources (`crowdsec.friloux.me` →
+sa configuration initiale (jeton dans `sudo docker logs pangolin`), ressaisir
+la licence Enterprise dans `/admin/license` (liée au host ID du serveur),
+réactiver le TOTP, recréer le site local et les ressources (`crowdsec.friloux.me` →
 `http://crowdsec-manager:8080`, SSO actif). crowdsec réenregistre seul le
 bouncer depuis sops.
 

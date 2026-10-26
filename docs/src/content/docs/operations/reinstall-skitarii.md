@@ -185,7 +185,8 @@ nc -zv -w 5 5.196.4.180 22    # must time out
 
 pangolin's data (`/srv/docker/pangolin.friloux.me`) is **not backed up
 yet**: after a reinstall pangolin starts empty. Redo its initial setup
-(token in `sudo docker logs pangolin`), re-enable TOTP, recreate the local
+(token in `sudo docker logs pangolin`), re-enter the Enterprise license
+at `/admin/license` (it is bound to the server's host ID), re-enable TOTP, recreate the local
 site and the resources (`crowdsec.friloux.me` → `http://crowdsec-manager:8080`,
 SSO on). crowdsec re-registers the bouncer by itself from sops.
 

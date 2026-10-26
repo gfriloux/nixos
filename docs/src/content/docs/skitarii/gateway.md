@@ -25,7 +25,7 @@ docker network "pangolin" (IPv4 + fd49:e7d1:9e38::/64)
 
 | Container | Image | Role |
 |---|---|---|
-| `pangolin` | `fosrl/pangolin` | Dashboard and API, SQLite in `/srv/docker/pangolin.friloux.me/config` |
+| `pangolin` | `fosrl/pangolin:ee-*` | Dashboard and API, SQLite in `/srv/docker/pangolin.friloux.me/config`. Enterprise Edition, free personal-use license entered at `/admin/license` |
 | `gerbil` | `fosrl/gerbil` | WireGuard endpoint, owns the published ports |
 | `traefik` | `traefik` | Reverse proxy, Let's Encrypt (HTTP-01), plugins badger + crowdsec bouncer |
 | `crowdsec` | `crowdsecurity/crowdsec` | STC relic, reads traefik's access log |

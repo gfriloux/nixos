@@ -158,7 +158,9 @@ in {
 
   virtualisation.oci-containers.containers = {
     pangolin = {
-      image = "docker.io/fosrl/pangolin:1.25.3"; # renovate
+      # Édition Enterprise : licence gratuite pour usage personnel, saisie dans
+      # l'UI (/admin/license) et liée au host ID du serveur.
+      image = "docker.io/fosrl/pangolin:ee-1.25.3"; # renovate
       volumes = [
         "${dataDir}/config:/app/config"
         "${config.sops.templates."pangolin-config.yml".path}:/app/config/config.yml:ro"
