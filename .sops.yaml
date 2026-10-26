@@ -5,6 +5,7 @@ keys:
   - &desktop_examplehost age1xr32hdvanup0zk63v8hrcv2u2c09wplz6fd42w47mkjrd49j39xqaqqckq
   - &server_clochette age18594hnd4mk3736a36a5fqc5w55sanac86tv8du0hz67rfk558srs3y9jwa
   - &server_rogueleader age1nttxr633hf6r43szc9ffl2a0avmtmhtl7hhnjjuyd3sc4au705nqffyfwe
+  - &server_skitarii age14ewyggykcl9c6kxgtzg2uud4qhlztd90uj8w6zesl5fg6kyytvysfhhv6f
   # Admin keys, for editing with sops; never used at boot.
   # YubiKey 5 NFC serial 36644572, PIV slot 1 (needs age-plugin-yubikey).
   - &admin_yubikey age1yubikey1qtsqgx98tq7d005aue4lqth3z5hgu67e9eee490mpf0phfx7znghqr8x67l
@@ -27,5 +28,11 @@ creation_rules:
     key_groups:
     - age:
       - *server_rogueleader
+      - *admin_yubikey
+      - *admin_rescue
+  - path_regex: secrets/skitarii.yaml$
+    key_groups:
+    - age:
+      - *server_skitarii
       - *admin_yubikey
       - *admin_rescue
