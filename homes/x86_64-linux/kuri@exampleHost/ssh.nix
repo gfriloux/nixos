@@ -3,6 +3,7 @@
     secrets = {
       "ssh/keys/guillaume@clochette" = {};
       "ssh/keys/weechat@clochette" = {};
+      "ssh/keys/guillaume@skitarii" = {};
       "ssh/keys/kuri@storage2" = {};
       "ssh/keys/root@rogueleader" = {};
       "ssh/keys/github" = {};
@@ -43,10 +44,10 @@
         IdentityFile = config.sops.secrets."ssh/keys/weechat@clochette".path;
       };
       # One failed key costs an hour of ban on skitarii (PerSourcePenalties):
-      # offer only this key, through the agent, never everything it holds.
+      # offer only this key, never everything the agent holds.
       "skitarii.friloux.me" = {
         User = "guillaume";
-        IdentityFile = "~/.ssh/id_ed25519.pub";
+        IdentityFile = config.sops.secrets."ssh/keys/guillaume@skitarii".path;
         IdentitiesOnly = true;
       };
       "storage2.friloux.me" = {
