@@ -14,6 +14,11 @@ Internet
     │       └── Traefik :80/:443
     │               └── photos.friloux.me    → immich
     │
+    ├── skitarii (5.196.4.180, 2001:41d0:404:200::487d)
+    │       └── gerbil :80/:443 → Traefik → crowdsec bouncer
+    │               ├── pangolin.friloux.me  → pangolin
+    │               └── crowdsec.friloux.me  → crowdsec-manager (pangolin SSO)
+    │
     ├── home box (port-forward :80/:443)
     │       └── RogueLeader (192.168.0.10)
     │               └── Traefik :80/:443
@@ -23,7 +28,8 @@ Internet
     └── Tailscale (100.x.x.x)
             ├── exampleHost
             ├── clochette
-            └── RogueLeader
+            ├── RogueLeader
+            └── skitarii
 ```
 
 ## Tailscale — The Ethereal Link

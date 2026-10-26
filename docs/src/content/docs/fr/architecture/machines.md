@@ -72,7 +72,7 @@ publiquement via Traefik + CrowdSec, atteints par une redirection de port
 
 | Paramètre | Valeur |
 |---|---|
-| Rôle | Futur gateway (pangolin, gerbil, traefik, crowdsec, crowdsec-manager) |
+| Rôle | Passerelle (pangolin, POC) |
 | Hébergeur | OVH VPS-1 |
 | IP publique | `5.196.4.180`, `2001:41d0:404:200::487d` |
 | OS | NixOS |
@@ -81,4 +81,6 @@ publiquement via Traefik + CrowdSec, atteints par une redirection de port
 | sops | Clé age dérivée de la clé SSH host |
 | stateVersion | `26.05` |
 
-Services Docker : aucun pour l'instant. Voir [skitarii](../skitarii/overview.md).
+Services Docker : pangolin (pangolin.friloux.me), gerbil, traefik, crowdsec,
+crowdsec-manager (crowdsec.friloux.me, derrière le SSO pangolin). Voir
+[La Porte](../skitarii/gateway.md).

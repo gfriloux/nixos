@@ -1,20 +1,20 @@
 ---
 title: skitarii — Le Sanctuaire-Porte
-description: VPS-1 OVH, futur gateway pangolin. Système de base pour l'instant — SSH via Tailscale, sops, IPv6 statique.
+description: VPS-1 OVH, passerelle pangolin (POC). SSH via Tailscale, sops, IPv6 statique.
 ---
 
-Voici skitarii — le sanctuaire-porte, dressé sur un VPS-1 OVH pour devenir un
-jour le point d'entrée unique vers tous les autres sanctuaires.
+Voici skitarii — le sanctuaire-porte, dressé sur un VPS-1 OVH comme point
+d'entrée unique vers tous les autres sanctuaires.
 
 ## Configuration
 
 | Paramètre | Valeur |
 |---|---|
-| Rôle | Futur gateway (pangolin, gerbil, traefik, crowdsec, crowdsec-manager) |
+| Rôle | Passerelle : pangolin, gerbil, traefik, crowdsec, crowdsec-manager — voir [La Porte](gateway.md) |
 | Hébergeur | OVH VPS-1 (4 Go de RAM, disque 40 Go) |
 | IPv4 publique | `5.196.4.180` (DHCP) |
 | IPv6 publique | `2001:41d0:404:200::487d/128` (statique, passerelle `2001:41d0:404:200::1`) |
-| DNS | `skitarii.friloux.me` — A + AAAA chez Gandi, posés à la main |
+| DNS | `skitarii.friloux.me` — A + AAAA chez Gandi, posés à la main ; `pangolin` et `crowdsec` en sont des CNAME |
 | Tailscale | `100.118.203.120`, expiration de clé désactivée |
 | Boot | BIOS, GRUB sur `/dev/sda` |
 | Disque | `/dev/sda`, GPT via disko : 1M BIOS boot, 2G swap, `/` ext4 |
@@ -23,7 +23,7 @@ jour le point d'entrée unique vers tous les autres sanctuaires.
 
 ## État Actuel
 
-Aucun conteneur pour l'instant. Le sanctuaire ne porte que le système de base :
+Système de base :
 
 - relics STC `hardening.ssh` et `nixHousekeeping`
 - SSH joignable **uniquement via Tailscale** (`openFirewall = false`, `tailscale0` de confiance)
@@ -32,7 +32,8 @@ Aucun conteneur pour l'instant. Le sanctuaire ne porte que le système de base :
   hash du mot de passe dans `secrets/skitarii.yaml`
 - Home Manager `guillaume@skitarii` (cogitator-enginseer), rattaché par snowfall
 
-Les services arriveront un par un.
+Services, en POC : pangolin, gerbil, traefik, crowdsec et crowdsec-manager —
+voir [La Porte](gateway.md).
 
 ## Déploiement
 

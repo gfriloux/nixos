@@ -1,20 +1,20 @@
 ---
 title: skitarii — The Gate-Shrine
-description: OVH VPS-1, future pangolin gateway. Base system only for now — SSH over Tailscale, sops, static IPv6.
+description: OVH VPS-1, pangolin gateway (POC). SSH over Tailscale, sops, static IPv6.
 ---
 
-Behold skitarii — the gate-shrine, raised on an OVH VPS-1 to stand one day
-before every other shrine as their single point of entry.
+Behold skitarii — the gate-shrine, raised on an OVH VPS-1 to stand before
+every other shrine as their single point of entry.
 
 ## Configuration
 
 | Parameter | Value |
 |---|---|
-| Role | Future gateway (pangolin, gerbil, traefik, crowdsec, crowdsec-manager) |
+| Role | Gateway: pangolin, gerbil, traefik, crowdsec, crowdsec-manager — see [The Gate](gateway.md) |
 | Host | OVH VPS-1 (4 GB RAM, 40 GB disk) |
 | Public IPv4 | `5.196.4.180` (DHCP) |
 | Public IPv6 | `2001:41d0:404:200::487d/128` (static, gateway `2001:41d0:404:200::1`) |
-| DNS | `skitarii.friloux.me` — A + AAAA at Gandi, set by hand |
+| DNS | `skitarii.friloux.me` — A + AAAA at Gandi, set by hand; `pangolin` and `crowdsec` are CNAMEs to it |
 | Tailscale | `100.118.203.120`, key expiry disabled |
 | Boot | BIOS, GRUB on `/dev/sda` |
 | Storage | `/dev/sda`, GPT via disko: 1M BIOS boot, 2G swap, ext4 `/` |
@@ -23,7 +23,7 @@ before every other shrine as their single point of entry.
 
 ## Current State
 
-No daemon is bound yet. The shrine carries only the base system:
+Base system:
 
 - STC relics `hardening.ssh` and `nixHousekeeping`
 - SSH reachable **only through Tailscale** (`openFirewall = false`, `tailscale0` trusted)
@@ -32,7 +32,8 @@ No daemon is bound yet. The shrine carries only the base system:
   password hash in `secrets/skitarii.yaml`
 - Home Manager `guillaume@skitarii` (cogitator-enginseer), wired in by snowfall
 
-The daemons will be bound one at a time.
+Bound daemons, as a POC: pangolin, gerbil, traefik, crowdsec and
+crowdsec-manager — see [The Gate](gateway.md).
 
 ## Deployment
 

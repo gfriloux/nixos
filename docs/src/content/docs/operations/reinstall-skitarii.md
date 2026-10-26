@@ -183,6 +183,12 @@ ssh skitarii.friloux.me true
 nc -zv -w 5 5.196.4.180 22    # must time out
 ```
 
+pangolin's data (`/srv/docker/pangolin.friloux.me`) is **not backed up
+yet**: after a reinstall pangolin starts empty. Redo its initial setup
+(token in `sudo docker logs pangolin`), re-enable TOTP, recreate the local
+site and the resources (`crowdsec.friloux.me` → `http://crowdsec-manager:8080`,
+SSO on). crowdsec re-registers the bouncer by itself from sops.
+
 Commit `.sops.yaml` and `secrets/skitarii.yaml`, then delete the local
 copy of the host key:
 

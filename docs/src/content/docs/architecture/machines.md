@@ -72,7 +72,7 @@ publicly through Traefik + CrowdSec, reached via a box port-forward of
 
 | Parameter | Value |
 |---|---|
-| Role | Future gateway (pangolin, gerbil, traefik, crowdsec, crowdsec-manager) |
+| Role | Gateway (pangolin, POC) |
 | Host | OVH VPS-1 |
 | Public IP | `5.196.4.180`, `2001:41d0:404:200::487d` |
 | OS | NixOS |
@@ -81,4 +81,6 @@ publicly through Traefik + CrowdSec, reached via a box port-forward of
 | sops | Age key derived from SSH host key |
 | stateVersion | `26.05` |
 
-**Bound daemons:** none yet. See [skitarii](../skitarii/overview.md).
+**Bound daemons:** pangolin (pangolin.friloux.me), gerbil, traefik, crowdsec,
+crowdsec-manager (crowdsec.friloux.me, behind pangolin SSO). See
+[The Gate](../skitarii/gateway.md).
