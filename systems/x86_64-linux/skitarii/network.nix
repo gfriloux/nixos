@@ -29,6 +29,6 @@ _: {
   services.tailscale.enable = true;
   networking.firewall.trustedInterfaces = ["tailscale0"];
 
-  # SSH public tant que Tailscale n'est pas en place.
-  services.openssh.openFirewall = true;
+  # SSH joignable uniquement via le tailnet (tailscale0, de confiance).
+  services.openssh.openFirewall = false;
 }

@@ -46,6 +46,7 @@
       # One failed key costs an hour of ban on skitarii (PerSourcePenalties):
       # offer only this key, never everything the agent holds.
       "skitarii.friloux.me" = {
+        HostName = "skitarii";
         User = "guillaume";
         IdentityFile = config.sops.secrets."ssh/keys/guillaume@skitarii".path;
         IdentitiesOnly = true;
