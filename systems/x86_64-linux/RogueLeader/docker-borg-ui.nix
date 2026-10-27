@@ -5,7 +5,7 @@
 }: {
   virtualisation.oci-containers.containers = {
     "borg-ui" = {
-      image = "ainullcode/borg-ui:2.4.0"; # renovate
+      image = "ainullcode/borg-ui:2.4.5"; # renovate
       serviceName = "borg-ui";
       dependsOn = ["borg-redis"];
 
