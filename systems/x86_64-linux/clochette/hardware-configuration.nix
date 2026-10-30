@@ -28,7 +28,13 @@
   };
 
   swapDevices = [
-    {device = "/dev/disk/by-uuid/f503e882-3502-4012-8732-ad44aaa4bb88";}
+    # Clé aléatoire à chaque boot, pas d'hibernation ici. PARTUUID et non
+    # by-uuid : le chiffrement efface la signature swap, et son UUID avec,
+    # dès le premier boot.
+    {
+      device = "/dev/disk/by-partuuid/43678d65-03";
+      randomEncryption.enable = true;
+    }
   ];
 
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
