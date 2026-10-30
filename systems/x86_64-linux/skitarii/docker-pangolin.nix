@@ -153,6 +153,12 @@ in {
         disable_user_create_org = false;
         allow_raw_resources = true;
       };
+      # auth vaut 500/min par défaut, comme global : rien contre le
+      # brute-force du login. 10/min est la valeur d'exemple de la doc.
+      rate_limits.auth = {
+        window_minutes = 1;
+        max_requests = 10;
+      };
     };
   };
 
