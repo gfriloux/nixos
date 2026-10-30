@@ -16,7 +16,12 @@ _: {
         };
         swap = {
           size = "2G";
-          content.type = "swap";
+          # Clé aléatoire à chaque boot : rien de ce qui est passé en swap ne
+          # survit à un reboot. Pas d'hibernation ici, donc rien à reprendre.
+          content = {
+            type = "swap";
+            randomEncryption = true;
+          };
         };
         root = {
           size = "100%";
