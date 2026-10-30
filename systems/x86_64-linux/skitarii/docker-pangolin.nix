@@ -166,6 +166,11 @@ in {
         "${config.sops.templates."pangolin-config.yml".path}:/app/config/config.yml:ro"
       ];
       networks = ["pangolin"];
+      # Celui du compose officiel.
+      extraOptions = inputs.stc.lib.docker.mkHealthCheck {
+        cmd = "curl -f http://localhost:3001/api/v1/";
+        startPeriod = "60s";
+      };
     };
 
     gerbil = {
@@ -191,6 +196,10 @@ in {
         SYS_MODULE = true;
       };
       networks = ["pangolin"];
+      # Le serveur HTTP de --reachableAt, par lequel pangolin le pilote.
+      extraOptions = inputs.stc.lib.docker.mkHealthCheck {
+        cmd = "wget -q -O /dev/null http://localhost:3004/healthz";
+      };
     };
 
     traefik = {
@@ -204,7 +213,12 @@ in {
         "${dataDir}/letsencrypt:/letsencrypt"
         "${dataDir}/traefik-logs:/var/log/traefik"
       ];
-      extraOptions = ["--network=container:gerbil"];
+      extraOptions =
+        ["--network=container:gerbil"]
+        # L'entrypoint ping déclaré sur web, lu dans la config statique.
+        ++ inputs.stc.lib.docker.mkHealthCheck {
+          cmd = "traefik healthcheck --configFile=/etc/traefik/traefik_config.yml";
+        };
     };
 
     # Conteneur de la relic STC : elle ne connaît que son propre traefik, on
