@@ -53,13 +53,19 @@
     secrets = {
       "users/guillaume/hashed-password".neededForUsers = true;
       "services/crowdsec/bouncer-key" = {};
+      "services/crowdsec/enroll-key" = {};
       "services/ntfy/topic" = {};
     };
     # crowdsec enregistre lui-même le bouncer avec cette clé au démarrage ;
     # traefik lit la même clé dans un fichier (docker-pangolin.nix).
+    # ENROLL_KEY : enrôlement à la console app.crowdsec.net (alertes,
+    # blocklists et allowlists de la console). L'image le rejoue à chaque
+    # démarrage ; une fois enrôlé, cscli répond par un simple warning.
     templates."crowdsec.env".content = ''
       COLLECTIONS=crowdsecurity/traefik crowdsecurity/http-cve
       BOUNCER_KEY_traefik=${config.sops.placeholder."services/crowdsec/bouncer-key"}
+      ENROLL_KEY=${config.sops.placeholder."services/crowdsec/enroll-key"}
+      ENROLL_INSTANCE_NAME=skitarii
     '';
   };
 
