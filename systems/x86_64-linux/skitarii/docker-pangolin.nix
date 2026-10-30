@@ -242,6 +242,20 @@ in {
     ];
   };
 
+  # Comme la relic traefik de STC : renommage puis USR1 pour que traefik
+  # rouvre son log. Pas de copytruncate, qui perd les lignes écrites pendant
+  # la copie, donc des lignes que crowdsec n'aurait jamais lues.
+  services.logrotate.settings.traefik = {
+    files = "${dataDir}/traefik-logs/access.log";
+    frequency = "daily";
+    rotate = 14;
+    compress = true;
+    delaycompress = true;
+    missingok = true;
+    notifempty = true;
+    postrotate = "${pkgs.docker}/bin/docker kill -s USR1 traefik || true";
+  };
+
   # Ouverts pour les cas où docker-proxy prend la connexion sur l'hôte (INPUT)
   # plutôt que le DNAT (FORWARD, hors du pare-feu NixOS).
   networking.firewall = {
