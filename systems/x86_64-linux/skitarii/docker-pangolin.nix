@@ -171,6 +171,7 @@ in {
         cmd = "curl -f http://localhost:3001/api/v1/";
         startPeriod = "60s";
       };
+      labels."stc.docker/health-watch" = "true";
     };
 
     gerbil = {
@@ -200,6 +201,7 @@ in {
       extraOptions = inputs.stc.lib.docker.mkHealthCheck {
         cmd = "wget -q -O /dev/null http://localhost:3004/healthz";
       };
+      labels."stc.docker/health-watch" = "true";
     };
 
     traefik = {
@@ -219,6 +221,7 @@ in {
         ++ inputs.stc.lib.docker.mkHealthCheck {
           cmd = "traefik healthcheck --configFile=/etc/traefik/traefik_config.yml";
         };
+      labels."stc.docker/health-watch" = "true";
     };
 
     # Conteneur de la relic STC : elle ne connaît que son propre traefik, on

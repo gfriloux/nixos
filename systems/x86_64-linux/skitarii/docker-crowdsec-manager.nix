@@ -30,6 +30,13 @@ _: {
     ];
 
     networks = ["pangolin"];
+
+    # Le HEALTHCHECK est dans l'image (curl sur /health), invisible à
+    # l'évaluation.
+    labels = {
+      "stc.docker/health-cmd-in-image" = "true";
+      "stc.docker/health-watch" = "true";
+    };
   };
 
   systemd = {

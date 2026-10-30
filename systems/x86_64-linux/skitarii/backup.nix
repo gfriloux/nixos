@@ -92,11 +92,9 @@
   };
 
   systemd = {
-    # Pas d'OnFailure ici, contrairement aux autres hôtes : stc-notify-failure@
-    # arrive avec la relic notify (étape 4 de #106). En attendant, un échec ne
-    # se voit que dans le journal.
     services.borgbackup-check = {
       description = "Vérification d'intégrité Borg";
+      unitConfig.OnFailure = "stc-notify-failure@%p.service";
       serviceConfig = {
         Type = "oneshot";
         ExecStart = pkgs.writeShellScript "borgbackup-check" ''

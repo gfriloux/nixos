@@ -1,12 +1,14 @@
 {
   config,
   inputs,
+  pkgs,
   ...
 }: {
   imports = [
     inputs.sops-nix.nixosModules.sops
     inputs.disko.nixosModules.disko
     inputs.stc.nixosModules.relics-docker-crowdsec
+    inputs.stc.nixosModules.relics-docker-notify
     inputs.stc.nixosModules.relics-hardening-ssh
     inputs.stc.nixosModules.relics-nix-housekeeping
     ./hardware-configuration.nix
@@ -26,6 +28,17 @@
       image = "crowdsecurity/crowdsec:v1.8.1"; # renovate
       dataDir = "/srv/docker/crowdsec.skitarii.friloux.me";
       envFile = config.sops.templates."crowdsec.env".path;
+    };
+    # -4 --fail : voir le postHook de backup.nix (quota IPv6 de ntfy.sh épuisé
+    # sur le /64 OVH partagé).
+    docker.notify = {
+      enable = true;
+      notifyCommand = ''
+        ${pkgs.curl}/bin/curl -4 -sS --fail -o /dev/null \
+          -H "Title: [$STC_NOTIFY_HOSTNAME] $STC_NOTIFY_SERVICE en défaut" \
+          -d "$STC_NOTIFY_SERVICE est passé en état failed" \
+          "https://ntfy.sh/$(cat ${config.sops.secrets."services/ntfy/topic".path})"
+      '';
     };
 
     nixHousekeeping.enable = true;
