@@ -15,6 +15,7 @@
     ./users.nix
     ./docker-pangolin.nix
     ./docker-crowdsec-manager.nix
+    ./backup.nix
   ];
 
   stc.relics = {
@@ -39,6 +40,7 @@
     secrets = {
       "users/guillaume/hashed-password".neededForUsers = true;
       "services/crowdsec/bouncer-key" = {};
+      "services/ntfy/topic" = {};
     };
     # crowdsec enregistre lui-même le bouncer avec cette clé au démarrage ;
     # traefik lit la même clé dans un fichier (docker-pangolin.nix).
