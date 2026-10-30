@@ -3,9 +3,8 @@ title: La Porte — Pangolin, Gerbil, Traefik & CrowdSec
 description: Comment la passerelle pangolin de skitarii est câblée, ce qui vit où, et les pièges déjà rencontrés.
 ---
 
-Le sanctuaire-porte fait tourner la pile pangolin en **POC** : elle marche de
-bout en bout, mais n'a encore ni healthchecks, ni notifications, ni
-sauvegarde, ni rotation des logs.
+Le sanctuaire-porte fait tourner la pile pangolin, sauvegardée chaque nuit
+sur storage2, avec healthchecks et notifications ntfy sur chaque conteneur.
 
 ## Architecture
 
@@ -91,6 +90,16 @@ sudo tail -n 3 /srv/docker/pangolin.friloux.me/traefik-logs/access.log \
 sudo docker exec crowdsec cscli decisions add --ip <IP> --duration 5m --reason test
 ```
 
+## Sauvegarde, Santé et Alertes
+
+| Quoi | Où | Détail |
+|---|---|---|
+| Sauvegarde Borg | `backup.nix` | 04:00 vers `storage2.friloux.me/~/skitarii.friloux.me`, `borg check` chaque semaine. Restauration : [Restauration des Données depuis Borg](../operations/restore.md) |
+| Copies SQLite | `/srv/docker/sqlite-snapshots` | pangolin, crowdsec, crowdsec-manager (settings, history), faites par le job avant `borg create` |
+| Rotation des logs | `docker-pangolin.nix` | `access.log` chaque jour, 14 gardés, renommage puis `USR1` |
+| Healthchecks | `docker-pangolin.nix` | pangolin `:3001/api/v1/`, gerbil `:3004/healthz`, `traefik healthcheck` ; crowdsec et crowdsec-manager ont le leur |
+| Notifications | `default.nix` | `stc.relics.docker.notify`, topic ntfy dans `secrets/skitarii.yaml` |
+
 ## Pièges Déjà Rencontrés
 
 - **badger v1.8.0** échoue au contrôle d'intégrité des plugins traefik, qui
@@ -105,6 +114,10 @@ sudo docker exec crowdsec cscli decisions add --ip <IP> --duration 5m --reason t
   changer ses options demande d'arrêter les conteneurs et
   `docker network rm pangolin`, le script de création ne recrée jamais un
   réseau existant.
+- **Pas de notification ntfy, pas d'erreur** : ntfy.sh limite l'IPv6 par /64,
+  et celui de skitarii est partagé entre VPS OVH ; son quota anonyme est
+  épuisé par les voisins (`429`). Chaque appel ntfy ici passe par `curl -4`,
+  et `--fail` pour qu'un `429` fasse échouer l'unité au lieu de sortir en 0.
 - **Erreurs au démarrage** (`connection refused` sur `pangolin:3001`,
   `no such host crowdsec`, `crowdsec@file does not exist` sur les routeurs
   internes) : elles cessent quelques secondes après un redémarrage. Si elles
@@ -112,7 +125,4 @@ sudo docker exec crowdsec cscli decisions add --ip <IP> --duration 5m --reason t
 
 ## Pas Encore Fait
 
-- Healthchecks, `stc.docker/health-watch`, notifications ntfy
-- Sauvegarde de `/srv/docker/pangolin.friloux.me` et des données crowdsec
-- Rotation du `access.log` de traefik
 - AppSec (inspection des requêtes) dans crowdsec

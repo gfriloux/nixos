@@ -183,12 +183,12 @@ ssh skitarii.friloux.me true
 nc -zv -w 5 5.196.4.180 22    # must time out
 ```
 
-pangolin's data (`/srv/docker/pangolin.friloux.me`) is **not backed up
-yet**: after a reinstall pangolin starts empty. Redo its initial setup
-(token in `sudo docker logs pangolin`), re-enter the Enterprise license
-at `/admin/license` (it is bound to the server's host ID), re-enable TOTP, recreate the local
-site and the resources (`crowdsec.friloux.me` → `http://crowdsec-manager:8080`,
-SSO on). crowdsec re-registers the bouncer by itself from sops.
+Bring pangolin's data back from Borg (sites, resources, users, TOTP,
+license activation, gerbil's WireGuard key): extract the latest archive and
+put the SQLite snapshots in place, as described in
+[Rite of Restoration](restore.md). The Enterprise license is bound to the
+server's host ID: if `/admin/license` shows it inactive after the restore,
+re-enter it. crowdsec re-registers the bouncer by itself from sops.
 
 Commit `.sops.yaml` and `secrets/skitarii.yaml`, then delete the local
 copy of the host key:

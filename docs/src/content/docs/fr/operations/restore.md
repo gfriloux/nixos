@@ -21,10 +21,13 @@ fichiers extraits donne une base vide.
 | RogueLeader | Uptime Kuma (SQLite) | `status.friloux.me/data/kuma.db*` | `sqlite-snapshots/uptime-kuma.db` |
 | RogueLeader | Papra (SQLite) | `docs.friloux.me/data/db/db.sqlite*` | `sqlite-snapshots/papra.db` |
 | RogueLeader | Mealie (SQLite) | `cuisine.home.friloux.me/data/mealie.db*` | `sqlite-snapshots/mealie.db` |
+| skitarii | pangolin (SQLite) | `pangolin.friloux.me/config/db/db.sqlite*` | `sqlite-snapshots/pangolin.db` |
+| skitarii | crowdsec (SQLite) | `crowdsec.skitarii.friloux.me/data/crowdsec.db*` | `sqlite-snapshots/crowdsec.db` |
+| skitarii | crowdsec-manager (SQLite) | `crowdsec-manager/data/settings.db*`, `history.db*` | `sqlite-snapshots/crowdsec-manager-settings.db`, `crowdsec-manager-history.db` |
 
 Tous les chemins sont sous `/srv/docker/`. Borg passe après les dumps (03:00
 sur clochette, 06:00 sur RogueLeader) : chaque archive contient les copies de
-la nuit. Les copies SQLite sont faites par le job lui-même, juste avant
+la nuit. skitarii n'a pas de dump à attendre et passe à 04:00. Les copies SQLite sont faites par le job lui-même, juste avant
 `borg create`.
 
 ## Préparation commune
@@ -34,12 +37,12 @@ Le shell de root est bash. En root sur l'hôte :
 ```bash
 export BORG_PASSPHRASE=$(cat /run/secrets/services/borg/passphrase)
 export BORG_RSH="ssh -i /run/secrets/services/borg/key/private"
-REPO=ssh://backup@storage2.friloux.me/~/clochette.friloux.me      # ou rogueleader.friloux.me
+REPO=ssh://backup@storage2.friloux.me/~/clochette.friloux.me      # ou rogueleader / skitarii.friloux.me
 borg list --last 5 "$REPO"
 ```
 
 La clé de chaque hôte n'ouvre que son propre dépôt : RogueLeader ne peut pas
-lire les archives de clochette, et inversement.
+lire les archives de clochette, et inversement. Idem pour skitarii.
 
 Une archive dont le nom finit par `.failed` vient d'un job qui ne s'est pas
 terminé proprement. Préférer la plus récente sans ce suffixe.
@@ -147,3 +150,27 @@ systemctl start uptime-kuma
 
 Supprimer les fichiers `-wal` et `-shm` avant la copie : un WAL périmé à côté
 d'une base restaurée serait rejoué dedans.
+
+## Services SQLite (skitarii)
+
+La copie de pangolin a passé `PRAGMA integrity_check` le 2026-10-30. Même
+procédure que sur RogueLeader : arrêter l'unité, supprimer `-wal`/`-shm`,
+remettre la copie. Tout appartient à `root:root`.
+
+| Service | Unité | Copie | Chemin vivant |
+|---|---|---|---|
+| pangolin | `docker-pangolin` | `pangolin.db` | `pangolin.friloux.me/config/db/db.sqlite` |
+| crowdsec | `crowdsec` | `crowdsec.db` | `crowdsec.skitarii.friloux.me/data/crowdsec.db` |
+| crowdsec-manager | `crowdsec-manager` | `crowdsec-manager-settings.db` | `crowdsec-manager/data/settings.db` |
+| crowdsec-manager | `crowdsec-manager` | `crowdsec-manager-history.db` | `crowdsec-manager/data/history.db` |
+
+```bash
+systemctl stop docker-pangolin docker-gerbil docker-traefik
+cd /srv/docker
+rm -f pangolin.friloux.me/config/db/db.sqlite-wal pangolin.friloux.me/config/db/db.sqlite-shm
+cp sqlite-snapshots/pangolin.db pangolin.friloux.me/config/db/db.sqlite
+systemctl start docker-pangolin docker-gerbil docker-traefik
+```
+
+gerbil et traefik s'arrêtent avec pangolin : tous deux tirent leur
+configuration de lui.

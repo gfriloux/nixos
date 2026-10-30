@@ -20,9 +20,13 @@ alone gives an empty database.
 | RogueLeader | Uptime Kuma (SQLite) | `status.friloux.me/data/kuma.db*` | `sqlite-snapshots/uptime-kuma.db` |
 | RogueLeader | Papra (SQLite) | `docs.friloux.me/data/db/db.sqlite*` | `sqlite-snapshots/papra.db` |
 | RogueLeader | Mealie (SQLite) | `cuisine.home.friloux.me/data/mealie.db*` | `sqlite-snapshots/mealie.db` |
+| skitarii | pangolin (SQLite) | `pangolin.friloux.me/config/db/db.sqlite*` | `sqlite-snapshots/pangolin.db` |
+| skitarii | crowdsec (SQLite) | `crowdsec.skitarii.friloux.me/data/crowdsec.db*` | `sqlite-snapshots/crowdsec.db` |
+| skitarii | crowdsec-manager (SQLite) | `crowdsec-manager/data/settings.db*`, `history.db*` | `sqlite-snapshots/crowdsec-manager-settings.db`, `crowdsec-manager-history.db` |
 
 All paths are under `/srv/docker/`. Borg runs after the dumps (03:00 on
 clochette, 06:00 on RogueLeader), so each archive carries that night's copies.
+skitarii has no dump to wait for and runs at 04:00.
 The SQLite snapshots are taken by the job itself, just before `borg create`.
 
 ## Common setup
@@ -32,12 +36,12 @@ The root shell is bash. As root on the host:
 ```bash
 export BORG_PASSPHRASE=$(cat /run/secrets/services/borg/passphrase)
 export BORG_RSH="ssh -i /run/secrets/services/borg/key/private"
-REPO=ssh://backup@storage2.friloux.me/~/clochette.friloux.me      # or rogueleader.friloux.me
+REPO=ssh://backup@storage2.friloux.me/~/clochette.friloux.me      # or rogueleader / skitarii.friloux.me
 borg list --last 5 "$REPO"
 ```
 
 Each host's key can only reach its own repository: RogueLeader cannot read
-clochette's archives, and the other way round.
+clochette's archives, and the other way round. Same for skitarii.
 
 An archive whose name ends in `.failed` was written by a job that did not
 finish cleanly. Prefer the most recent archive without that suffix.
@@ -143,3 +147,27 @@ systemctl start uptime-kuma
 
 Remove the `-wal` and `-shm` files before copying: a stale WAL next to a
 restored database would be replayed into it.
+
+## SQLite services (skitarii)
+
+The pangolin snapshot passed `PRAGMA integrity_check` on 2026-10-30. Same
+procedure as RogueLeader: stop the unit, remove `-wal`/`-shm`, copy the
+snapshot back. Everything is owned by `root:root`.
+
+| Service | Unit | Snapshot | Live path |
+|---|---|---|---|
+| pangolin | `docker-pangolin` | `pangolin.db` | `pangolin.friloux.me/config/db/db.sqlite` |
+| crowdsec | `crowdsec` | `crowdsec.db` | `crowdsec.skitarii.friloux.me/data/crowdsec.db` |
+| crowdsec-manager | `crowdsec-manager` | `crowdsec-manager-settings.db` | `crowdsec-manager/data/settings.db` |
+| crowdsec-manager | `crowdsec-manager` | `crowdsec-manager-history.db` | `crowdsec-manager/data/history.db` |
+
+```bash
+systemctl stop docker-pangolin docker-gerbil docker-traefik
+cd /srv/docker
+rm -f pangolin.friloux.me/config/db/db.sqlite-wal pangolin.friloux.me/config/db/db.sqlite-shm
+cp sqlite-snapshots/pangolin.db pangolin.friloux.me/config/db/db.sqlite
+systemctl start docker-pangolin docker-gerbil docker-traefik
+```
+
+gerbil and traefik stop with pangolin: both fetch their configuration from
+it.

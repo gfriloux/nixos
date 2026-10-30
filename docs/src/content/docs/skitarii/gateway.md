@@ -3,8 +3,8 @@ title: The Gate — Pangolin, Gerbil, Traefik & CrowdSec
 description: How the pangolin gateway on skitarii is wired, what lives where, and the traps already met.
 ---
 
-The gate-shrine runs the pangolin stack as a **POC**: it works end to end,
-but has no healthchecks, notifications, backup or log rotation yet.
+The gate-shrine runs the pangolin stack, backed up nightly to storage2,
+with healthchecks and ntfy notifications on every container.
 
 ## Layout
 
@@ -89,6 +89,16 @@ sudo tail -n 3 /srv/docker/pangolin.friloux.me/traefik-logs/access.log \
 sudo docker exec crowdsec cscli decisions add --ip <IP> --duration 5m --reason test
 ```
 
+## Backup, Health and Alerts
+
+| What | Where | Detail |
+|---|---|---|
+| Borg backup | `backup.nix` | 04:00 to `storage2.friloux.me/~/skitarii.friloux.me`, `borg check` weekly. Restore: [Rite of Restoration](../operations/restore.md) |
+| SQLite snapshots | `/srv/docker/sqlite-snapshots` | pangolin, crowdsec, crowdsec-manager (settings, history), taken by the job before `borg create` |
+| Log rotation | `docker-pangolin.nix` | `access.log` daily, 14 kept, rename then `USR1` |
+| Healthchecks | `docker-pangolin.nix` | pangolin `:3001/api/v1/`, gerbil `:3004/healthz`, `traefik healthcheck`; crowdsec and crowdsec-manager ship their own |
+| Notifications | `default.nix` | `stc.relics.docker.notify`, ntfy topic in `secrets/skitarii.yaml` |
+
 ## Traps Already Met
 
 - **badger v1.8.0** fails traefik's plugin integrity check, and traefik then
@@ -101,13 +111,14 @@ sudo docker exec crowdsec cscli decisions add --ip <IP> --duration 5m --reason t
   Docker gateway, which crowdsec whitelists. The network now has a ULA /64;
   changing its options requires stopping the containers and `docker network
   rm pangolin`, the creation script never recreates an existing network.
+- **No ntfy notification, no error**: ntfy.sh rate-limits IPv6 per /64, and
+  skitarii's /64 is shared between OVH VPS, so its anonymous quota is spent
+  by the neighbours (`429`). Every ntfy call here uses `curl -4`, and
+  `--fail` so a `429` fails the unit instead of exiting 0.
 - **Startup errors** (`connection refused` on `pangolin:3001`, `no such host
   crowdsec`, `crowdsec@file does not exist` on internal routers) stop within
   seconds of a restart. If they persist, they are real.
 
 ## Not Done Yet
 
-- Healthchecks, `stc.docker/health-watch`, ntfy notifications
-- Backup of `/srv/docker/pangolin.friloux.me` and the crowdsec data
-- Rotation of traefik's `access.log`
 - AppSec (request inspection) in crowdsec
