@@ -27,17 +27,12 @@
         cmd = "curl -fs http://localhost/status | grep -q '\"database\":true'";
         startPeriod = "300s";
       };
-      labels = {
-        "traefik.enable" = "true";
-        "traefik.http.routers.wowcp.rule" = "Host(`wow-cp.friloux.me`)";
-        "traefik.http.routers.wowcp.tls" = "true";
-        "traefik.http.routers.wowcp.tls.certresolver" = "letsencrypt";
-        "traefik.docker.network" = "web";
-        "traefik.http.routers.wowcp.middlewares" = "crowdsec@file,rate-limit@file,security-headers@file";
-        "traefik.http.routers.wowcp-login.rule" = "Host(`wow-cp.friloux.me`) && Path(`/login`)";
-        "traefik.http.routers.wowcp-login.middlewares" = "crowdsec@file,rate-limit-strict@file,security-headers@file";
-        "stc.docker/health-watch" = "true";
-      };
+      # Publié par la passerelle pangolin (wow-cp.friloux.me), via newt sur
+      # le réseau web : plus de route sur le traefik local, donc plus de
+      # rate-limit strict sur /login. BookStack bloque lui-même après 5
+      # essais par minute (compte + IP) ; APP_PROXIES=* dans son env lui fait
+      # lire la vraie IP, sûr car seul newt le joint (aucun port publié).
+      labels."stc.docker/health-watch" = "true";
       networks = [
         "wow-cp"
         "web"
