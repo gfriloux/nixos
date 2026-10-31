@@ -125,7 +125,28 @@
   };
 in {
   sops = {
-    secrets."services/pangolin/secret" = {};
+    secrets = {
+      "services/pangolin/secret" = {};
+      # Le dépôt est public : l'IP de la box ne doit pas y apparaître.
+      "network/box-ip" = {};
+    };
+    # Écartées dès le parsing : ni alerte, ni ban, ni signal envoyé à CAPI.
+    # La whitelist par défaut ne couvre que les plages privées IPv4 et ::1.
+    templates."crowdsec-whitelist.yaml".content = builtins.toJSON {
+      name = "friloux/skitarii-whitelist";
+      description = "tailnet, skitarii, réseau docker pangolin, box";
+      whitelist = {
+        reason = "tailnet, skitarii, réseau docker pangolin, box";
+        cidr = [
+          "100.64.0.0/10" # tailnet
+          "fd7a:115c:a1e0::/48" # tailnet
+          "5.196.4.180/32" # skitarii
+          "2001:41d0:404:200::487d/128" # skitarii
+          "fd49:e7d1:9e38::/64" # réseau docker pangolin (ULA)
+          "${config.sops.placeholder."network/box-ip"}/32" # box
+        ];
+      };
+    };
     # config.yml porte server.secret : rendu par sops, monté en lecture seule.
     templates."pangolin-config.yml".content = builtins.toJSON {
       gerbil = {
@@ -236,6 +257,7 @@ in {
       volumes = [
         "${dataDir}/traefik-logs:/var/log/traefik:ro"
         "${crowdsecAcquis}:/etc/crowdsec/acquis.d/traefik.yaml:ro"
+        "${config.sops.templates."crowdsec-whitelist.yaml".path}:/etc/crowdsec/parsers/s02-enrich/skitarii-whitelist.yaml:ro"
       ];
       networks = ["pangolin"];
     };
