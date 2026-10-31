@@ -31,9 +31,9 @@ Job pull `storage2` dans `services.nix`, toutes les 10 min, depuis `storage2.ret
 
 ## Réglages de boot
 
-| Réglage | Pourquoi |
-|---|---|
-| `boot.zfs.forceImportRoot = false` | pas d'import forcé des pools au boot |
-| `neededForBoot = true` sur tous les datasets, `/home` compris | uniformité |
-| `canTouchEfiVariables = false` | GRUB en mode amovible |
-| IDs des disques dans `boot.nix` et `disko.nix` | changer un disque oblige à mettre à jour les deux |
+```nix
+boot.zfs.forceImportRoot = false;                 # posé par la relic zfs : pas d'import forcé
+fileSystems."/home".neededForBoot = true;         # sur tous les datasets, /home compris, par uniformité
+boot.loader.efi.canTouchEfiVariables = false;     # GRUB en mode amovible
+boot.zfs.devNodes = "/dev/disk/by-id/";           # IDs des disques dans boot.nix et disko.nix : mettre à jour les deux si un disque change
+```

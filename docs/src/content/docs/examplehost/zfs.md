@@ -31,9 +31,9 @@ Pull job `storage2` in `services.nix`, every 10 min, from `storage2.retrohive.fr
 
 ## Boot settings
 
-| Setting | Why |
-|---|---|
-| `boot.zfs.forceImportRoot = false` | no forced pool import at boot |
-| `neededForBoot = true` on every dataset, `/home` included | uniformity |
-| `canTouchEfiVariables = false` | GRUB in removable mode |
-| Disk IDs in `boot.nix` and `disko.nix` | replacing a disk means updating both |
+```nix
+boot.zfs.forceImportRoot = false;                 # set by the zfs relic: no forced import
+fileSystems."/home".neededForBoot = true;         # on every dataset, /home included, for uniformity
+boot.loader.efi.canTouchEfiVariables = false;     # GRUB in removable mode
+boot.zfs.devNodes = "/dev/disk/by-id/";           # disk IDs live in boot.nix and disko.nix: update both when a disk changes
+```
