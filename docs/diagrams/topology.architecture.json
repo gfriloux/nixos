@@ -1,0 +1,183 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "Network topology",
+    "quality_profile": "showcase"
+  },
+  "components": [
+    {
+      "id": "internet",
+      "type": "external",
+      "label": "Internet",
+      "sublabel": "visitors",
+      "pos": [
+        40,
+        100
+      ],
+      "size": [
+        150,
+        64
+      ]
+    },
+    {
+      "id": "skitarii",
+      "type": "security",
+      "label": "skitarii",
+      "sublabel": "5.196.4.180 · OVH",
+      "pos": [
+        330,
+        100
+      ],
+      "size": [
+        170,
+        64
+      ],
+      "tag": "only public ports"
+    },
+    {
+      "id": "clochette",
+      "type": "backend",
+      "label": "clochette",
+      "sublabel": "51.159.34.135 · Scaleway",
+      "pos": [
+        700,
+        100
+      ],
+      "size": [
+        190,
+        64
+      ]
+    },
+    {
+      "id": "rogueleader",
+      "type": "backend",
+      "label": "RogueLeader",
+      "sublabel": "192.168.0.10 · home LAN",
+      "pos": [
+        200,
+        500
+      ],
+      "size": [
+        190,
+        64
+      ]
+    },
+    {
+      "id": "tailnet",
+      "type": "cloud",
+      "label": "Tailscale",
+      "sublabel": "100.64.0.0/10",
+      "pos": [
+        515,
+        300
+      ],
+      "size": [
+        170,
+        64
+      ]
+    },
+    {
+      "id": "examplehost",
+      "type": "frontend",
+      "label": "exampleHost",
+      "sublabel": "desktop · deploys",
+      "pos": [
+        525,
+        500
+      ],
+      "size": [
+        150,
+        64
+      ]
+    }
+  ],
+  "connections": [
+    {
+      "id": "web-in",
+      "from": "internet",
+      "to": "skitarii",
+      "label": "80/443 TCP",
+      "variant": "emphasis"
+    },
+    {
+      "id": "newt-cl",
+      "from": "clochette",
+      "to": "skitarii",
+      "label": "newt, outbound",
+      "variant": "dashed"
+    },
+    {
+      "id": "newt-rl",
+      "from": "rogueleader",
+      "to": "skitarii",
+      "label": "newt, outbound",
+      "variant": "dashed",
+      "fromSide": "top",
+      "toSide": "bottom"
+    },
+    {
+      "id": "admin",
+      "from": "examplehost",
+      "to": "tailnet",
+      "label": "SSH",
+      "fromSide": "top",
+      "toSide": "bottom"
+    },
+    {
+      "id": "ssh-sk",
+      "from": "tailnet",
+      "to": "skitarii",
+      "label": "SSH :22",
+      "variant": "security",
+      "fromSide": "left",
+      "toSide": "bottom",
+      "labelSegment": 0
+    },
+    {
+      "id": "ssh-cl",
+      "from": "tailnet",
+      "to": "clochette",
+      "label": "SSH :22",
+      "variant": "security",
+      "fromSide": "right",
+      "toSide": "bottom"
+    },
+    {
+      "id": "ssh-rl",
+      "from": "examplehost",
+      "to": "rogueleader",
+      "label": "SSH",
+      "fromSide": "left",
+      "toSide": "right"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "rose",
+      "title": "Public",
+      "items": [
+        "skitarii alone publishes ports",
+        "clochette and RogueLeader dial out with newt"
+      ]
+    },
+    {
+      "dot": "cyan",
+      "title": "Admin",
+      "items": [
+        "SSH to clochette and skitarii over Tailscale only",
+        "RogueLeader is reached on the LAN"
+      ]
+    }
+  ],
+  "boundaries": [
+    {
+      "kind": "region",
+      "label": "home LAN",
+      "wraps": [
+        "rogueleader",
+        "examplehost"
+      ]
+    }
+  ]
+}

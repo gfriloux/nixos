@@ -46,6 +46,10 @@ logged the Docker gateway instead of the visitor, so crowdsec could not ban
 them. Solved by the move behind the pangolin gateway: traffic now enters
 through skitarii, whose traefik sees the real visitor, IPv4 or IPv6.
 
+:::caution
+Scaleway blocks outbound 465 and 587: no direct mail. Notifications go through ntfy.sh over HTTPS.
+:::
+
 ## The Pilgrims — System Users
 
 | User | Shell | Role |

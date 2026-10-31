@@ -1,0 +1,30 @@
+---
+title: "Networking & DNS"
+description: Public entry, newt tunnels, Tailscale, firewall, clochette addressing.
+---
+
+import Archify from '../../../components/Archify.astro';
+
+<Archify name="topology" title="Network topology" caption="Web enters through skitarii only. Admin SSH goes through Tailscale, except RogueLeader on the LAN." ratio="1000 / 720" />
+
+## Rules
+
+| Host | Public ports | SSH |
+|---|---|---|
+| skitarii | 80/443 TCP, 443/51820/21820 UDP | Tailscale only |
+| clochette | none (newt dials out) | Tailscale only |
+| RogueLeader | none (newt dials out) | LAN, `rogueleader.home` |
+| exampleHost | none | |
+
+Web routing details: [Gateway](../skitarii/gateway.mdx).
+
+## Tailscale
+
+`tailscale0` is in `trustedInterfaces` on clochette and skitarii. clochette also
+accepts port 22 from the tailnet range explicitly:
+
+```nix
+networking.firewall.extraInputRules = ''
+  ip saddr 100.64.0.0/10 tcp dport 22 accept
+'';
+```

@@ -48,6 +48,10 @@ les bannir. Réglé par le passage derrière la passerelle pangolin : le trafic
 entre désormais par skitarii, dont le traefik voit le vrai visiteur, IPv4 ou
 IPv6.
 
+:::caution
+Scaleway bloque le 465 et le 587 en sortie : pas de mail direct. Les notifications passent par ntfy.sh en HTTPS.
+:::
+
 ## Utilisateurs
 
 | Utilisateur | Shell | Rôle |
