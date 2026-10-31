@@ -1,60 +1,39 @@
 ---
 title: "ZFS"
-description: Commands for inspecting and maintaining ZFS mirrors, snapshots, and the zrepl backup system.
+description: ZFS mirror maintenance, Docker on ZFS, zrepl pull from storage2.
 ---
 
-ZFS on exampleHost guards data in twin Samsung mirrors. The following rites inspect and maintain the pools.
+Layout and datasets: [Storage](/nixos/architecture/storage/).
 
-See also [Vaults of the Machine-Spirit](/nixos/architecture/storage/) for the architectural overview.
-
-## Commands for Maintenance
+## Commands
 
 ```bash
-# Pool status
-zpool status
+zpool status                       # pool health
+zfs list -r rpool bpool            # usage
+zfs list -t snapshot -r rpool      # snapshots
+zpool scrub rpool && zpool scrub bpool
+zpool status -w                    # wait for the scrub
 
-# Disk usage
-zfs list -r rpool bpool
+docker info | grep "Storage Driver"   # must say zfs (layers are datasets under /var/lib/docker)
 
-# Existing snapshots
-zfs list -t snapshot -r rpool
-
-# Begin manual scrub
-zpool scrub rpool
-zpool scrub bpool
-# Track progress
-zpool status -w
-```
-
-## ZFS & Bound Daemons (Docker)
-
-Docker uses ZFS as the storage driver on exampleHost.
-Image layers and volumes are datasets beneath `/var/lib/docker`.
-
-```bash
-# Verify the storage driver
-docker info | grep "Storage Driver"
-zfs list | grep docker
-```
-
-## zrepl — The Snapshot Archive
-
-zrepl pulls snapshots from `storage2.retrohive.fr` (the archive-shrine)
-into `rpool/backup/storage2` on exampleHost.
-
-```bash
-# Job status
 sudo zrepl status
-
-# List received snapshots
 zfs list -t snapshot rpool/backup/storage2
 ```
 
-Retention is configured: 7 days (all) + 3 months (30 days per month).
+## zrepl
 
-## Important Notes
+Pull job `storage2` in `services.nix`, every 10 min, from `storage2.retrohive.fr` (ssh+stdinserver, root) into `rpool/backup/storage2`, encryption inherited.
 
-- `zfs.forceImportRoot = false` — NixOS does not force-import pools at boot
-- `neededForBoot = true` on all ZFS datasets (including `/home`) for uniformity
-- `canTouchEfiVariables = false` — GRUB is installed in removable mode, no EFI variables are touched
-- Disk IDs are hardcoded in `boot.nix` — if disks change, update both `boot.nix` and `disko.nix`
+| Side | Keeps `zrepl_*` snapshots |
+|---|---|
+| exampleHost (receiver) | all for 7 days, then 1 per 30 days for 3 periods |
+| storage2 (sender) | last 10 |
+
+## Boot settings
+
+| Setting | Why |
+|---|---|
+| `boot.zfs.forceImportRoot = false` | no forced pool import at boot |
+| `neededForBoot = true` on every dataset, `/home` included | uniformity |
+| `canTouchEfiVariables = false` | GRUB in removable mode |
+| Disk IDs in `boot.nix` and `disko.nix` | replacing a disk means updating both |
