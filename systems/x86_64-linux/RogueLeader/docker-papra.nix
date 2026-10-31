@@ -28,18 +28,11 @@ in {
       "/srv/docker/docs.friloux.me/data:/app/app-data"
     ];
 
-    labels = {
-      "traefik.enable" = "true";
-      "traefik.http.routers.papra.rule" = "Host(`docs.friloux.me`)";
-      "traefik.http.routers.papra.tls" = "true";
-      "traefik.http.routers.papra.tls.certresolver" = "letsencrypt";
-      "traefik.docker.network" = "web";
-      "traefik.http.services.papra.loadbalancer.server.port" = "1221";
-      "traefik.http.routers.papra.middlewares" = "crowdsec@file,rate-limit@file,security-headers@file";
-      "traefik.http.routers.papra-login.rule" = "Host(`docs.friloux.me`) && Path(`/login`)";
-      "traefik.http.routers.papra-login.middlewares" = "crowdsec@file,rate-limit-strict@file,security-headers@file";
-      "stc.docker/health-watch" = "true";
-    };
+    # Publié par la passerelle pangolin (docs.friloux.me), via newt sur le
+    # réseau web : plus de route sur le traefik local. La connexion reste
+    # limitée par better-auth (3 essais par 10 s sur /api/auth/sign-in), qui
+    # lit la vraie IP dans X-Forwarded-For, réécrit par le traefik de skitarii.
+    labels."stc.docker/health-watch" = "true";
 
     extraOptions = inputs.stc.lib.docker.mkHealthCheck {
       cmd = healthCmd;
