@@ -1,56 +1,48 @@
 ---
 title: "RogueLeader"
-description: Domestic dedicated server with Borg, Mealie, Uptime Kuma, Papra, and BookStack (public via the pangolin gateway).
+description: Home server. BookStack, Mealie, Papra, Uptime Kuma, Borg UI, published through the pangolin gateway.
 sidebar:
   order: 1
   label: "Overview"
 ---
 
-Behold RogueLeader — the home-shrine, tending the domestic sanctuary on the local network frontier at `192.168.0.10`.
+| Container | Domain | Role |
+|---|---|---|
+| `newt` | | Outbound tunnel to the [gateway](/nixos/skitarii/gateway/) |
+| `wow-cp-bookstack` | `wow-cp.friloux.me` | Wiki ([BookStack](/nixos/rogueleader/bookstack/)) |
+| `wow-cp-mariadb` | | MariaDB for BookStack |
+| `wow-cp-mysqldump` | | Nightly SQL dump |
+| `papra` | `docs.friloux.me` | Documents ([Papra](/nixos/rogueleader/papra/)) |
+| `mealie` | `cuisine.friloux.me` | Recipes |
+| `uptime-kuma` | `status.friloux.me` | Status page |
+| `borg-ui` | `borg-ui.friloux.me` | Borg web UI |
 
-## Configuration
+Every domain is a CNAME to `skitarii.friloux.me`. No traefik, no crowdsec, no open port, no port-forward on the box.
 
-| Parameter | Value |
+## Host
+
+| | |
 |---|---|
-| Role | Domestic internal server |
-| Local network | `rogueleader.home` (192.168.0.10) |
-| OS | NixOS 25.11 |
-| Storage | `/dev/sda`, ext4, GPT (via disko) |
-| sops | Age key derived from SSH host key |
+| Network | `rogueleader.home` (`192.168.0.10`), LAN only |
+| Disk | `/dev/sda`, GPT via disko, ext4 |
+| sops | age key from `/etc/ssh/ssh_host_ed25519_key`. After a reinstall: new key in `.sops.yaml`, see [Age key backup](/nixos/operations/secrets-backup/) |
 | stateVersion | `25.11` |
 
-## Bound Daemons
+## Deploy
 
-| Daemon | Role |
+```bash
+just install_rogueleader   # system
+just home_rogueleader      # Home Manager only
+```
+
+## Backup
+
+Borg to `ssh://backup@storage2.friloux.me/~/rogueleader.friloux.me`, `backup.nix`.
+
+| Path | Note |
 |---|---|
-| `newt` | Outbound tunnel to the pangolin gateway on skitarii |
-| `borg-ui` | Borg backup web interface |
-| `mealie` | Recipe manager |
-| `uptime-kuma` | External availability monitoring |
-| `papra` | Document management (docs.friloux.me) |
-| `wow-cp-bookstack` | BookStack wiki (wow-cp.friloux.me) |
-| `wow-cp-mariadb` | MariaDB for BookStack |
-| `wow-cp-mysqldump` | SQL backup cron |
-
-## Public Exposure
-
-Every web daemon (mealie, borg-ui, uptime-kuma, papra, BookStack) is published
-by the pangolin gateway on skitarii: each name is a CNAME to
-`skitarii.friloux.me`, and `newt` carries the traffic through an outbound tunnel
-to the containers on the `web` network. TLS, crowdsec and the certificates live
-on skitarii (see [The Gate](/nixos/skitarii/gateway/)). RogueLeader runs no
-traefik and no crowdsec, opens no web port, and needs no port-forward on the
-box.
-
-## Archive & Backup
-
-Configured with borgbackup toward `storage2.friloux.me` (same pattern as clochette).
-Papra data (`/srv/docker/docs.friloux.me`) is included in the backup set.
-
-## Important Notes
-
-- sops derives the age key from `/etc/ssh/ssh_host_ed25519_key` (like clochette)
-- After reinstall: update `.sops.yaml` with the new age public key
-  (see [Reliquary Backup & Restoration](/nixos/operations/secrets-backup/))
-- Deploy from exampleHost: `just install_rogueleader`
-- Home Manager: `just home_rogueleader`
+| `/srv/docker/wow-cp.friloux.me` | live `db/` excluded, the SQL dump covers it |
+| `/srv/docker/docs.friloux.me` | live SQLite excluded |
+| `/srv/docker/status.friloux.me` | live SQLite excluded |
+| `/srv/docker/cuisine.home.friloux.me` | live SQLite excluded |
+| `/srv/docker/sqlite-snapshots` | copies of the three SQLite databases, taken before `borg create` |
