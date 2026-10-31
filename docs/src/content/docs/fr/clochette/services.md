@@ -19,12 +19,12 @@ extraOptions = inputs.stc.lib.docker.mkHealthCheck {
 `mkHealthCheck` (fourni par l'input de flake STC) génère les flags `--health-cmd`,
 `--health-interval=30s`, `--health-timeout=10s`, `--health-start-period`,
 `--health-retries=3`. L'associer au label `stc.docker/health-watch` pour obtenir
-redémarrages et notifications (voir [Notifications de Pannes](notifications.md)).
+redémarrages et notifications (voir [Notifications de Pannes](/nixos/fr/clochette/notifications/)).
 
 ## Réseaux Docker
 
 Les containers publiés par la passerelle pangolin rejoignent le réseau `web`,
-où `newt` les joint par leur nom (voir [La Porte](../skitarii/gateway.mdx)).
+où `newt` les joint par leur nom (voir [La Porte](/nixos/fr/skitarii/gateway/)).
 Les containers à usage interne (bases de données) ont leur propre réseau isolé.
 
 ```nix

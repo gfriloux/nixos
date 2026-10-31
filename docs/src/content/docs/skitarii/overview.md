@@ -13,7 +13,7 @@ every other shrine as their single point of entry.
 
 | Parameter | Value |
 |---|---|
-| Role | Gateway: pangolin, gerbil, traefik, crowdsec, crowdsec-manager — see [The Gate](gateway.md) |
+| Role | Gateway: pangolin, gerbil, traefik, crowdsec, crowdsec-manager — see [The Gate](/nixos/skitarii/gateway/) |
 | Host | OVH VPS-1 (4 GB RAM, 40 GB disk) |
 | Public IPv4 | `5.196.4.180` (DHCP) |
 | Public IPv6 | `2001:41d0:404:200::487d/128` (static, gateway `2001:41d0:404:200::1`) |
@@ -36,7 +36,7 @@ Base system:
 - Home Manager `guillaume@skitarii` (cogitator-enginseer), wired in by snowfall
 
 Bound daemons, as a POC: pangolin, gerbil, traefik, crowdsec and
-crowdsec-manager — see [The Gate](gateway.md).
+crowdsec-manager — see [The Gate](/nixos/skitarii/gateway/).
 
 ## Deployment
 
@@ -50,7 +50,7 @@ just secrets_skitarii    # edit secrets/skitarii.yaml
 
 - **No KVM console on a VPS-1.** If SSH and Tailscale are both gone, the only
   way in is the OVH rescue mode — see
-  [Rite of Resurrection: skitarii](../operations/reinstall-skitarii.md).
+  [Rite of Resurrection: skitarii](/nixos/operations/reinstall-skitarii/).
 - **One failed SSH authentication costs one hour of ban** for the source
   address (`PerSourcePenalties = authfail:3600s` from the ssh relic). The
   ssh block pins the key with `IdentitiesOnly`, so it never happens through

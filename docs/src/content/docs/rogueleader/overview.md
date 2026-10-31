@@ -38,7 +38,7 @@ Every web daemon (mealie, borg-ui, uptime-kuma, papra, BookStack) is published
 by the pangolin gateway on skitarii: each name is a CNAME to
 `skitarii.friloux.me`, and `newt` carries the traffic through an outbound tunnel
 to the containers on the `web` network. TLS, crowdsec and the certificates live
-on skitarii (see [The Gate](../skitarii/gateway.mdx)). RogueLeader runs no
+on skitarii (see [The Gate](/nixos/skitarii/gateway/)). RogueLeader runs no
 traefik and no crowdsec, opens no web port, and needs no port-forward on the
 box.
 
@@ -51,6 +51,6 @@ Papra data (`/srv/docker/docs.friloux.me`) is included in the backup set.
 
 - sops derives the age key from `/etc/ssh/ssh_host_ed25519_key` (like clochette)
 - After reinstall: update `.sops.yaml` with the new age public key
-  (see [Reliquary Backup & Restoration](../operations/secrets-backup.md))
+  (see [Reliquary Backup & Restoration](/nixos/operations/secrets-backup/))
 - Deploy from exampleHost: `just install_rogueleader`
 - Home Manager: `just home_rogueleader`

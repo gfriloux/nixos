@@ -22,7 +22,7 @@ VPS Scaleway hébergeant les services web personnels, publiés par la passerelle
 `photos.friloux.me` est un CNAME vers `skitarii.friloux.me` : la passerelle
 pangolin le publie, et `newt` porte le trafic par un tunnel sortant jusqu'à
 `immich-server` sur le réseau `web` (créé par `docker-newt.nix`). TLS, crowdsec
-et les certificats vivent sur skitarii (voir [La Porte](../skitarii/gateway.mdx)).
+et les certificats vivent sur skitarii (voir [La Porte](/nixos/fr/skitarii/gateway/)).
 clochette ne fait tourner ni traefik ni crowdsec et n'ouvre aucun port web ; SSH
 n'est joignable que par Tailscale.
 
@@ -86,5 +86,5 @@ Chemins sauvegardés : `/srv/docker/photos.friloux.me` (sans le `db/` vivant),
 :::note[Marginalia]
 Le datadir PostgreSQL vivant d'Immich (`photos.friloux.me/db`) est **exclu** de Borg.
 La base est sauvegardée via le dump nocturne d'Immich dans `upload/backups/` :
-voir [Restauration des Données depuis Borg](../operations/restore.md#immich-clochette).
+voir [Restauration des Données depuis Borg](/nixos/fr/operations/restore/#immich-clochette).
 :::

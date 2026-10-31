@@ -49,7 +49,7 @@ docker exec wow-cp-mariadb mysqldump \
 
 ## Database Restoration
 
-See [Rite of Restoration](../operations/restore.md#bookstack-rogueleader):
+See [Rite of Restoration](/nixos/operations/restore/#bookstack-rogueleader):
 the dump needs its first line dropped before a 10.5 client accepts it, and the
 database must be created first.
 

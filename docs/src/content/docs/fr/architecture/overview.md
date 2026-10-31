@@ -27,7 +27,7 @@ snowfall-lib **ne propage pas** les modules globalement — chaque sanctuaire do
 
 ## Le Reliquaire
 
-Tous les secrets sont scellés avec age + sops-nix. La clé de chaque machine n'ouvre que son propre reliquaire ; l'édition passe par des clés d'administration qui ne sont sur aucune machine (une YubiKey et une clé de secours hors ligne). Voir [Reliquaires de Secrets](secrets.md).
+Tous les secrets sont scellés avec age + sops-nix. La clé de chaque machine n'ouvre que son propre reliquaire ; l'édition passe par des clés d'administration qui ne sont sur aucune machine (une YubiKey et une clé de secours hors ligne). Voir [Reliquaires de Secrets](/nixos/fr/architecture/secrets/).
 
 ## Démons Liés — Services Web (clochette, RogueLeader)
 
@@ -36,11 +36,11 @@ publiés par la passerelle pangolin de skitarii. Chaque machine fait tourner un
 container `newt` qui porte le trafic par un tunnel sortant : aucune des deux ne
 fait tourner traefik ou crowdsec, ni n'ouvre de port web. Le traefik de skitarii
 gère les certificats Let's Encrypt et son CrowdSec garde toutes les routes. Voir
-[La Porte](../skitarii/gateway.mdx).
+[La Porte](/nixos/fr/skitarii/gateway/).
 
 ## L'Astropathe
 
-La relic `relics-docker-notify` de STC (`stc.relics.docker.notify`) observe tous les containers portant le label `stc.docker/health-watch = "true"` sur chaque machine, tue ceux qui passent `unhealthy`, et annonce leurs présages par le `notifyCommand` de la machine (un appel ntfy.sh) quand leur unité entre en défaillance. Voir [Notifications de Pannes](../clochette/notifications.md).
+La relic `relics-docker-notify` de STC (`stc.relics.docker.notify`) observe tous les containers portant le label `stc.docker/health-watch = "true"` sur chaque machine, tue ceux qui passent `unhealthy`, et annonce leurs présages par le `notifyCommand` de la machine (un appel ntfy.sh) quand leur unité entre en défaillance. Voir [Notifications de Pannes](/nixos/fr/clochette/notifications/).
 
 ## Principes de Consécration
 

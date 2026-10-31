@@ -13,7 +13,7 @@ d'entrée unique vers tous les autres sanctuaires.
 
 | Paramètre | Valeur |
 |---|---|
-| Rôle | Passerelle : pangolin, gerbil, traefik, crowdsec, crowdsec-manager — voir [La Porte](gateway.md) |
+| Rôle | Passerelle : pangolin, gerbil, traefik, crowdsec, crowdsec-manager — voir [La Porte](/nixos/fr/skitarii/gateway/) |
 | Hébergeur | OVH VPS-1 (4 Go de RAM, disque 40 Go) |
 | IPv4 publique | `5.196.4.180` (DHCP) |
 | IPv6 publique | `2001:41d0:404:200::487d/128` (statique, passerelle `2001:41d0:404:200::1`) |
@@ -36,7 +36,7 @@ Système de base :
 - Home Manager `guillaume@skitarii` (cogitator-enginseer), rattaché par snowfall
 
 Services, en POC : pangolin, gerbil, traefik, crowdsec et crowdsec-manager —
-voir [La Porte](gateway.md).
+voir [La Porte](/nixos/fr/skitarii/gateway/).
 
 ## Déploiement
 
@@ -50,7 +50,7 @@ just secrets_skitarii    # éditer secrets/skitarii.yaml
 
 - **Pas de console KVM sur un VPS-1.** Si SSH et Tailscale tombent tous les
   deux, la seule entrée est le mode rescue OVH — voir
-  [Réinstallation — skitarii](../operations/reinstall-skitarii.md).
+  [Réinstallation — skitarii](/nixos/fr/operations/reinstall-skitarii/).
 - **Une authentification SSH ratée coûte une heure de ban** à l'adresse
   source (`PerSourcePenalties = authfail:3600s`, relic ssh). Le bloc ssh fixe
   la clé avec `IdentitiesOnly`, donc ça n'arrive pas via

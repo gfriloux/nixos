@@ -5,7 +5,7 @@ description: Gestion quotidienne des secrets — édition, lecture, ajout, rotat
 
 Référence pour la gestion quotidienne des secrets avec sops-nix.
 
-Pour les procédures de sauvegarde et restauration, voir [Sauvegarde & Restauration des Secrets](secrets-backup.md).
+Pour les procédures de sauvegarde et restauration, voir [Sauvegarde & Restauration des Secrets](/nixos/fr/operations/secrets-backup/).
 
 ## Éditer un Fichier de Secrets
 

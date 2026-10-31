@@ -28,7 +28,7 @@ Before starting:
 - [ ] Network connectivity from the server
 - [ ] `nixos` repo accessible (GitHub or USB)
 - [ ] exampleHost age key available (for re-encrypting secrets after install)
-      See [Reliquary Backup & Restoration](secrets-backup.md)
+      See [Reliquary Backup & Restoration](/nixos/operations/secrets-backup/)
 - [ ] Recent Borg backup verified
       `BORG_PASSPHRASE=... borg list ssh://backup@storage2.friloux.me/~/clochette.friloux.me`
 - [ ] Gateway noted: `photos.friloux.me` goes through skitarii; until `newt` reconnects, Immich is unreachable
@@ -242,7 +242,7 @@ and activates Docker health watch.
 ## Step 10 — Data Restoration from Borg
 
 If service data must be restored (real loss scenario), follow
-[Rite of Restoration](restore.md). The archive holds no live database:
+[Rite of Restoration](/nixos/operations/restore/). The archive holds no live database:
 extracting it is not enough, Immich's database must then be loaded from its
 dump, or it starts empty.
 

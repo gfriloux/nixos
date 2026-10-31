@@ -27,7 +27,7 @@ snowfall-lib does **not** propagate modules globally — each shrine must explic
 
 ## The Reliquary
 
-All secrets are sealed with age + sops-nix. Each shrine's key opens only its own reliquary; editing goes through admin keys kept off every shrine (a YubiKey and an offline rescue key). See [The Reliquary](secrets.md).
+All secrets are sealed with age + sops-nix. Each shrine's key opens only its own reliquary; editing goes through admin keys kept off every shrine (a YubiKey and an offline rescue key). See [The Reliquary](/nixos/architecture/secrets/).
 
 ## Bound Daemons — Web Services (clochette, RogueLeader)
 
@@ -35,11 +35,11 @@ All web services run as bound daemons (Docker containers) published by the
 pangolin gateway on skitarii. Each host runs a `newt` container that carries the
 traffic through an outbound tunnel: neither host runs traefik or crowdsec, nor
 opens a web port. skitarii's traefik manages the Let's Encrypt certificates and
-its CrowdSec guards every route. See [The Gate](../skitarii/gateway.mdx).
+its CrowdSec guards every route. See [The Gate](/nixos/skitarii/gateway/).
 
 ## The Astropath
 
-STC's `relics-docker-notify` relic (`stc.relics.docker.notify`) watches all containers bearing the label `stc.docker/health-watch = "true"` on every host, kills those that turn `unhealthy`, and heralds their omens through each host's `notifyCommand` (an ntfy.sh call) when their unit enters failure. See [The Astropath](../clochette/notifications.md).
+STC's `relics-docker-notify` relic (`stc.relics.docker.notify`) watches all containers bearing the label `stc.docker/health-watch = "true"` on every host, kills those that turn `unhealthy`, and heralds their omens through each host's `notifyCommand` (an ntfy.sh call) when their unit enters failure. See [The Astropath](/nixos/clochette/notifications/).
 
 ## Principles of Consecration
 

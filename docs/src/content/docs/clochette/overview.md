@@ -23,7 +23,7 @@ Behold clochette — the VPS-shrine exposed to the noosphere, where bound daemon
 publishes it, and `newt` carries the traffic through an outbound tunnel to
 `immich-server` on the `web` network (created by `docker-newt.nix`). TLS,
 crowdsec and the certificates live on skitarii (see
-[The Gate](../skitarii/gateway.mdx)). clochette runs no traefik and no crowdsec
+[The Gate](/nixos/skitarii/gateway/)). clochette runs no traefik and no crowdsec
 and opens no web port; SSH is reachable over Tailscale only.
 
 No pangolin SSO on this resource: the Immich mobile app could not get through
@@ -83,5 +83,5 @@ Backed-up paths: `/srv/docker/photos.friloux.me` (minus the live `db/`),
 :::note[Marginalia]
 Immich's live PostgreSQL datadir (`photos.friloux.me/db`) is excluded from Borg.
 The database is backed up through Immich's nightly dump in `upload/backups/`:
-see [Rite of Restoration](../operations/restore.md#immich-clochette).
+see [Rite of Restoration](/nixos/operations/restore/#immich-clochette).
 :::

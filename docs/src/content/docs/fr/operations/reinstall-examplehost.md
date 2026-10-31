@@ -28,7 +28,7 @@ Le disque `/data2` est monté avec `nofail` — son absence ne bloque pas le dé
 Avant de lancer quoi que ce soit, vérifier :
 
 - [ ] La **clé age** de exampleHost est disponible (sauvegarde Bitwarden, USB chiffrée, papier…)
-      Voir [Sauvegarde & Restauration des Secrets](secrets-backup.md)
+      Voir [Sauvegarde & Restauration des Secrets](/nixos/fr/operations/secrets-backup/)
 - [ ] L'ISO NixOS est téléchargée et gravée/flashée
       Utiliser une version récente : <https://nixos.org/download/>
 - [ ] Le dépôt git `nixos` est accessible (GitHub ou copie locale sur USB)

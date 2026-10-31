@@ -5,7 +5,7 @@ description: Unsealing and rotating secrets, declaring new secrets, adding machi
 
 Reference for daily secret management with sops-nix.
 
-For backup and restoration procedures, see [Reliquary Backup & Restoration](secrets-backup.md).
+For backup and restoration procedures, see [Reliquary Backup & Restoration](/nixos/operations/secrets-backup/).
 
 ## Unsealing a Secret File
 

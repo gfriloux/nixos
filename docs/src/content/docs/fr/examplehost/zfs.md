@@ -3,7 +3,7 @@ title: "ZFS"
 description: Pools ZFS, datasets, snapshots, zrepl, maintenance — exampleHost.
 ---
 
-Voir aussi [Reliquaires & Systèmes de Fichiers](../architecture/storage.md) pour la vue d'ensemble.
+Voir aussi [Reliquaires & Systèmes de Fichiers](/nixos/fr/architecture/storage/) pour la vue d'ensemble.
 
 ## Commandes de Maintenance
 

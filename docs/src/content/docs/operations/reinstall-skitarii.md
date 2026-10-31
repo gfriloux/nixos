@@ -183,10 +183,10 @@ ssh skitarii.friloux.me true
 nc -zv -w 5 5.196.4.180 22    # must time out
 ```
 
-Bring pangolin's data back from Borg (sites, resources, users, TOTP,
+Bring pangolin's data back from Borg (nodes, resources, users, TOTP,
 license activation, gerbil's WireGuard key): extract the latest archive and
 put the SQLite snapshots in place, as described in
-[Rite of Restoration](restore.md). The Enterprise license is bound to the
+[Rite of Restoration](/nixos/operations/restore/). The Enterprise license is bound to the
 server's host ID: if `/admin/license` shows it inactive after the restore,
 re-enter it. crowdsec re-registers the bouncer by itself from sops.
 

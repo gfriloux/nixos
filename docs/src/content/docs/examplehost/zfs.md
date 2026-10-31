@@ -5,7 +5,7 @@ description: Commands for inspecting and maintaining ZFS mirrors, snapshots, and
 
 ZFS on exampleHost guards data in twin Samsung mirrors. The following rites inspect and maintain the pools.
 
-See also [Vaults of the Machine-Spirit](../architecture/storage.md) for the architectural overview.
+See also [Vaults of the Machine-Spirit](/nixos/architecture/storage/) for the architectural overview.
 
 ## Commands for Maintenance
 

@@ -10,7 +10,7 @@ Vue d'ensemble des mécanismes de surveillance en place sur l'infrastructure.
 Sur chaque machine qui fait tourner des containers (clochette, RogueLeader,
 skitarii), les containers portant le label `stc.docker/health-watch = "true"`
 sont surveillés automatiquement par la relic `relics-docker-notify` de STC.
-Voir [Notifications de Pannes](../clochette/notifications.md).
+Voir [Notifications de Pannes](/nixos/fr/clochette/notifications/).
 
 Deux mécanismes :
 
@@ -94,4 +94,4 @@ statut `status.friloux.me`, publiée par la passerelle pangolin. Si skitarii
 tombe, la page publique tombe avec lui, mais Uptime Kuma continue de tourner à
 la maison et d'alerter par ntfy.
 
-Voir [RogueLeader](../rogueleader/overview.md).
+Voir [RogueLeader](/nixos/fr/rogueleader/overview/).

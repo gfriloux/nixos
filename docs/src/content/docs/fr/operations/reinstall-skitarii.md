@@ -183,10 +183,10 @@ ssh skitarii.friloux.me true
 nc -zv -w 5 5.196.4.180 22    # doit échouer en timeout
 ```
 
-Remettre les données de pangolin depuis Borg (sites, ressources,
+Remettre les données de pangolin depuis Borg (nœuds, ressources,
 utilisateurs, TOTP, activation de la licence, clé WireGuard de gerbil) :
 extraire la dernière archive et remettre les copies SQLite en place, comme
-décrit dans [Restauration des Données depuis Borg](restore.md). La licence
+décrit dans [Restauration des Données depuis Borg](/nixos/fr/operations/restore/). La licence
 Enterprise est liée au host ID du serveur : si `/admin/license` la montre
 inactive après la restauration, la ressaisir. crowdsec réenregistre seul le
 bouncer depuis sops.

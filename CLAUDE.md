@@ -44,7 +44,7 @@ just docs-preview   # serve the built dist
 
 **Key config invariants** (`docs/astro.config.mjs`):
 
-- `base` is extracted as a `const` at the top and reused everywhere — including hero action links in `index.mdx` (`/nixos/introduction/`). Starlight does NOT auto-prefix absolute paths with the base.
+- `base` is extracted as a `const` at the top and reused everywhere — including hero action links in `index.mdx` (`/nixos/introduction/`). Starlight does NOT auto-prefix absolute paths with the base. The same goes for internal links in content: write `[text](/nixos/fr/skitarii/gateway/)`, never `(gateway.md)` (relative file links are not resolved and 404).
 - Starlight 0.39+ requires `autogenerate` to be wrapped in `items`: `items: [{ autogenerate: { directory: '...' } }]`.
 - Content config lives at `src/content.config.ts` (Astro v6 — the old `src/content/config.ts` location is gone).
 - Diagrams are archify specs in `docs/diagrams/<name>.architecture.json` (one `.fr` copy per diagram), rendered to `docs/public/diagrams/<name>.html` with `node ~/.claude/skills/archify/bin/archify.mjs deliver architecture <spec> <html> --quality showcase`, and embedded with `src/components/Archify.astro` (embed mode, theme synced with Starlight's toggle).

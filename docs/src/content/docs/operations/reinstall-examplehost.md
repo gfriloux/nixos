@@ -28,7 +28,7 @@ Note: `/data2` is mounted with `nofail` — its absence does not block boot.
 Before proceeding:
 
 - [ ] The exampleHost age key is available (Bitwarden, encrypted USB, paper backup…)
-      See [Reliquary Backup & Restoration](secrets-backup.md)
+      See [Reliquary Backup & Restoration](/nixos/operations/secrets-backup/)
 - [ ] NixOS ISO is downloaded and burned/flashed
       Use a recent version: <https://nixos.org/download/>
 - [ ] The `nixos` git repo is accessible (GitHub or USB copy)

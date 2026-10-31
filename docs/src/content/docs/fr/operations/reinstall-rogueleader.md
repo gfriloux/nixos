@@ -23,7 +23,7 @@ Guide de réinstallation complète du serveur dédié domestique RogueLeader.
 - [ ] Clé USB NixOS ISO prête
 - [ ] Connexion réseau local (DHCP)
 - [ ] Clé age de exampleHost disponible (pour re-chiffrer les secrets après install)
-      Voir [Sauvegarde & Restauration des Secrets](secrets-backup.md)
+      Voir [Sauvegarde & Restauration des Secrets](/nixos/fr/operations/secrets-backup/)
 - [ ] Sauvegarde Borg vérifiée :
       `BORG_PASSPHRASE=... borg list ssh://backup@storage2.friloux.me/~/rogueleader.friloux.me`
 
@@ -163,7 +163,7 @@ just home_rogueleader
 
 ## Étape 8 — Restauration des Données depuis Borg (si Nécessaire)
 
-Suivre [Restauration des Données depuis Borg](restore.md). L'archive ne
+Suivre [Restauration des Données depuis Borg](/nixos/fr/operations/restore/). L'archive ne
 contient aucune base vivante : après l'extraction, la base de BookStack doit
 être chargée depuis son dump, et celles des services SQLite remises en place
 depuis `sqlite-snapshots/`, sinon elles démarrent vides.

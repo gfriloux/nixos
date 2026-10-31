@@ -25,7 +25,7 @@ This rite is irreversible at certain steps. Execute each command exactly as writ
 - [ ] NixOS ISO USB ready
 - [ ] Local network connectivity (DHCP)
 - [ ] exampleHost age key available (for re-encrypting secrets after install)
-      See [Reliquary Backup & Restoration](secrets-backup.md)
+      See [Reliquary Backup & Restoration](/nixos/operations/secrets-backup/)
 - [ ] Recent Borg backup verified:
       `BORG_PASSPHRASE=... borg list ssh://backup@storage2.friloux.me/~/rogueleader.friloux.me`
 
@@ -161,7 +161,7 @@ just home_rogueleader
 
 ## Step 8 — Data Restoration from Borg (if needed)
 
-Follow [Rite of Restoration](restore.md). The archive holds no live
+Follow [Rite of Restoration](/nixos/operations/restore/). The archive holds no live
 database: after extracting it, BookStack's database must be loaded from its
 dump and the SQLite services' databases put back from `sqlite-snapshots/`,
 or they start empty.

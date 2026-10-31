@@ -9,7 +9,7 @@ Overview of surveillance mechanisms across the Forge.
 
 On every host that runs containers (clochette, RogueLeader, skitarii), daemons
 with the label `stc.docker/health-watch = "true"` are automatically watched by
-STC's `relics-docker-notify` relic. See [The Astropath](../clochette/notifications.md).
+STC's `relics-docker-notify` relic. See [The Astropath](/nixos/clochette/notifications/).
 
 Two mechanisms:
 
@@ -93,4 +93,4 @@ page at `status.friloux.me`, published through the pangolin gateway. If skitarii
 goes down the public page goes with it, but Uptime Kuma keeps running at home
 and keeps alerting through ntfy.
 
-See [RogueLeader](../rogueleader/overview.md).
+See [RogueLeader](/nixos/rogueleader/overview/).

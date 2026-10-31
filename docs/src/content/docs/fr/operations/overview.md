@@ -12,21 +12,21 @@ Cette section regroupe toutes les procédures opérationnelles de la Forge.
 
 | Tâche | Page |
 |---|---|
-| Déployer une configuration | [Commandes de Déploiement](deployment.md) |
-| Éditer un secret sops | [sops-nix & Secrets](sops.md) |
-| Surveiller les services | [Monitoring & Observabilité](monitoring.md) |
-| Diagnostiquer un problème | [Dépannage](troubleshooting.md) |
+| Déployer une configuration | [Commandes de Déploiement](/nixos/fr/operations/deployment/) |
+| Éditer un secret sops | [sops-nix & Secrets](/nixos/fr/operations/sops/) |
+| Surveiller les services | [Monitoring & Observabilité](/nixos/fr/operations/monitoring/) |
+| Diagnostiquer un problème | [Dépannage](/nixos/fr/operations/troubleshooting/) |
 
 ## Opérations de Récupération
 
 | Tâche | Page |
 |---|---|
-| Sauvegarder/restaurer les clés age | [Sauvegarde & Restauration des Secrets](secrets-backup.md) |
-| Restaurer les données des services depuis Borg | [Restauration des Données depuis Borg](restore.md) |
-| Réinstaller exampleHost | [Réinstallation exampleHost](reinstall-examplehost.md) |
-| Réinstaller clochette | [Réinstallation clochette](reinstall-clochette.md) |
-| Réinstaller skitarii | [Réinstallation skitarii](reinstall-skitarii.md) |
-| Ré-enrôler Tailscale | [Tailscale — Ré-enrôlement](tailscale.md) |
+| Sauvegarder/restaurer les clés age | [Sauvegarde & Restauration des Secrets](/nixos/fr/operations/secrets-backup/) |
+| Restaurer les données des services depuis Borg | [Restauration des Données depuis Borg](/nixos/fr/operations/restore/) |
+| Réinstaller exampleHost | [Réinstallation exampleHost](/nixos/fr/operations/reinstall-examplehost/) |
+| Réinstaller clochette | [Réinstallation clochette](/nixos/fr/operations/reinstall-clochette/) |
+| Réinstaller skitarii | [Réinstallation skitarii](/nixos/fr/operations/reinstall-skitarii/) |
+| Ré-enrôler Tailscale | [Tailscale — Ré-enrôlement](/nixos/fr/operations/tailscale/) |
 
 ## Principe Général
 

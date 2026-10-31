@@ -29,7 +29,7 @@ Avant de démarrer :
 - [ ] Connexion réseau disponible depuis le serveur
 - [ ] Dépôt `nixos` accessible (GitHub ou USB)
 - [ ] Clé age de exampleHost disponible (pour re-chiffrer les secrets après install)
-      Voir [Sauvegarde & Restauration des Secrets](secrets-backup.md)
+      Voir [Sauvegarde & Restauration des Secrets](/nixos/fr/operations/secrets-backup/)
 - [ ] Sauvegarde Borg vérifiée et récente
       `BORG_PASSPHRASE=... borg list ssh://backup@storage2.friloux.me/~/clochette.friloux.me`
 - [ ] Passerelle notée : `photos.friloux.me` passe par skitarii ; tant que `newt` ne s'est pas reconnecté, Immich est injoignable
@@ -245,7 +245,7 @@ et active la surveillance de santé Docker.
 ## Étape 10 — Restauration des Données depuis Borg
 
 Si les données des services doivent être restaurées (cas d'une vraie perte),
-suivre [Restauration des Données depuis Borg](restore.md). L'archive ne contient
+suivre [Restauration des Données depuis Borg](/nixos/fr/operations/restore/). L'archive ne contient
 aucune base vivante : l'extraire ne suffit pas, la base d'Immich doit ensuite
 être chargée depuis son dump, sinon elle démarre vide.
 

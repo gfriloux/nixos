@@ -12,21 +12,21 @@ This section gathers all operational ceremonies — from daily maintenance to em
 
 | Task | Page |
 |---|---|
-| Deploy a configuration | [Rites of Anointment](deployment.md) |
-| Edit a sops secret | [The Reliquary & sops-nix](sops.md) |
-| Monitor services | [The Astropath & Observability](monitoring.md) |
-| Diagnose failure | [Dépannage](troubleshooting.md) |
+| Deploy a configuration | [Rites of Anointment](/nixos/operations/deployment/) |
+| Edit a sops secret | [The Reliquary & sops-nix](/nixos/operations/sops/) |
+| Monitor services | [The Astropath & Observability](/nixos/operations/monitoring/) |
+| Diagnose failure | [Dépannage](/nixos/operations/troubleshooting/) |
 
 ## Recovery Rites
 
 | Task | Page |
 |---|---|
-| Backup/restore age keys | [Reliquary Backup & Restoration](secrets-backup.md) |
-| Restore service data from Borg | [Rite of Restoration](restore.md) |
-| Reinstall exampleHost | [Rite of Resurrection: exampleHost](reinstall-examplehost.md) |
-| Reinstall clochette | [Rite of Resurrection: clochette](reinstall-clochette.md) |
-| Reinstall skitarii | [Rite of Resurrection: skitarii](reinstall-skitarii.md) |
-| Re-enroll Tailscale | [Tailscale — Re-enrollment](tailscale.md) |
+| Backup/restore age keys | [Reliquary Backup & Restoration](/nixos/operations/secrets-backup/) |
+| Restore service data from Borg | [Rite of Restoration](/nixos/operations/restore/) |
+| Reinstall exampleHost | [Rite of Resurrection: exampleHost](/nixos/operations/reinstall-examplehost/) |
+| Reinstall clochette | [Rite of Resurrection: clochette](/nixos/operations/reinstall-clochette/) |
+| Reinstall skitarii | [Rite of Resurrection: skitarii](/nixos/operations/reinstall-skitarii/) |
+| Re-enroll Tailscale | [Tailscale — Re-enrollment](/nixos/operations/tailscale/) |
 
 ## General Principle
 

@@ -81,4 +81,4 @@ redirection de port sur la box.
 
 Services Docker : pangolin (pangolin.friloux.me), gerbil, traefik, crowdsec,
 crowdsec-manager (crowdsec.friloux.me, derrière le SSO pangolin). Voir
-[La Porte](../skitarii/gateway.mdx).
+[La Porte](/nixos/fr/skitarii/gateway/).

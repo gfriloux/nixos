@@ -51,7 +51,7 @@ sudo docker exec crowdsec cscli decisions list --ip <IP>
 ```
 
 La suite (bouncer, certificats, ressources) est dans
-[La Porte](../skitarii/gateway.mdx).
+[La Porte](/nixos/fr/skitarii/gateway/).
 
 ## sops ne Peut pas Déchiffrer les Secrets
 
@@ -67,7 +67,7 @@ age-keygen -y /etc/sops/age/keys.txt
 sops -d secrets/clochette.yaml
 ```
 
-Si la clé publique ne correspond pas : voir [Sauvegarde & Restauration des Secrets](secrets-backup.md).
+Si la clé publique ne correspond pas : voir [Sauvegarde & Restauration des Secrets](/nixos/fr/operations/secrets-backup/).
 
 ## Déploiement nixos-rebuild Échoue
 
