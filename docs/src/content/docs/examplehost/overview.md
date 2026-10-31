@@ -1,51 +1,33 @@
 ---
 title: "exampleHost"
-description: Primary machine-shrine running Plasma 6 on NixOS with ZFS mirror storage.
+description: Desktop workstation. NixOS, Plasma 6, ZFS mirror, AMD GPU.
 sidebar:
   order: 1
   label: "Overview"
 ---
 
-Behold exampleHost — the Techpriest's primary workstation, where the machine-spirit tends both labour and leisure. A ZFS-mirrored sanctuary running NixOS with Plasma 6 at its core.
-
-## The Pilgrim's Account
-
-| Parameter | Value |
+| | |
 |---|---|
-| User | `kuri` |
-| Shell | fish |
-| Groups | `users`, `networkmanager`, `video`, `audio`, `docker`, `wheel` |
-| Home Manager | `homes/x86_64-linux/kuri@exampleHost/` |
+| User | `kuri`, fish, groups `users` `networkmanager` `video` `audio` `docker` `wheel` `dialout` |
+| STC relics | `zfs`, `plasma6` (fr layout, sddm `catppuccin-mocha-mauve`), `amdGpu` (initrd) |
+| STC profiles | `cogitator.workstation` (Plasma, hardening, YubiKey; filesystem hardening off for KDE polkit and Steam/Proton), `cogitator.gaming` |
+| Services | Docker (ZFS storage driver), zrepl (pulls snapshots from storage2), Tailscale, flatpak |
+| sops | age key `/etc/sops/age/keys.txt`, opens `kuri_exampleHost.yaml` only |
+| Home Manager | `homes/x86_64-linux/kuri@exampleHost/`, see [Home Manager](/nixos/examplehost/home-manager/) |
 
-## Bound Daemons & Services
+Pages: [ZFS](/nixos/examplehost/zfs/), [AMD GPU](/nixos/examplehost/amd-gpu/), [Plasma 6](/nixos/examplehost/plasma6/).
 
-| Service | Role |
+## Home Manager secrets
+
+sops-nix writes them to `/run/user/1000/secrets/`.
+
+| Secret | Use |
 |---|---|
-| sddm | Display manager (Wayland) |
-| Plasma 6 | Sacred desktop environment |
-| pipewire | Audio (ALSA + PulseAudio compat) |
-| Docker | Local bound daemons (ZFS storage driver) |
-| zrepl | Pulls ZFS snapshots from storage2 |
-| Tailscale | Mesh VPN |
-| pcscd | Smart card daemon (YubiKey) |
-| flatpak | Sandboxed applications |
-
-## The Sealed Sanctum — Home Manager Secrets
-
-Home Manager's reliquaries are deposited in `/run/user/1000/secrets/` by sops-nix:
-
-| Secret | Path | Usage |
-|---|---|---|
-| `rbw/server` | `rbw_server` | Bitwarden (rbw) server URL |
-| `workspace` | `workspace` | Shell environment variables |
-| `ssh/keys/guillaume@clochette` | — | SSH key: clochette admin |
-| `ssh/keys/weechat@clochette` | — | SSH key: weechat daemon |
-| `ssh/keys/kuri@storage2` | — | SSH key: storage2 archive |
-| `ssh/keys/root@rogueleader` | — | SSH key: RogueLeader |
-| `ssh/keys/github` | — | SSH key: GitHub |
-| `mail/address` | — | Mail address (rbw-wrapper) |
-
-## Notable Applications
-
-Steam, Heroic, WineWow64 (gaming), Transmission, GIMP, Ghostty, rustup,
-yubikey-manager, rbw (Bitwarden CLI), git-workspace, claude-code.
+| `rbw/server` | Bitwarden (rbw) server URL |
+| `workspace` | shell environment variables |
+| `mail/address`, `mail/password`, `mail/tags/*` | mail account and tagging rules |
+| `ssh/keys/guillaume@clochette`, `ssh/keys/weechat@clochette` | clochette |
+| `ssh/keys/guillaume@skitarii` | skitarii |
+| `ssh/keys/root@rogueleader` | RogueLeader |
+| `ssh/keys/kuri@storage2` | storage2 |
+| `ssh/keys/github` | GitHub |
