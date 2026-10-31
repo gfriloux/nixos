@@ -124,6 +124,21 @@ sudo docker exec crowdsec cscli decisions add --ip <IP> --duration 5m --reason t
 | Rotation des logs | `docker-pangolin.nix` | `access.log` chaque jour, 14 gardés, renommage puis `USR1` |
 | Healthchecks | `docker-pangolin.nix` | pangolin `:3001/api/v1/`, gerbil `:3004/healthz`, `traefik healthcheck` ; crowdsec et crowdsec-manager ont le leur |
 | Notifications | `default.nix` | `stc.relics.docker.notify`, topic ntfy dans `secrets/skitarii.yaml` |
+| Alertes sites et ressources | UI pangolin (base de données, sauvegardée) | Règles d'alerte *site toggle* et *resource toggle*, webhook vers ntfy (ci-dessous) |
+
+### Alertes pangolin vers ntfy
+
+Deux règles d'alerte dans le dashboard, chacune avec une action webhook : URL
+`https://ntfy.sh/` (la racine : ntfy n'y lit un corps JSON que là), méthode
+`POST`, body template actif, le topic dans le corps :
+
+```json
+{"topic":"TOPIC","title":"[pangolin] site {{siteName}} {{status}}","message":"{{event}} à {{timestamp}}"}
+```
+
+La règle des ressources utilise `{{resourceName}}` au lieu de
+`site {{siteName}}`. Les événements de ressource ne partent que pour les
+cibles qui ont un health check.
 
 ## Pièges Déjà Rencontrés
 
@@ -143,6 +158,10 @@ sudo docker exec crowdsec cscli decisions add --ip <IP> --duration 5m --reason t
   et celui de skitarii est partagé entre VPS OVH ; son quota anonyme est
   épuisé par les voisins (`429`). Chaque appel ntfy ici passe par `curl -4`,
   et `--fail` pour qu'un `429` fasse échouer l'unité au lieu de sortir en 0.
+- **`{{resourceName}}` non remplacé dans une alerte de test** : le bouton
+  *Test* du dashboard envoie de fausses données (`siteName: "Test Resource
+  Alert"`, statut aléatoire). Les vraies alertes portent le nom de la
+  ressource.
 - **Erreurs au démarrage** (`connection refused` sur `pangolin:3001`,
   `no such host crowdsec`, `crowdsec@file does not exist` sur les routeurs
   internes) : elles cessent quelques secondes après un redémarrage. Si elles
