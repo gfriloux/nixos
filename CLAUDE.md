@@ -71,6 +71,7 @@ skitarii runs only the crowdsec relic, wired to its local traefik in
 | RogueLeader | papra | Documents (docs.friloux.me) |
 | RogueLeader | mealie | Recipes (cuisine.home.friloux.me) |
 | RogueLeader | borg-ui, borg-redis | Borg web UI (borg-ui.friloux.me) |
+| RogueLeader | newt | Outbound tunnel to the pangolin gateway; serves mealie as cuisine.friloux.me |
 
 ## Key patterns
 

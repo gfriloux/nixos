@@ -60,7 +60,31 @@ In `secrets/skitarii.yaml`:
    queries the name (a cached `NXDOMAIN` lasts 3 hours).
 2. In pangolin: a resource on the right site. **Local** for a container on
    skitarii's `pangolin` network; a newt tunnel for another machine.
-3. Keep SSO on unless the service is meant to be public.
+3. Keep SSO on unless the service is meant to be public. Save the
+   authentication tab: switching SSO off without saving leaves it on, and
+   the browser, already holding a dashboard session, hides it (`401` from
+   `curl`, page fine in the browser).
+
+## Adding a newt Site
+
+A machine reaches the gate through an outbound newt tunnel: nothing is
+published on it, no port-forward needed. First one: RogueLeader
+(`docker-newt.nix`), serving `cuisine.friloux.me` (mealie).
+
+1. In pangolin: **Sites** → **Add Site**, type **Newt**. Note the id and the
+   secret, shown only once.
+2. Put them in the host's sops file as `services/newt/id` and
+   `services/newt/secret`.
+3. Run newt as a container on the network of the services it serves (`web`
+   on RogueLeader). Copy RogueLeader's `docker-newt.nix`: a sops template
+   renders `PANGOLIN_ENDPOINT`, `NEWT_ID`, `NEWT_SECRET`.
+4. Deploy, then `docker logs newt` must show `Tunnel connection to server
+   established successfully!` and the site turns **Online**.
+5. Resource targets use the container name and its internal port
+   (`http://mealie:9000`), bypassing the host's own traefik.
+
+Tunnelled traffic still enters through skitarii's traefik: the bouncer sees
+the visitor's real address and bans apply (checked with a manual ban).
 
 ## crowdsec-manager
 

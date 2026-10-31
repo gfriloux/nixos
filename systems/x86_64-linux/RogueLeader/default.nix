@@ -19,6 +19,7 @@
     ./docker-borg-ui.nix
     ./docker-uptime-kuma.nix
     ./docker-mealie.nix
+    ./docker-newt.nix
     ./docker-papra.nix
     ./docker-wow-cp.nix
     ./users.nix
