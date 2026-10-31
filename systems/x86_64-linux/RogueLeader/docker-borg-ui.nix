@@ -25,14 +25,10 @@
         "/etc/localtime:/etc/localtime:ro"
       ];
 
+      # Publié par la passerelle pangolin (borg-ui.friloux.me), via newt sur
+      # le réseau web : plus de route sur le traefik local. Pas de SSO
+      # pangolin, borg-ui a sa propre authentification.
       labels = {
-        "traefik.enable" = "true";
-        "traefik.http.routers.borg-ui.rule" = "Host(`borg-ui.friloux.me`)";
-        "traefik.http.routers.borg-ui.tls" = "true";
-        "traefik.http.routers.borg-ui.tls.certresolver" = "letsencrypt";
-        "traefik.docker.network" = "web";
-        "traefik.http.services.borg-ui.loadbalancer.server.port" = "8081";
-        "traefik.http.routers.borg-ui.middlewares" = "crowdsec@file,rate-limit@file,security-headers@file";
         # ainullcode/borg-ui declares its own HEALTHCHECK (curl on $PORT)
         "stc.docker/health-cmd-in-image" = "true";
         "stc.docker/health-watch" = "true";
