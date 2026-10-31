@@ -39,7 +39,7 @@ them and pushes a notification to ntfy.sh.
 | [BookStack](https://www.bookstackapp.com/) — wiki | `RogueLeader` | `wow-cp.friloux.me` |
 | [Uptime Kuma](https://github.com/louislam/uptime-kuma) — monitoring | `RogueLeader` | `status.friloux.me` |
 | [Papra](https://papra.app/) — document archive | `RogueLeader` | `docs.friloux.me` |
-| [Mealie](https://mealie.io/) — recipes | `RogueLeader` | `cuisine.home.friloux.me` |
+| [Mealie](https://mealie.io/) — recipes | `RogueLeader` | `cuisine.friloux.me` |
 | Borg UI — backup browser | `RogueLeader` | `borg-ui.friloux.me` |
 
 Image tags are pinned and bumped by Renovate, which reads the `# renovate`
