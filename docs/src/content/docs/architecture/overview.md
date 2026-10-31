@@ -39,7 +39,7 @@ its CrowdSec guards every route. See [The Gate](/nixos/skitarii/gateway/).
 
 ## The Astropath
 
-STC's `relics-docker-notify` relic (`stc.relics.docker.notify`) watches all containers bearing the label `stc.docker/health-watch = "true"` on every host, kills those that turn `unhealthy`, and heralds their omens through each host's `notifyCommand` (an ntfy.sh call) when their unit enters failure. See [The Astropath](/nixos/clochette/notifications/).
+STC's `relics-docker-notify` relic (`stc.relics.docker.notify`) watches all containers bearing the label `stc.docker/health-watch = "true"` on every host, kills those that turn `unhealthy`, and heralds their omens through each host's `notifyCommand` (an ntfy.sh call) when their unit enters failure. See [Failure notifications](/nixos/operations/notifications/).
 
 ## Principles of Consecration
 

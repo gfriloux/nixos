@@ -9,7 +9,7 @@ Overview of surveillance mechanisms across the Forge.
 
 On every host that runs containers (clochette, RogueLeader, skitarii), daemons
 with the label `stc.docker/health-watch = "true"` are automatically watched by
-STC's `relics-docker-notify` relic. See [The Astropath](/nixos/clochette/notifications/).
+STC's `relics-docker-notify` relic. See [Failure notifications](/nixos/operations/notifications/).
 
 Two mechanisms:
 

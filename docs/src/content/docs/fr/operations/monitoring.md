@@ -10,7 +10,7 @@ Vue d'ensemble des mécanismes de surveillance en place sur l'infrastructure.
 Sur chaque machine qui fait tourner des containers (clochette, RogueLeader,
 skitarii), les containers portant le label `stc.docker/health-watch = "true"`
 sont surveillés automatiquement par la relic `relics-docker-notify` de STC.
-Voir [Notifications de Pannes](/nixos/fr/clochette/notifications/).
+Voir [Notifications de panne](/nixos/fr/operations/notifications/).
 
 Deux mécanismes :
 

@@ -19,7 +19,7 @@ extraOptions = inputs.stc.lib.docker.mkHealthCheck {
 `mkHealthCheck` (from the STC flake input) generates the flags `--health-cmd`,
 `--health-interval=30s`, `--health-timeout=10s`, `--health-start-period`,
 `--health-retries=3`. Pair it with the `stc.docker/health-watch` label to get
-restarts and notifications (see [The Astropath](/nixos/clochette/notifications/)).
+restarts and notifications (see [Failure notifications](/nixos/operations/notifications/)).
 
 ## Docker Networks
 

@@ -40,7 +40,7 @@ gère les certificats Let's Encrypt et son CrowdSec garde toutes les routes. Voi
 
 ## L'Astropathe
 
-La relic `relics-docker-notify` de STC (`stc.relics.docker.notify`) observe tous les containers portant le label `stc.docker/health-watch = "true"` sur chaque machine, tue ceux qui passent `unhealthy`, et annonce leurs présages par le `notifyCommand` de la machine (un appel ntfy.sh) quand leur unité entre en défaillance. Voir [Notifications de Pannes](/nixos/fr/clochette/notifications/).
+La relic `relics-docker-notify` de STC (`stc.relics.docker.notify`) observe tous les containers portant le label `stc.docker/health-watch = "true"` sur chaque machine, tue ceux qui passent `unhealthy`, et annonce leurs présages par le `notifyCommand` de la machine (un appel ntfy.sh) quand leur unité entre en défaillance. Voir [Notifications de panne](/nixos/fr/operations/notifications/).
 
 ## Principes de Consécration
 
