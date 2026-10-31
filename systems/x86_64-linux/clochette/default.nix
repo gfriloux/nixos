@@ -14,6 +14,7 @@
     inputs.stc.nixosModules.relics-nix-housekeeping
     ./hardware-configuration.nix
     ./docker-immich.nix
+    ./docker-newt.nix
     ./backup.nix
     ./network.nix
     ./users.nix

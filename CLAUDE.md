@@ -63,7 +63,8 @@ through newt, and `docker-newt.nix` creates the `web` network. On top of that:
 
 | Host | Containers | Role |
 |---|---|---|
-| clochette | immich-server, immich-postgres, immich-redis | Photo gallery (photos.friloux.me) |
+| clochette | immich-server, immich-postgres, immich-redis | Photo gallery (photos.friloux.me, through the pangolin gateway) |
+| clochette | newt | Outbound tunnel to the pangolin gateway; serves immich |
 | clochette | crowdsec-manager | CrowdSec web UI, Tailscale-only; keeps the raw Docker socket (needs POST) |
 | skitarii | pangolin, gerbil, traefik | Gateway (pangolin.friloux.me); local traefik in gerbil's netns, not STC's relic |
 | skitarii | crowdsec-manager | CrowdSec web UI, published as a pangolin resource (crowdsec.friloux.me) behind pangolin SSO + 2FA; raw Docker socket |

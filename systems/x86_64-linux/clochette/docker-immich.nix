@@ -38,16 +38,11 @@
         startPeriod = "60s";
       };
 
-      labels = {
-        "traefik.enable" = "true";
-        "traefik.http.routers.immich.rule" = "Host(`photos.friloux.me`)";
-        "traefik.http.routers.immich.tls" = "true";
-        "traefik.http.routers.immich.tls.certresolver" = "letsencrypt";
-        "traefik.docker.network" = "web";
-        "traefik.http.services.immich.loadbalancer.server.port" = "2283";
-        "traefik.http.routers.immich.middlewares" = "crowdsec@file,rate-limit@file,security-headers@file";
-        "stc.docker/health-watch" = "true";
-      };
+      # Publié par la passerelle pangolin (photos.friloux.me), via newt sur le
+      # réseau web : plus de route sur le traefik local. immich ne limite pas
+      # les essais de connexion ; le crowdsec de skitarii bannit après une
+      # rafale de POST en 401 (LePresidente/http-generic-401-bf).
+      labels."stc.docker/health-watch" = "true";
 
       networks = ["immich" "web"];
     };
