@@ -26,10 +26,10 @@ Les notifications arrivent sur le topic ntfy.sh configuré dans `services/ntfy/t
 docker ps --format "table {{.Names}}\t{{.Status}}\t{{.RunningFor}}"
 
 # Santé détaillée d'un container
-docker inspect --format='{{.Name}} : {{.State.Health.Status}}' traefik
+docker inspect --format='{{.Name}} : {{.State.Health.Status}}' immich-server
 
 # Santé de tous les containers surveillés
-for c in traefik crowdsec immich-server immich-postgres immich-redis; do
+for c in newt immich-server immich-postgres immich-redis; do
   echo "$c : $(docker inspect --format='{{.State.Health.Status}}' $c 2>/dev/null || echo 'not found')"
 done
 ```
@@ -38,8 +38,7 @@ done
 
 | Service | Commande de Test |
 |---|---|
-| traefik | `curl -s http://127.0.0.1:8080/ping` |
-| crowdsec | `curl -s http://localhost:8080/health` |
+| newt | `docker exec newt test -f /tmp/healthy` |
 | immich | `curl -s http://localhost:2283/api/server/ping` |
 | postgres | `docker exec immich-postgres pg_isready -U immich -d immich` |
 | redis | `docker exec immich-redis redis-cli ping` |
@@ -76,11 +75,11 @@ systemctl start borgbackup-check
 
 ```bash
 # Logs d'un service Docker via journald
-journalctl -u docker-traefik -f
+journalctl -u docker-newt -f
 journalctl -u docker-immich-server --since "1 hour ago"
 
-# Logs applicatifs Traefik (fichier rotaté)
-tail -f /srv/docker/traefik/logs/traefik.log
+# Les logs d'accès web sont sur skitarii, dont le traefik tient la passerelle
+sudo tail -f /srv/docker/pangolin.friloux.me/traefik-logs/access.log
 
 # Logrotate — vérifier la dernière exécution
 journalctl -u logrotate --since today

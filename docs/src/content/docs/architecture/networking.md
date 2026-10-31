@@ -10,20 +10,16 @@ The Forge connects its shrines across the noosphere through Tailscale, DNS, and 
 ```text
 Internet
     │
-    ├── clochette (51.159.34.135)
-    │       └── Traefik :80/:443
-    │               └── photos.friloux.me    → immich
-    │
     ├── skitarii (5.196.4.180, 2001:41d0:404:200::487d)
     │       └── gerbil :80/:443 → Traefik → crowdsec bouncer
     │               ├── pangolin.friloux.me  → pangolin
-    │               └── crowdsec.friloux.me  → crowdsec-manager (pangolin SSO)
+    │               ├── crowdsec.friloux.me  → crowdsec-manager (pangolin SSO)
+    │               ├── photos.friloux.me    → newt tunnel → clochette → immich
+    │               └── docs, wow-cp, status, cuisine.home, borg-ui
+    │                                        → newt tunnel → RogueLeader
     │
-    ├── home box (port-forward :80/:443)
-    │       └── RogueLeader (192.168.0.10)
-    │               └── Traefik :80/:443
-    │                       ├── docs.friloux.me    → papra
-    │                       └── wow-cp.friloux.me  → bookstack
+    ├── clochette (51.159.34.135)  — no web port, newt dials out
+    ├── RogueLeader (192.168.0.10) — no port-forward, newt dials out
     │
     └── Tailscale (100.x.x.x)
             ├── exampleHost
@@ -60,16 +56,14 @@ DNS       : 51.159.47.28, 51.159.47.26  (Scaleway nameservers)
 
 | Network | Purpose |
 |---|---|
-| `web` | Shared: Traefik ↔ exposed daemons |
+| `web` | Shared: newt ↔ published daemons |
 | `immich` | Internal: Immich ↔ PostgreSQL ↔ Redis |
 
 ## Open Ports on clochette
 
-| Port | Service |
-|---|---|
-| 80 | Traefik HTTP (redirects to 443) |
-| 443 | Traefik HTTPS |
-| 3000 | crowdsec-manager (internal, bound to 0.0.0.0 — should be restricted) |
+None on the public interface. `newt` opens an outbound tunnel to the pangolin
+gateway on skitarii, which terminates TLS (see [The Gate](../skitarii/gateway.md));
+SSH answers on Tailscale only.
 
 ## SMTP — Note on Scaleway
 

@@ -69,7 +69,11 @@ In `secrets/skitarii.yaml`:
 
 A machine reaches the gate through an outbound newt tunnel: nothing is
 published on it, no port-forward needed. First one: RogueLeader
-(`docker-newt.nix`), serving `cuisine.friloux.me` (mealie).
+(`docker-newt.nix`), serving `cuisine.friloux.me` (mealie). Then clochette,
+serving `photos.friloux.me` (immich).
+
+If no host traefik created the `web` network, the host must create it itself:
+clochette's `docker-newt.nix` does it with `stc.lib.docker.mkNetwork`.
 
 1. In pangolin: **Sites** → **Add Site**, type **Newt**. Note the id and the
    secret, shown only once.
@@ -81,10 +85,15 @@ published on it, no port-forward needed. First one: RogueLeader
 4. Deploy, then `docker logs newt` must show `Tunnel connection to server
    established successfully!` and the site turns **Online**.
 5. Resource targets use the container name and its internal port
-   (`http://mealie:9000`), bypassing the host's own traefik.
+   (`http://mealie:9000`).
 
 Tunnelled traffic still enters through skitarii's traefik: the bouncer sees
 the visitor's real address and bans apply (checked with a manual ban).
+
+`photos.friloux.me` has no pangolin SSO: the Immich mobile app could not get
+through it. Immich does not throttle logins itself; the
+`LePresidente/http-generic-401-bf` scenario bans bursts of `POST` answered with
+401.
 
 ## crowdsec-manager
 

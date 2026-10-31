@@ -19,8 +19,9 @@ host-specific layer that wires them together.
 | Host | Role | Notable |
 |---|---|---|
 | `exampleHost` | Workstation | ZFS mirror, AMD GPU, Plasma 6, gaming profile, YubiKey |
-| `clochette` | Scaleway VPS, public services | Docker behind Traefik + CrowdSec, SSH over Tailscale only |
+| `clochette` | Scaleway VPS, public services | Docker, published through the pangolin gateway (newt), SSH over Tailscale only |
 | `RogueLeader` | Home server | Docker, published through the pangolin gateway (newt), Borg backups |
+| `skitarii` | OVH VPS, gateway | pangolin + gerbil + Traefik + CrowdSec, SSH over Tailscale only |
 
 Four Home Manager configurations: `kuri@exampleHost`, `guillaume@clochette`,
 `guillaume@RogueLeader`, `weechat@clochette` (a persistent zellij + WeeChat IRC
@@ -28,15 +29,15 @@ session).
 
 ## Services
 
-Every container sits behind Traefik (clochette) or the pangolin gateway on
-skitarii (RogueLeader) with Let's Encrypt certificates, and is
+Every web container is published by the pangolin gateway on skitarii, which
+holds the Let's Encrypt certificates and runs CrowdSec in front of it, and is
 watched by a health poller that kills unhealthy containers so systemd restarts
 them and pushes a notification to ntfy.sh.
 
 | Service | Host | Domain |
 |---|---|---|
 | [Immich](https://immich.app/) — photo gallery | `clochette` | `photos.friloux.me` |
-| CrowdSec Manager — WAF UI | `clochette` | internal |
+| CrowdSec Manager — WAF UI | `skitarii` | `crowdsec.friloux.me` (pangolin SSO + TOTP) |
 | [BookStack](https://www.bookstackapp.com/) — wiki | `RogueLeader` | `wow-cp.friloux.me` |
 | [Uptime Kuma](https://github.com/louislam/uptime-kuma) — monitoring | `RogueLeader` | `status.friloux.me` |
 | [Papra](https://papra.app/) — document archive | `RogueLeader` | `docs.friloux.me` |

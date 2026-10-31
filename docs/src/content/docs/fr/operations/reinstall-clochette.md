@@ -32,7 +32,7 @@ Avant de démarrer :
       Voir [Sauvegarde & Restauration des Secrets](secrets-backup.md)
 - [ ] Sauvegarde Borg vérifiée et récente
       `BORG_PASSPHRASE=... borg list ssh://backup@storage2.friloux.me/~/clochette.friloux.me`
-- [ ] DNS d'urgence noté : si Traefik ne redémarre pas, les domaines sont inaccessibles
+- [ ] Passerelle notée : `photos.friloux.me` passe par skitarii ; tant que `newt` ne s'est pas reconnecté, Immich est injoignable
 
 ## Étape 1 — Accès au Mode Rescue Scaleway
 
@@ -257,13 +257,13 @@ docker ps --format "table {{.Names}}\t{{.Status}}"
 
 # Santé de chaque container
 docker inspect --format='{{.Name}} → {{.State.Health.Status}}' \
-  traefik crowdsec immich-server immich-postgres immich-redis
+  newt immich-server immich-postgres immich-redis
 
-# Certificats Traefik — Let's Encrypt actif
-docker exec traefik traefik healthcheck
+# Tunnel vers la passerelle pangolin (les certificats sont sur skitarii)
+docker logs newt --tail 20
 
 # Logs récents sans erreur critique
-journalctl -u docker-traefik --since "10 minutes ago" | tail -20
+journalctl -u docker-immich-server --since "10 minutes ago" | tail -20
 
 # Backup Borg — dernier statut
 systemctl status borgbackup-job-remote

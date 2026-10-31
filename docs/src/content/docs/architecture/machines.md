@@ -44,12 +44,10 @@ Behold the four shrines that form the KURI Forge: the workstation where the Tech
 
 | Daemon | Domain | Role |
 |---|---|---|
-| traefik | — | Reverse proxy, TLS (Let's Encrypt) |
-| crowdsec | — | WAF / DDoS guard |
+| newt | — | Outbound tunnel to the pangolin gateway on skitarii |
 | immich-server | photos.friloux.me | Photo gallery |
 | immich-postgres | — | Immich database |
 | immich-redis | — | Immich cache |
-| crowdsec-manager | :3000 (internal) | CrowdSec UI |
 
 ## RogueLeader — The Home-Shrine
 
@@ -64,9 +62,9 @@ Behold the four shrines that form the KURI Forge: the workstation where the Tech
 
 **Bound daemons:** borg-ui, mealie, uptime-kuma, papra
 (docs.friloux.me), and the wow-cp BookStack stack (wow-cp.friloux.me —
-bookstack + mariadb + mysqldump). Both papra and BookStack are exposed
-publicly through Traefik + CrowdSec, reached via a box port-forward of
-80/443 to 192.168.0.10.
+bookstack + mariadb + mysqldump). Every web daemon is published by the pangolin
+gateway on skitarii through RogueLeader's `newt` tunnel; no port-forward on the
+box.
 
 ## skitarii — The Gate-Shrine
 

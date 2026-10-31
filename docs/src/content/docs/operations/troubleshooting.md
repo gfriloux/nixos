@@ -34,23 +34,23 @@ systemctl reset-failed docker-<name>
 systemctl start docker-<name>
 ```
 
-## Traefik Is Unresponsive
+## photos.friloux.me Is Unreachable
+
+clochette runs no traefik: Immich is published by the pangolin gateway on
+skitarii, through clochette's `newt` tunnel. Check both ends.
 
 ```bash
-# Internal health check
-docker exec traefik traefik healthcheck
+# On clochette: tunnel and target
+docker inspect --format='{{.Name}} : {{.State.Health.Status}}' newt immich-server
+docker logs newt --tail 50
 
-# Verify container is running
-docker ps | grep traefik
-
-# Check Let's Encrypt certificates
-ls -lh /srv/docker/traefik/acme.json
-# If 0 bytes: certs not generated
-# Let's Encrypt limit: 5 attempts/domain/hour
-
-# Traefik logs
-tail -100 /srv/docker/traefik/logs/traefik.log | jq .
+# On skitarii: routing, certificates, crowdsec bans
+sudo docker logs traefik --tail 100
+sudo docker exec crowdsec cscli decisions list --ip <IP>
 ```
+
+The rest (bouncer, certificates, resources) is in
+[The Gate](../skitarii/gateway.md).
 
 ## sops Cannot Decrypt Secrets
 

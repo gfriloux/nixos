@@ -1,6 +1,6 @@
 ---
 title: clochette — The VPS-Shrine
-description: Scaleway VPS hosting personal web services behind Traefik, with Docker-based bound daemons.
+description: Scaleway VPS hosting Immich, published through the pangolin gateway, with Docker-based bound daemons.
 ---
 
 Behold clochette — the VPS-shrine exposed to the noosphere, where bound daemons serve personal domains across the network frontier.
@@ -9,12 +9,24 @@ Behold clochette — the VPS-shrine exposed to the noosphere, where bound daemon
 
 | Daemon | Domain | Role |
 |---|---|---|
-| traefik | — | Reverse proxy, TLS (Let's Encrypt) |
-| crowdsec | — | WAF, DDoS guard, Traefik plugin |
+| newt | — | Outbound tunnel to the pangolin gateway on skitarii |
 | immich-server | photos.friloux.me | Photo gallery (self-hosted) |
 | immich-postgres | — | PostgreSQL for Immich |
 | immich-redis | — | Redis cache for Immich |
-| crowdsec-manager | :3000 | CrowdSec management UI |
+
+## Public Exposure
+
+`photos.friloux.me` is a CNAME to `skitarii.friloux.me`: the pangolin gateway
+publishes it, and `newt` carries the traffic through an outbound tunnel to
+`immich-server` on the `web` network (created by `docker-newt.nix`). TLS,
+crowdsec and the certificates live on skitarii (see
+[The Gate](../skitarii/gateway.md)). clochette runs no traefik and no crowdsec
+and opens no web port; SSH is reachable over Tailscale only.
+
+No pangolin SSO on this resource: the Immich mobile app could not get through
+it. Immich has no login throttle of its own, so skitarii's crowdsec covers it:
+the `LePresidente/http-generic-401-bf` scenario bans bursts of `POST` answered
+with 401.
 
 ## Network
 
@@ -26,10 +38,10 @@ Temporary (privacy) addresses are disabled (`networking.tempAddresses`):
 Scaleway only lets the EUI-64 address out, so anything leaving from a
 temporary address was lost — inbound IPv6 worked, outbound did not (#108).
 
-IPv6 visitors still reach traefik through `docker-proxy`, which logs the Docker
-gateway (`172.19.0.1`) instead of the visitor: crowdsec cannot ban them. Left
-as-is on purpose, the move of clochette's services behind the pangolin gateway
-removes the problem.
+IPv6 visitors used to reach clochette's traefik through `docker-proxy`, which
+logged the Docker gateway instead of the visitor, so crowdsec could not ban
+them. Solved by the move behind the pangolin gateway: traffic now enters
+through skitarii, whose traefik sees the real visitor, IPv4 or IPv6.
 
 ## The Pilgrims — System Users
 
@@ -46,23 +58,20 @@ All persistent bound daemon data resides beneath `/srv/docker/`:
 
 ```text
 /srv/docker/
-├── traefik/
-│   ├── conf/         # traefik.yml (Nix symlink), traefik_dynamic.yml (sops)
-│   ├── acme.json     # Let's Encrypt certificates
-│   └── logs/         # Access logs (rotated daily)
 ├── photos.friloux.me/
 │   ├── upload/       # Immich photos
 │   └── db/           # PostgreSQL data
-├── crowdsec.clochette.friloux.me/  # CrowdSec config and data
-└── crowdsec-manager/ # crowdsec-manager config and DB
 ```
+
+`traefik/`, `crowdsec.clochette.friloux.me/` and `crowdsec-manager/` remain on
+disk from the old stack: nothing uses them and Borg no longer backs them up.
 
 ## The Archive — Backup
 
 Daily Borg backup to `ssh://backup@storage2.friloux.me/~/clochette.friloux.me`.
 
-Backed-up paths: `/srv/docker/traefik`,
-`crowdsec*.`, `photos.friloux.me/upload`, `/home/weechat/.config/weechat`.
+Backed-up paths: `/srv/docker/photos.friloux.me` (minus the live `db/`),
+`/home/weechat/.config/weechat`.
 
 :::note[Marginalia]
 Immich's live PostgreSQL datadir (`photos.friloux.me/db`) is excluded from Borg.

@@ -1,6 +1,6 @@
 ---
 title: Rite of Resurrection — clochette
-description: Complete reinstallation guide for the VPS on Scaleway with Traefik and bound daemons.
+description: Complete reinstallation guide for the VPS on Scaleway with its bound daemons.
 ---
 
 Complete guide to resurrect the clochette VPS.
@@ -31,7 +31,7 @@ Before starting:
       See [Reliquary Backup & Restoration](secrets-backup.md)
 - [ ] Recent Borg backup verified
       `BORG_PASSPHRASE=... borg list ssh://backup@storage2.friloux.me/~/clochette.friloux.me`
-- [ ] Emergency DNS noted: if Traefik fails to restart, domains are unreachable
+- [ ] Gateway noted: `photos.friloux.me` goes through skitarii; until `newt` reconnects, Immich is unreachable
 
 ## Step 1 — Access Scaleway Rescue Mode
 
@@ -254,13 +254,13 @@ docker ps --format "table {{.Names}}\t{{.Status}}"
 
 # Health of each daemon
 docker inspect --format='{{.Name}} → {{.State.Health.Status}}' \
-  traefik crowdsec immich-server immich-postgres immich-redis
+  newt immich-server immich-postgres immich-redis
 
-# Traefik certificates — Let's Encrypt active
-docker exec traefik traefik healthcheck
+# Tunnel to the pangolin gateway (certificates live on skitarii)
+docker logs newt --tail 20
 
 # Recent logs without critical errors
-journalctl -u docker-traefik --since "10 minutes ago" | tail -20
+journalctl -u docker-immich-server --since "10 minutes ago" | tail -20
 
 # Borg backup — latest status
 systemctl status borgbackup-job-remote

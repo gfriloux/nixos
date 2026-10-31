@@ -44,12 +44,10 @@ Services Docker :
 
 | Container | Domaine | Rôle |
 |---|---|---|
-| traefik | — | Reverse proxy + TLS Let's Encrypt |
-| crowdsec | — | WAF / protection DDoS |
+| newt | — | Tunnel sortant vers la passerelle pangolin de skitarii |
 | immich-server | photos.friloux.me | Galerie photos |
 | immich-postgres | — | Base de données Immich |
 | immich-redis | — | Cache Immich |
-| crowdsec-manager | :3000 (interne) | UI de gestion CrowdSec |
 
 ## RogueLeader
 
@@ -64,9 +62,9 @@ Services Docker :
 
 Services Docker : borg-ui, mealie, uptime-kuma, papra
 (docs.friloux.me), ainsi que la stack BookStack wow-cp (wow-cp.friloux.me —
-bookstack + mariadb + mysqldump). papra et BookStack sont tous deux exposés
-publiquement via Traefik + CrowdSec, atteints par une redirection de port
-80/443 de la box vers 192.168.0.10.
+bookstack + mariadb + mysqldump). Chaque service web est publié par la passerelle
+pangolin de skitarii à travers le tunnel `newt` de RogueLeader ; aucune
+redirection de port sur la box.
 
 ## skitarii
 

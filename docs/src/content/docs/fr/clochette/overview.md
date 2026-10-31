@@ -1,20 +1,32 @@
 ---
 title: clochette — Serveur VPS
-description: Configuration du VPS Scaleway — services Docker, Traefik, CrowdSec, utilisateurs.
+description: Configuration du VPS Scaleway — services Docker, exposition via la passerelle pangolin, utilisateurs.
 ---
 
-VPS Scaleway hébergeant les services web personnels, exposés publiquement via Traefik avec protection WAF CrowdSec.
+VPS Scaleway hébergeant les services web personnels, publiés par la passerelle pangolin de skitarii.
 
 ## Services Actifs
 
 | Container | URL | Rôle |
 |---|---|---|
-| traefik | — | Reverse proxy, TLS Let's Encrypt |
-| crowdsec | — | WAF, protection DDoS, plugin Traefik |
+| newt | — | Tunnel sortant vers la passerelle pangolin de skitarii |
 | immich-server | photos.friloux.me | Galerie photos auto-hébergée |
 | immich-postgres | — | PostgreSQL pour Immich |
 | immich-redis | — | Redis pour Immich |
-| crowdsec-manager | :3000 | UI de gestion CrowdSec |
+
+## Exposition Publique
+
+`photos.friloux.me` est un CNAME vers `skitarii.friloux.me` : la passerelle
+pangolin le publie, et `newt` porte le trafic par un tunnel sortant jusqu'à
+`immich-server` sur le réseau `web` (créé par `docker-newt.nix`). TLS, crowdsec
+et les certificats vivent sur skitarii (voir [La Porte](../skitarii/gateway.md)).
+clochette ne fait tourner ni traefik ni crowdsec et n'ouvre aucun port web ; SSH
+n'est joignable que par Tailscale.
+
+Pas de SSO pangolin sur cette ressource : l'application mobile Immich ne
+passerait pas. Immich ne limite pas lui-même les tentatives de connexion, c'est
+donc le crowdsec de skitarii qui s'en charge : le scénario
+`LePresidente/http-generic-401-bf` bannit les rafales de `POST` répondues en 401.
 
 ## Réseau
 
@@ -27,10 +39,11 @@ Les adresses temporaires (confidentialité) sont désactivées
 tout ce qui partait d'une adresse temporaire était perdu — l'IPv6 entrante
 marchait, la sortante non (#108).
 
-Les visiteurs IPv6 arrivent encore sur traefik par `docker-proxy`, qui note la
-passerelle Docker (`172.19.0.1`) au lieu du visiteur : crowdsec ne peut pas les
-bannir. Laissé tel quel volontairement, le passage des services de clochette
-derrière la passerelle pangolin règle le problème.
+Les visiteurs IPv6 arrivaient sur le traefik de clochette par `docker-proxy`,
+qui notait la passerelle Docker au lieu du visiteur : crowdsec ne pouvait pas
+les bannir. Réglé par le passage derrière la passerelle pangolin : le trafic
+entre désormais par skitarii, dont le traefik voit le vrai visiteur, IPv4 ou
+IPv6.
 
 ## Utilisateurs
 
@@ -47,23 +60,21 @@ Toutes les données persistantes des containers sont sous `/srv/docker/` :
 
 ```text
 /srv/docker/
-├── traefik/
-│   ├── conf/         # traefik.yml (symlink Nix), traefik_dynamic.yml (sops)
-│   ├── acme.json     # Certificats Let's Encrypt
-│   └── logs/         # Logs d'accès (rotatés quotidiennement)
 ├── photos.friloux.me/
 │   ├── upload/       # Photos Immich
 │   └── db/           # Données PostgreSQL
-├── crowdsec.clochette.friloux.me/  # Config et données CrowdSec
-└── crowdsec-manager/ # Config et DB crowdsec-manager
 ```
+
+`traefik/`, `crowdsec.clochette.friloux.me/` et `crowdsec-manager/` restent sur
+le disque depuis l'ancienne pile : plus rien ne s'en sert et Borg ne les
+sauvegarde plus.
 
 ## Backup
 
 Borg backup quotidien vers `ssh://backup@storage2.friloux.me/~/clochette.friloux.me`.
 
-Chemins sauvegardés : `/srv/docker/traefik`,
-`crowdsec*.`, `photos.friloux.me/upload`, `/home/weechat/.config/weechat`.
+Chemins sauvegardés : `/srv/docker/photos.friloux.me` (sans le `db/` vivant),
+`/home/weechat/.config/weechat`.
 
 :::note[Marginalia]
 Le datadir PostgreSQL vivant d'Immich (`photos.friloux.me/db`) est **exclu** de Borg.

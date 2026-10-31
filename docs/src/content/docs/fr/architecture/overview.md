@@ -25,11 +25,14 @@ snowfall-lib **ne propage pas** les modules globalement — chaque sanctuaire do
 
 Tous les secrets sont scellés avec age + sops-nix. La clé de chaque machine n'ouvre que son propre reliquaire ; l'édition passe par des clés d'administration qui ne sont sur aucune machine (une YubiKey et une clé de secours hors ligne). Voir [Reliquaires de Secrets](secrets.md).
 
-## Démons Liés — Services Web (clochette)
+## Démons Liés — Services Web (clochette, RogueLeader)
 
-Tous les services web fonctionnent comme des démons liés (containers Docker) derrière le Gardien (Traefik).
-Traefik gère les certificats Let's Encrypt (défi TLS).
-La Sentinelle (CrowdSec) garde toutes les routes exposées.
+Tous les services web fonctionnent comme des démons liés (containers Docker)
+publiés par la passerelle pangolin de skitarii. Chaque machine fait tourner un
+container `newt` qui porte le trafic par un tunnel sortant : aucune des deux ne
+fait tourner traefik ou crowdsec, ni n'ouvre de port web. Le traefik de skitarii
+gère les certificats Let's Encrypt et son CrowdSec garde toutes les routes. Voir
+[La Porte](../skitarii/gateway.md).
 
 ## L'Astropathe
 

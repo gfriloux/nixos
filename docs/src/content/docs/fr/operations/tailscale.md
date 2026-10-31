@@ -51,10 +51,6 @@ tailscale status
 # La machine doit apparaître dans la liste avec une adresse 100.x.x.x
 ```
 
-### clochette : mettre à jour l'IP Tailscale
-
-Une machine ré-enrôlée reçoit une nouvelle adresse `100.x.x.x`. L'interface CrowdSec Manager de clochette n'est publiée que sur cette adresse : reporter la sortie de `tailscale ip -4` dans `tailscaleIp` (`systems/x86_64-linux/clochette/docker-crowdsec-manager.nix`), puis redéployer. D'ici là, le conteneur ne démarre pas (son `preStart` attend l'ancienne adresse 60 s puis abandonne).
-
 ## Ré-enrôlement sans Navigateur (authkey)
 
 Si le serveur n'a pas d'interface graphique et que la console série ne permet pas d'afficher l'URL facilement, générer une authkey depuis le panel :

@@ -34,23 +34,24 @@ systemctl reset-failed docker-<nom>
 systemctl start docker-<nom>
 ```
 
-## Traefik ne Répond Plus
+## photos.friloux.me ne Répond Plus
+
+clochette ne fait pas tourner traefik : Immich est publié par la passerelle
+pangolin de skitarii, à travers le tunnel `newt` de clochette. Vérifier les deux
+bouts.
 
 ```bash
-# Health check interne
-docker exec traefik traefik healthcheck
+# Sur clochette : tunnel et cible
+docker inspect --format='{{.Name}} : {{.State.Health.Status}}' newt immich-server
+docker logs newt --tail 50
 
-# Vérifier que le container tourne
-docker ps | grep traefik
-
-# Vérifier les certificats Let's Encrypt
-ls -lh /srv/docker/traefik/acme.json
-# Si 0 octets : les certs n'ont pas été générés
-# Let's Encrypt a une limite de 5 tentatives / domaine / heure
-
-# Logs Traefik
-tail -100 /srv/docker/traefik/logs/traefik.log | jq .
+# Sur skitarii : routage, certificats, bannissements crowdsec
+sudo docker logs traefik --tail 100
+sudo docker exec crowdsec cscli decisions list --ip <IP>
 ```
+
+La suite (bouncer, certificats, ressources) est dans
+[La Porte](../skitarii/gateway.md).
 
 ## sops ne Peut pas Déchiffrer les Secrets
 

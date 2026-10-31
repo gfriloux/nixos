@@ -10,7 +10,7 @@ Ce Codex consigne la Forge KURI : la configuration sacrée qui consacre trois sa
 | Machine | Rôle | OS |
 |---|---|---|
 | **exampleHost** | Sanctuaire de travail principal | NixOS, ZFS, AMD GPU, Plasma 6 |
-| **clochette** | Serveur VPS (Scaleway) | NixOS, Docker, Traefik |
+| **clochette** | Serveur VPS (Scaleway) | NixOS, Docker, newt (passerelle pangolin) |
 | **RogueLeader** | Serveur dédié domestique | NixOS, Docker |
 
 ## Le Dépôt
@@ -31,8 +31,6 @@ homes/x86_64-linux/
 └── weechat@clochette/    # Session IRC persistante
 
 modules/nixos/
-├── docker-traefik/       # Reverse proxy Traefik (le Gardien)
-├── docker-crowdsec/      # WAF CrowdSec (la Sentinelle)
 └── notify-docker/        # Surveillance et notifications Docker (l'Astropathe)
 
 secrets/

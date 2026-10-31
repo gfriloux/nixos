@@ -25,11 +25,13 @@ snowfall-lib does **not** propagate modules globally — each shrine must explic
 
 All secrets are sealed with age + sops-nix. Each shrine's key opens only its own reliquary; editing goes through admin keys kept off every shrine (a YubiKey and an offline rescue key). See [The Reliquary](secrets.md).
 
-## Bound Daemons — Services Web (clochette)
+## Bound Daemons — Web Services (clochette, RogueLeader)
 
-All web services run as bound daemons (Docker containers) behind the Gatekeeper (Traefik).
-Traefik manages Let's Encrypt certificates (TLS challenge).
-The Sentinel (CrowdSec) guards all exposed routes.
+All web services run as bound daemons (Docker containers) published by the
+pangolin gateway on skitarii. Each host runs a `newt` container that carries the
+traffic through an outbound tunnel: neither host runs traefik or crowdsec, nor
+opens a web port. skitarii's traefik manages the Let's Encrypt certificates and
+its CrowdSec guards every route. See [The Gate](../skitarii/gateway.md).
 
 ## The Astropath
 

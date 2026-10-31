@@ -4,10 +4,10 @@
 
 Snowfall-lib flake with four systems:
 
-- `clochette` — VPS (Scaleway), Docker-based services behind Traefik
+- `clochette` — VPS (Scaleway), Docker-based services published through the pangolin gateway
 - `exampleHost` — desktop workstation (ZFS mirror, AMD GPU, Plasma 6)
 - `RogueLeader` — local dedicated server, Docker-based services
-- `skitarii` — VPS (OVH VPS-1), future pangolin gateway; base system only for now
+- `skitarii` — VPS (OVH VPS-1), pangolin gateway: single entry point for every public web service
 
 Two homes on clochette: `guillaume` (admin), `weechat` (IRC session via zellij).
 
@@ -55,17 +55,17 @@ Covers: reinstallation procedures (all 4 machines), secrets backup/restore, Tail
 
 ## Docker services
 
-clochette runs traefik, crowdsec and socket-proxy from STC's docker relics
-(`stc.relics.docker.*`, configured in its `default.nix`). skitarii runs only the
-crowdsec relic, wired to its local traefik in `docker-pangolin.nix`. RogueLeader
-runs none of them: its web services are published by the pangolin gateway
-through newt, and `docker-newt.nix` creates the `web` network. On top of that:
+Every public web service goes through the pangolin gateway on skitarii. skitarii
+runs STC's crowdsec relic (`stc.relics.docker.crowdsec`), wired to its local
+traefik in `docker-pangolin.nix`. clochette and RogueLeader run no traefik and no
+crowdsec: a `newt` container tunnels to the gateway, and each host's
+`docker-newt.nix` creates the `web` network newt shares with the services it
+publishes. On top of that:
 
 | Host | Containers | Role |
 |---|---|---|
 | clochette | immich-server, immich-postgres, immich-redis | Photo gallery (photos.friloux.me, through the pangolin gateway) |
 | clochette | newt | Outbound tunnel to the pangolin gateway; serves immich |
-| clochette | crowdsec-manager | CrowdSec web UI, Tailscale-only; keeps the raw Docker socket (needs POST) |
 | skitarii | pangolin, gerbil, traefik | Gateway (pangolin.friloux.me); local traefik in gerbil's netns, not STC's relic |
 | skitarii | crowdsec-manager | CrowdSec web UI, published as a pangolin resource (crowdsec.friloux.me) behind pangolin SSO + 2FA; raw Docker socket |
 | RogueLeader | wow-cp-bookstack, wow-cp-mariadb, wow-cp-mysqldump | Wiki (wow-cp.friloux.me, through the pangolin gateway) and its nightly DB dump |
@@ -90,11 +90,11 @@ through newt, and `docker-newt.nix` creates the `web` network. On top of that:
 - `stc-notify-failure@` — runs `notifyCommand` when a unit enters `failed` state (also usable as `OnFailure` for non-Docker units, e.g. the borg check)
 - `stc-docker-health-watch@` + matching timer — polls `docker inspect` every 30s and does `docker kill <container>` if status is `unhealthy`, which propagates the failure to systemd
 
-Each monitored container only needs the label `"stc.docker/health-watch" = "true"` — the relic generates its health-watch timer and its `systemd.services` restart/notification block (`OnFailure`, `StartLimitBurst`, `Restart = "on-failure"`). Do NOT declare these manually in `docker-*.nix`. Place this label last, after any traefik labels. The label is useless on a container without a healthcheck.
+Each monitored container only needs the label `"stc.docker/health-watch" = "true"` — the relic generates its health-watch timer and its `systemd.services` restart/notification block (`OnFailure`, `StartLimitBurst`, `Restart = "on-failure"`). Do NOT declare these manually in `docker-*.nix`. Place this label last. The label is useless on a container without a healthcheck.
 
 Container-specific `systemd.services` overrides (e.g. `after`/`requires` dependencies) can still be declared in `docker-*.nix` — NixOS will merge them with the generated block.
 
-**Log rotation**: Traefik's access log is rotated by STC's traefik relic (rename + `USR1`). For anything else, `services.logrotate.settings.<name>`.
+**Log rotation**: `services.logrotate.settings.<name>` (skitarii's traefik access log: rename + `USR1`, in `docker-pangolin.nix`).
 
 **Users**: `users.mutableUsers = false` on all systems — fully declarative, NixOS owns `/etc/shadow`.
 
@@ -139,7 +139,7 @@ row.
 | A host key as recipient of another host's sops file | Each host key opens its own file only; admin keys are the YubiKey and the offline rescue key (#94) | One key on one disk opens every host's secrets again |
 | Secrets in GitHub Actions | `check.yml` runs on `pull_request` only, with `contents: read` | A pull request could exfiltrate them |
 | Outbound SMTP (465, 587) on clochette | Blocked by Scaleway; direct Gmail sending does not work. ntfy.sh over HTTPS is the only notification channel | Mails silently never leave |
-| crowdsec-manager on a public route (clochette) | Tailscale-only there. On skitarii it is published, but only as a pangolin resource behind SSO + 2FA — never a bare traefik route or a published port | The WAF admin UI, and through the raw socket root on the host, exposed to the internet |
+| crowdsec-manager on a bare route | Published only as a pangolin resource behind SSO + 2FA — never a bare traefik route or a published port | The WAF admin UI, and through the raw socket root on the host, exposed to the internet |
 
 Not an omission but a deliberate choice that looks like one:
 `neededForBoot = true` on every ZFS dataset, `/home` included, on exampleHost.

@@ -3,27 +3,23 @@ title: Réseau & Noosphère
 description: Topologie du réseau — Tailscale, DNS, réseaux Docker, pare-feu.
 ---
 
-L'infrastructure s'expose à Internet via clochette et via RogueLeader (redirection de port de la box) ; tous les accès inter-machines passent par la noosphère Tailscale.
+L'infrastructure s'expose à Internet via la passerelle pangolin de skitarii, que clochette et RogueLeader joignent par un tunnel sortant ; tous les accès inter-machines passent par la noosphère Tailscale.
 
 ## Topologie
 
 ```text
 Internet
     │
-    ├── clochette (51.159.34.135)
-    │       └── Traefik :80/:443
-    │               └── photos.friloux.me    → immich
-    │
     ├── skitarii (5.196.4.180, 2001:41d0:404:200::487d)
     │       └── gerbil :80/:443 → Traefik → crowdsec bouncer
     │               ├── pangolin.friloux.me  → pangolin
-    │               └── crowdsec.friloux.me  → crowdsec-manager (pangolin SSO)
+    │               ├── crowdsec.friloux.me  → crowdsec-manager (pangolin SSO)
+    │               ├── photos.friloux.me    → tunnel newt → clochette → immich
+    │               └── docs, wow-cp, status, cuisine.home, borg-ui
+    │                                        → tunnel newt → RogueLeader
     │
-    ├── box maison (redirection de port :80/:443)
-    │       └── RogueLeader (192.168.0.10)
-    │               └── Traefik :80/:443
-    │                       ├── docs.friloux.me    → papra
-    │                       └── wow-cp.friloux.me  → bookstack
+    ├── clochette (51.159.34.135)  — aucun port web, newt sort
+    ├── RogueLeader (192.168.0.10) — aucune redirection de port, newt sort
     │
     └── Tailscale (100.x.x.x)
             ├── exampleHost
@@ -62,16 +58,14 @@ DNS      : 51.159.47.28, 51.159.47.26  (Scaleway)
 
 | Réseau | Usage |
 |---|---|
-| `web` | Réseau partagé Traefik ↔ services exposés |
+| `web` | Réseau partagé newt ↔ services publiés |
 | `immich` | Réseau interne Immich ↔ PostgreSQL ↔ Redis |
 
 ## Ports ouverts sur clochette
 
-| Port | Service |
-|---|---|
-| 80 | Traefik HTTP (redirige vers 443) |
-| 443 | Traefik HTTPS |
-| 3000 | crowdsec-manager (interne, bind sur 0.0.0.0 — à restreindre) |
+Aucun sur l'interface publique. `newt` ouvre un tunnel sortant vers la
+passerelle pangolin de skitarii, qui termine le TLS (voir
+[La Porte](../skitarii/gateway.md)) ; SSH ne répond que par Tailscale.
 
 :::caution[Garde]
 Scaleway bloque les ports 465 et 587 par défaut.

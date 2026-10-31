@@ -21,13 +21,14 @@ extraOptions = lib.kuri.docker.mkHealthCheck {
 
 ## Réseaux Docker
 
-Les containers exposés via Traefik rejoignent le réseau `web`.
+Les containers publiés par la passerelle pangolin rejoignent le réseau `web`,
+où `newt` les joint par leur nom (voir [La Porte](../skitarii/gateway.md)).
 Les containers à usage interne (bases de données) ont leur propre réseau isolé.
 
 ```nix
-networks = ["web"];          # exposé Traefik
+networks = ["web"];          # joignable par newt
 networks = ["immich"];       # interne seulement
-networks = ["immich" "web"]; # interne + Traefik
+networks = ["immich" "web"]; # interne + newt
 ```
 
 Les réseaux sont créés par des services systemd `docker-network-<nom>`
@@ -67,5 +68,6 @@ Les dépendances inter-containers sont déclarées avec `dependsOn` :
 };
 ```
 
-Les dépendances systemd supplémentaires (ex. CrowdSec → Traefik) sont
+Les dépendances systemd supplémentaires (ex. le réseau `web` avant newt et
+immich-server, dans `docker-newt.nix`) sont
 déclarées dans `systemd.services."docker-<nom>"`.

@@ -10,7 +10,7 @@ This Codex chronicles the KURI Forge: the sacred configuration that consecrates 
 | Shrine | Role | OS |
 |---|---|---|
 | **exampleHost** | Primary workstation-shrine | NixOS, ZFS, AMD GPU, Plasma 6 |
-| **clochette** | VPS: exposed services | NixOS, Docker, Traefik |
+| **clochette** | VPS: exposed services | NixOS, Docker, newt (pangolin gateway) |
 | **RogueLeader** | Dedicated home-shrine | NixOS, Docker |
 
 ## The Forge — Repository Structure
@@ -29,8 +29,6 @@ homes/x86_64-linux/
 └── weechat@clochette/    # IRC daemon-attendant Sanctum
 
 modules/nixos/
-├── docker-traefik/       # The Gatekeeper
-├── docker-crowdsec/      # The Sentinel
 └── notify-docker/        # The Astropath
 
 secrets/

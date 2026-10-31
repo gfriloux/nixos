@@ -86,11 +86,9 @@ users:
 services:
     ntfy:
         topic: "..."
-    traefik:
-        conf:
-            traefik_dynamic.yml: "..."
-    crowdsec:
-        env: "..."
+    newt:
+        id: "..."
+        secret: "..."
     immich:
         env: "..."
     borg:

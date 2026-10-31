@@ -22,7 +22,7 @@ Add the label to the container definition (last):
 
 ```nix
 labels = {
-  # ... other traefik labels ...
+  # ... other labels ...
   "friloux.me/health-watch" = "true";
 };
 ```
@@ -52,7 +52,7 @@ Container → unhealthy
 systemctl list-timers | grep health-watch
 
 # Trigger manually (test)
-systemctl start docker-health-watch@traefik
+systemctl start docker-health-watch@immich-server
 ```
 
 ## ntfy.sh Configuration

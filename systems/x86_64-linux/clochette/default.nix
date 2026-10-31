@@ -6,9 +6,6 @@
 }: {
   imports = [
     inputs.sops-nix.nixosModules.sops
-    inputs.stc.nixosModules.relics-docker-traefik
-    inputs.stc.nixosModules.relics-docker-socket-proxy
-    inputs.stc.nixosModules.relics-docker-crowdsec
     inputs.stc.nixosModules.relics-docker-notify
     inputs.stc.nixosModules.relics-hardening-ssh
     inputs.stc.nixosModules.relics-nix-housekeeping
@@ -18,28 +15,10 @@
     ./backup.nix
     ./network.nix
     ./users.nix
-    ./docker-crowdsec-manager.nix
   ];
 
   stc.relics = {
     docker = {
-      traefik = {
-        enable = true;
-        image = "traefik:v3.7.16"; # renovate
-        acme.email = "guillaume+letsencrypt@friloux.me";
-        enableDashboard = true;
-        dynamicConfigFile = config.sops.secrets."services/traefik/conf/traefik_dynamic.yml".path;
-      };
-      socketProxy = {
-        enable = true;
-        image = "tecnativa/docker-socket-proxy:v0.5.0"; # renovate
-      };
-      crowdsec = {
-        enable = true;
-        image = "crowdsecurity/crowdsec:v1.8.1"; # renovate
-        dataDir = "/srv/docker/crowdsec.clochette.friloux.me";
-        envFile = config.sops.secrets."services/crowdsec/env".path;
-      };
       notify = {
         enable = true;
         notifyCommand = ''
@@ -64,13 +43,6 @@
     secrets = {
       "users/guillaume/hashed-password".neededForUsers = true;
       "services/ntfy/topic" = {};
-      "services/crowdsec/env" = {};
-      "services/traefik/conf/traefik_dynamic.yml" = {
-        owner = "root";
-        group = "root";
-        mode = "0400";
-        path = "/srv/docker/traefik/conf/traefik_dynamic.yml";
-      };
     };
   };
 
@@ -95,7 +67,8 @@
     };
     # No fail2ban: its only jail was sshd, which is reachable from the
     # tailnet only, and the ssh relic's PerSourcePenalties already blocks
-    # failing sources inside sshd. The web side is covered by CrowdSec.
+    # failing sources inside sshd. The web side is covered by skitarii's
+    # CrowdSec, in front of the pangolin gateway.
     tailscale.enable = true;
   };
 
