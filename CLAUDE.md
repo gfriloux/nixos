@@ -67,11 +67,11 @@ skitarii runs only the crowdsec relic, wired to its local traefik in
 | skitarii | pangolin, gerbil, traefik | Gateway (pangolin.friloux.me); local traefik in gerbil's netns, not STC's relic |
 | skitarii | crowdsec-manager | CrowdSec web UI, published as a pangolin resource (crowdsec.friloux.me) behind pangolin SSO + 2FA; raw Docker socket |
 | RogueLeader | wow-cp-bookstack, wow-cp-mariadb, wow-cp-mysqldump | Wiki (wow-cp.friloux.me, through the pangolin gateway) and its nightly DB dump |
-| RogueLeader | uptime-kuma | Status page (status.friloux.me) |
+| RogueLeader | uptime-kuma | Status page (status.friloux.me, through the pangolin gateway) |
 | RogueLeader | papra | Documents (docs.friloux.me, through the pangolin gateway) |
 | RogueLeader | mealie | Recipes (cuisine.friloux.me, through the pangolin gateway) |
 | RogueLeader | borg-ui, borg-redis | Borg web UI (borg-ui.friloux.me, through the pangolin gateway) |
-| RogueLeader | newt | Outbound tunnel to the pangolin gateway; serves mealie, borg-ui, wow-cp and papra |
+| RogueLeader | newt | Outbound tunnel to the pangolin gateway; serves every RogueLeader web service |
 
 ## Key patterns
 

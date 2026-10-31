@@ -11,16 +11,11 @@
       cmd = "curl -f http://localhost:3001/api/entry-page";
     };
 
-    labels = {
-      "traefik.enable" = "true";
-      "traefik.http.routers.uptime-kuma.rule" = "Host(`status.friloux.me`)";
-      "traefik.http.routers.uptime-kuma.tls" = "true";
-      "traefik.http.routers.uptime-kuma.tls.certresolver" = "letsencrypt";
-      "traefik.docker.network" = "web";
-      "traefik.http.services.uptime-kuma.loadbalancer.server.port" = "3001";
-      "traefik.http.routers.uptime-kuma.middlewares" = "crowdsec@file,rate-limit@file,security-headers@file";
-      "stc.docker/health-watch" = "true";
-    };
+    # Publié par la passerelle pangolin (status.friloux.me), via newt sur le
+    # réseau web : plus de route sur le traefik local. Si skitarii tombe, la
+    # page publique tombe aussi, mais uptime-kuma tourne ici et continue
+    # d'alerter par ntfy.
+    labels."stc.docker/health-watch" = "true";
 
     networks = [
       "web"
