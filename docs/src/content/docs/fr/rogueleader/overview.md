@@ -24,7 +24,7 @@ Chaque domaine est un CNAME vers `skitarii.friloux.me`. Ni traefik, ni crowdsec,
 | | |
 |---|---|
 | Réseau | `rogueleader.home` (`192.168.0.10`), LAN uniquement |
-| Disque | `/dev/sda`, GPT via disko, ext4 |
+| Disque | `/dev/sda`, GPT via disko : 1M BIOS boot, 4G swap, `/` ext4. GRUB, BIOS |
 | sops | clé age dérivée de `/etc/ssh/ssh_host_ed25519_key`. Après une réinstallation : nouvelle clé dans `.sops.yaml`, voir [Sauvegarde des clés age](/nixos/fr/operations/secrets-backup/) |
 | stateVersion | `25.11` |
 
