@@ -1,44 +1,29 @@
 ---
 title: "skitarii"
-description: OVH VPS-1, pangolin gateway (POC). SSH over Tailscale, sops, static IPv6.
+description: OVH VPS-1, the pangolin gateway. SSH over Tailscale only.
 sidebar:
   order: 1
   label: "Overview"
 ---
 
-Behold skitarii — the gate-shrine, raised on an OVH VPS-1 to stand before
-every other shrine as their single point of entry.
+Single public entry point: [Gateway](/nixos/skitarii/gateway/).
 
-## Configuration
-
-| Parameter | Value |
+| | |
 |---|---|
-| Role | Gateway: pangolin, gerbil, traefik, crowdsec, crowdsec-manager — see [The Gate](/nixos/skitarii/gateway/) |
 | Host | OVH VPS-1 (4 GB RAM, 40 GB disk) |
-| Public IPv4 | `5.196.4.180` (DHCP) |
-| Public IPv6 | `2001:41d0:404:200::487d/128` (static, gateway `2001:41d0:404:200::1`) |
-| DNS | `skitarii.friloux.me` — A + AAAA at Gandi, set by hand; `pangolin` and `crowdsec` are CNAMEs to it |
+| IPv4 | `5.196.4.180` (DHCP) |
+| IPv6 | `2001:41d0:404:200::487d/128` static, gateway `2001:41d0:404:200::1` |
+| DNS | `skitarii.friloux.me` A + AAAA at Gandi (by hand). `pangolin`, `crowdsec` are CNAMEs to it |
 | Tailscale | `100.118.203.120`, key expiry disabled |
-| Boot | BIOS, GRUB on `/dev/sda` |
-| Storage | `/dev/sda`, GPT via disko: 1M BIOS boot, 2G swap, ext4 `/` |
-| sops | Age key derived from `/etc/ssh/ssh_host_ed25519_key` |
+| Disk | `/dev/sda`, GPT via disko: 1M BIOS boot, 2G swap, ext4 `/`. GRUB, BIOS |
+| sops | age key from `/etc/ssh/ssh_host_ed25519_key` |
+| STC relics | `hardening.ssh`, `nixHousekeeping` |
+| SSH | Tailscale only (`openFirewall = false`, `tailscale0` trusted) |
+| `guillaume` | YubiKey `sk-ssh-ed25519` (application `ssh:skitarii`, handle in `kuri_exampleHost.yaml`) + perso key. Password hash in `secrets/skitarii.yaml` |
+| Home Manager | `guillaume@skitarii` (cogitator-enginseer) |
 | stateVersion | `26.05` |
 
-## Current State
-
-Base system:
-
-- STC relics `hardening.ssh` and `nixHousekeeping`
-- SSH reachable **only through Tailscale** (`openFirewall = false`, `tailscale0` trusted)
-- user `guillaume`: keys `sk-ssh-ed25519` (YubiKey, application `ssh:skitarii`,
-  handle under passphrase in `kuri_exampleHost.yaml`) and the perso key;
-  password hash in `secrets/skitarii.yaml`
-- Home Manager `guillaume@skitarii` (cogitator-enginseer), wired in by snowfall
-
-Bound daemons, as a POC: pangolin, gerbil, traefik, crowdsec and
-crowdsec-manager — see [The Gate](/nixos/skitarii/gateway/).
-
-## Deployment
+## Deploy
 
 ```bash
 just build_skitarii
@@ -46,16 +31,8 @@ just install_skitarii    # through the tailnet (ssh block HostName = skitarii)
 just secrets_skitarii    # edit secrets/skitarii.yaml
 ```
 
-## Important Notes
+## Watch out
 
-- **No KVM console on a VPS-1.** If SSH and Tailscale are both gone, the only
-  way in is the OVH rescue mode — see
-  [Rite of Resurrection: skitarii](/nixos/operations/reinstall-skitarii/).
-- **One failed SSH authentication costs one hour of ban** for the source
-  address (`PerSourcePenalties = authfail:3600s` from the ssh relic). The
-  ssh block pins the key with `IdentitiesOnly`, so it never happens through
-  `ssh skitarii.friloux.me`. Rebooting the VPS clears the ban: it lives in
-  sshd's memory.
-- After a first switch that adds the IPv6 addresses, start
-  `network-addresses-ens3` by hand: it is tied to the interface showing up,
-  which already happened. At boot it starts on its own.
+- **No KVM console.** SSH and Tailscale both gone: OVH rescue mode only, see [Reinstall skitarii](/nixos/operations/reinstall-skitarii/).
+- **One failed SSH auth = 1 h ban** for the source address (`PerSourcePenalties = authfail:3600s`). The ssh block pins the key (`IdentitiesOnly`). A reboot clears the ban (it lives in sshd's memory).
+- **First switch adding the IPv6 addresses:** start `network-addresses-ens3` by hand. At boot it starts on its own.
