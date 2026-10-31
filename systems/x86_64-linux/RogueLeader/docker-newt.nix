@@ -1,8 +1,19 @@
 {
   config,
   inputs,
+  pkgs,
   ...
-}: {
+}: let
+  # Les services que newt publie, tous sur le réseau web.
+  webConsumers = [
+    "docker-newt.service"
+    "mealie.service"
+    "papra.service"
+    "borg-ui.service"
+    "uptime-kuma.service"
+    "wow-cp-bookstack.service"
+  ];
+in {
   sops = {
     secrets = {
       "services/newt/id" = {};
@@ -31,4 +42,13 @@
     };
     labels."stc.docker/health-watch" = "true";
   };
+
+  # Créé autrefois par la relic traefik, retirée depuis que tout passe par
+  # la passerelle. Le script ne recrée pas un réseau existant.
+  systemd.services."docker-network-web" =
+    inputs.stc.lib.docker.mkNetwork pkgs "web"
+    // {
+      requiredBy = webConsumers;
+      before = webConsumers;
+    };
 }

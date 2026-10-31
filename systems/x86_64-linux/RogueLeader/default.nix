@@ -7,9 +7,6 @@
   imports = [
     inputs.sops-nix.nixosModules.sops
     inputs.disko.nixosModules.disko
-    inputs.stc.nixosModules.relics-docker-traefik
-    inputs.stc.nixosModules.relics-docker-socket-proxy
-    inputs.stc.nixosModules.relics-docker-crowdsec
     inputs.stc.nixosModules.relics-docker-notify
     inputs.stc.nixosModules.relics-hardening-ssh
     inputs.stc.nixosModules.relics-nix-housekeeping
@@ -27,23 +24,6 @@
 
   stc.relics = {
     docker = {
-      traefik = {
-        enable = true;
-        image = "traefik:v3.7.16"; # renovate
-        acme.email = "guillaume+letsencrypt@friloux.me";
-        enableDashboard = true;
-        dynamicConfigFile = config.sops.secrets."services/traefik/conf/traefik_dynamic.yml".path;
-      };
-      socketProxy = {
-        enable = true;
-        image = "tecnativa/docker-socket-proxy:v0.5.0"; # renovate
-      };
-      crowdsec = {
-        enable = true;
-        image = "crowdsecurity/crowdsec:v1.8.1"; # renovate
-        dataDir = "/srv/docker/crowdsec.rogueleader.home";
-        envFile = config.sops.secrets."services/crowdsec/env".path;
-      };
       notify = {
         enable = true;
         notifyCommand = ''
@@ -71,13 +51,6 @@
     secrets = {
       "users/guillaume/hashed-password".neededForUsers = true;
       "services/ntfy/topic" = {};
-      "services/crowdsec/env" = {};
-      "services/traefik/conf/traefik_dynamic.yml" = {
-        owner = "root";
-        group = "root";
-        mode = "0400";
-        path = "/srv/docker/traefik/conf/traefik_dynamic.yml";
-      };
     };
   };
 

@@ -1,6 +1,6 @@
 ---
 title: Papra
-description: Gestionnaire de documents — configuration, health check, secrets, middlewares Traefik.
+description: Gestionnaire de documents — configuration, health check, secrets, exposition.
 ---
 
 Gestionnaire de documents auto-hébergé exposé à <https://docs.friloux.me>.
@@ -31,9 +31,9 @@ docker exec papra bash -c 'exec 3<>/dev/tcp/127.0.0.1/1221 && printf "GET /api/h
 Le fichier env est déchiffré par sops et monté via `environmentFiles`.
 Propriétaire : `papra:papra` pour que le container rootless puisse le lire.
 
-## Middlewares Traefik Actifs
+## Exposition
 
-- `crowdsec@file` — protection WAF
-- `rate-limit@file` — limitation de débit standard
-- `rate-limit-strict@file` — limitation stricte sur `/login`
-- `security-headers@file` — en-têtes de sécurité HTTP
+Publié par la passerelle pangolin de skitarii (sans SSO, qui casserait les liens
+de partage publics), crowdsec côté skitarii. La connexion est limitée par
+better-auth lui-même : 3 essais par 10 secondes sur `/api/auth/sign-in`, par IP
+du visiteur lue dans `X-Forwarded-For`.

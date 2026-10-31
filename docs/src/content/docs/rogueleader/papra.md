@@ -31,9 +31,9 @@ docker exec papra bash -c 'exec 3<>/dev/tcp/127.0.0.1/1221 && printf "GET /api/h
 The env file is unsealed by sops and mounted via `environmentFiles`.
 Owner: `papra:papra` so the rootless container can read it.
 
-## Active Traefik Middlewares
+## Exposure
 
-- `crowdsec@file` — WAF protection
-- `rate-limit@file` — standard rate limiting
-- `rate-limit-strict@file` — strict limiting on `/login`
-- `security-headers@file` — HTTP security headers
+Published by the pangolin gateway on skitarii (no SSO, it would break public
+share links), crowdsec there. Sign-in is rate-limited by better-auth itself: 3
+tries per 10 seconds on `/api/auth/sign-in`, keyed on the visitor's IP from
+`X-Forwarded-For`.

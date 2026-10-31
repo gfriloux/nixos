@@ -1,6 +1,6 @@
 ---
 title: rogueleader — Serveur Dédié
-description: Configuration du serveur dédié domestique — services Docker internes, Papra et BookStack publics via Traefik, backup.
+description: Configuration du serveur dédié domestique — services Docker internes, Papra et BookStack publics via la passerelle pangolin, backup.
 ---
 
 Serveur dédié domestique hébergeant les services internes : monitoring de disponibilité, gestion de recettes, interface backup.
@@ -20,8 +20,7 @@ Serveur dédié domestique hébergeant les services internes : monitoring de dis
 
 | Container | Rôle |
 |---|---|
-| `traefik` | Reverse proxy + TLS (Let's Encrypt) |
-| `crowdsec` | WAF / protection DDoS |
+| `newt` | Tunnel sortant vers la passerelle pangolin de skitarii |
 | `borg-ui` | Interface web Borg backup |
 | `mealie` | Gestionnaire de recettes |
 | `uptime-kuma` | Monitoring de disponibilité externe |
@@ -32,11 +31,13 @@ Serveur dédié domestique hébergeant les services internes : monitoring de dis
 
 ## Exposition Publique
 
-Papra (`docs.friloux.me`) et BookStack (`wow-cp.friloux.me`) sont servis vers la
-noosphère via Traefik + CrowdSec, exactement comme sur clochette. RogueLeader étant
-sur le réseau local, la box redirige les ports 80/443 vers `192.168.0.10` ; les
-certificats Let's Encrypt sont émis via le challenge TLS-ALPN-01 sur le port 443.
-Les autres services restent internes.
+Chaque service web (mealie, borg-ui, uptime-kuma, papra, BookStack) est publié
+par la passerelle pangolin de skitarii : chaque nom est un CNAME vers
+`skitarii.friloux.me`, et `newt` achemine le trafic par un tunnel sortant
+jusqu'aux conteneurs du réseau `web`. TLS, crowdsec et les certificats vivent sur
+skitarii (voir [La Porte](../skitarii/gateway.md)). RogueLeader ne fait tourner
+ni traefik ni crowdsec, n'ouvre aucun port web et n'a besoin d'aucune
+redirection de port sur la box.
 
 ## Backup
 

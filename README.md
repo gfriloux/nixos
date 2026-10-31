@@ -20,7 +20,7 @@ host-specific layer that wires them together.
 |---|---|---|
 | `exampleHost` | Workstation | ZFS mirror, AMD GPU, Plasma 6, gaming profile, YubiKey |
 | `clochette` | Scaleway VPS, public services | Docker behind Traefik + CrowdSec, SSH over Tailscale only |
-| `RogueLeader` | Home server | Docker behind Traefik + CrowdSec, Borg backups |
+| `RogueLeader` | Home server | Docker, published through the pangolin gateway (newt), Borg backups |
 
 Four Home Manager configurations: `kuri@exampleHost`, `guillaume@clochette`,
 `guillaume@RogueLeader`, `weechat@clochette` (a persistent zellij + WeeChat IRC
@@ -28,7 +28,8 @@ session).
 
 ## Services
 
-Every container sits behind Traefik with Let's Encrypt certificates, and is
+Every container sits behind Traefik (clochette) or the pangolin gateway on
+skitarii (RogueLeader) with Let's Encrypt certificates, and is
 watched by a health poller that kills unhealthy containers so systemd restarts
 them and pushes a notification to ntfy.sh.
 

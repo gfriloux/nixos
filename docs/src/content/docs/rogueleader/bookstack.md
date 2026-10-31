@@ -3,7 +3,7 @@ title: BookStack — The Personal Wiki
 description: Wiki service at wow-cp.friloux.me with MariaDB backend and automated backups.
 ---
 
-BookStack is the personal wiki, a chronicle of lore and knowledge. Runs on RogueLeader, exposed publicly at <https://wow-cp.friloux.me> through Traefik + CrowdSec (box port-forward of 80/443 to `192.168.0.10`).
+BookStack is the personal wiki, a chronicle of lore and knowledge. Runs on RogueLeader, exposed publicly at <https://wow-cp.friloux.me> through the pangolin gateway on skitarii (newt tunnel, no SSO). BookStack throttles sign-in itself (5 tries per minute per account and IP); `APP_PROXIES=*` in its env makes it read the visitor's IP.
 
 ## Stack
 
@@ -13,7 +13,7 @@ BookStack is the personal wiki, a chronicle of lore and knowledge. Runs on Rogue
 | `wow-cp-mariadb` | MariaDB database |
 | `wow-cp-mysqldump` | Automated SQL backup cron |
 
-Dedicated internal network `wow-cp` + `web` network for Traefik exposure.
+Dedicated internal network `wow-cp` + `web` network, where newt reaches it.
 
 ## Data Vault
 

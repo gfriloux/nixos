@@ -55,10 +55,11 @@ Covers: reinstallation procedures (all 4 machines), secrets backup/restore, Tail
 
 ## Docker services
 
-clochette and RogueLeader run traefik, crowdsec and socket-proxy from STC's
-docker relics (`stc.relics.docker.*`, configured in each host's `default.nix`).
-skitarii runs only the crowdsec relic, wired to its local traefik in
-`docker-pangolin.nix`. On top of that:
+clochette runs traefik, crowdsec and socket-proxy from STC's docker relics
+(`stc.relics.docker.*`, configured in its `default.nix`). skitarii runs only the
+crowdsec relic, wired to its local traefik in `docker-pangolin.nix`. RogueLeader
+runs none of them: its web services are published by the pangolin gateway
+through newt, and `docker-newt.nix` creates the `web` network. On top of that:
 
 | Host | Containers | Role |
 |---|---|---|

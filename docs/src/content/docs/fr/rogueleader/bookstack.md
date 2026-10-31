@@ -3,7 +3,7 @@ title: BookStack
 description: Wiki personnel — stack Docker, données, health checks, backup/restauration.
 ---
 
-Wiki personnel, chronique du savoir et des lores. Tourne sur RogueLeader, exposé publiquement à <https://wow-cp.friloux.me> via Traefik + CrowdSec (redirection de port 80/443 de la box vers `192.168.0.10`).
+Wiki personnel, chronique du savoir et des lores. Tourne sur RogueLeader, exposé publiquement à <https://wow-cp.friloux.me> via la passerelle pangolin de skitarii (tunnel newt, sans SSO). BookStack limite lui-même la connexion (5 essais par minute par compte et IP) ; `APP_PROXIES=*` dans son env lui fait lire l'IP du visiteur.
 
 ## Stack
 
@@ -13,7 +13,7 @@ Wiki personnel, chronique du savoir et des lores. Tourne sur RogueLeader, expos�
 | `wow-cp-mariadb` | Base de données MariaDB |
 | `wow-cp-mysqldump` | Dump SQL cron automatique |
 
-Réseau interne dédié `wow-cp` + réseau `web` pour l'exposition Traefik.
+Réseau interne dédié `wow-cp` + réseau `web`, par lequel newt le joint.
 
 ## Données
 

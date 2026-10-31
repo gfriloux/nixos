@@ -1,6 +1,6 @@
 ---
 title: RogueLeader — The Home-Shrine
-description: Domestic dedicated server with Borg, Mealie, Uptime Kuma, Papra, and BookStack (public via Traefik).
+description: Domestic dedicated server with Borg, Mealie, Uptime Kuma, Papra, and BookStack (public via the pangolin gateway).
 ---
 
 Behold RogueLeader — the home-shrine, tending the domestic sanctuary on the local network frontier at `192.168.0.10`.
@@ -20,8 +20,7 @@ Behold RogueLeader — the home-shrine, tending the domestic sanctuary on the lo
 
 | Daemon | Role |
 |---|---|
-| `traefik` | Reverse proxy + TLS (Let's Encrypt) |
-| `crowdsec` | WAF / DDoS guard |
+| `newt` | Outbound tunnel to the pangolin gateway on skitarii |
 | `borg-ui` | Borg backup web interface |
 | `mealie` | Recipe manager |
 | `uptime-kuma` | External availability monitoring |
@@ -32,11 +31,13 @@ Behold RogueLeader — the home-shrine, tending the domestic sanctuary on the lo
 
 ## Public Exposure
 
-Papra (`docs.friloux.me`) and BookStack (`wow-cp.friloux.me`) are served to the
-noosphere through Traefik + CrowdSec, exactly like on clochette. Since RogueLeader
-sits on the local network, the box port-forwards 80/443 to `192.168.0.10`; Let's
-Encrypt certificates are issued via the TLS-ALPN-01 challenge on port 443. The
-remaining daemons stay internal.
+Every web daemon (mealie, borg-ui, uptime-kuma, papra, BookStack) is published
+by the pangolin gateway on skitarii: each name is a CNAME to
+`skitarii.friloux.me`, and `newt` carries the traffic through an outbound tunnel
+to the containers on the `web` network. TLS, crowdsec and the certificates live
+on skitarii (see [The Gate](../skitarii/gateway.md)). RogueLeader runs no
+traefik and no crowdsec, opens no web port, and needs no port-forward on the
+box.
 
 ## Archive & Backup
 

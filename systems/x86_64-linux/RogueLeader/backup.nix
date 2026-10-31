@@ -20,8 +20,6 @@
 
   services.borgbackup.jobs.remote = {
     paths = [
-      "/srv/docker/traefik"
-      "/srv/docker/crowdsec.rogueleader.home"
       "/srv/docker/status.friloux.me"
       "/srv/docker/cuisine.home.friloux.me"
       "/srv/docker/docs.friloux.me"
