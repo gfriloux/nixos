@@ -16,6 +16,21 @@ Behold clochette — the VPS-shrine exposed to the noosphere, where bound daemon
 | immich-redis | — | Redis cache for Immich |
 | crowdsec-manager | :3000 | CrowdSec management UI |
 
+## Network
+
+Static IPv4 (`51.159.34.135/24`) in `network.nix`. IPv6 comes from Scaleway's
+router advertisements (SLAAC): `2001:bc8:6005:1c:208:a2ff:fe0c:6ca2`, the
+EUI-64 address published as `clochette.friloux.me`'s AAAA.
+
+Temporary (privacy) addresses are disabled (`networking.tempAddresses`):
+Scaleway only lets the EUI-64 address out, so anything leaving from a
+temporary address was lost — inbound IPv6 worked, outbound did not (#108).
+
+IPv6 visitors still reach traefik through `docker-proxy`, which logs the Docker
+gateway (`172.19.0.1`) instead of the visitor: crowdsec cannot ban them. Left
+as-is on purpose, the move of clochette's services behind the pangolin gateway
+removes the problem.
+
 ## The Pilgrims — System Users
 
 | User | Shell | Role |

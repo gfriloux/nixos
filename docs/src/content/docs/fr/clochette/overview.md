@@ -16,6 +16,22 @@ VPS Scaleway hébergeant les services web personnels, exposés publiquement via 
 | immich-redis | — | Redis pour Immich |
 | crowdsec-manager | :3000 | UI de gestion CrowdSec |
 
+## Réseau
+
+IPv4 statique (`51.159.34.135/24`) dans `network.nix`. L'IPv6 vient des
+annonces du routeur Scaleway (SLAAC) : `2001:bc8:6005:1c:208:a2ff:fe0c:6ca2`,
+l'adresse EUI-64 publiée en AAAA de `clochette.friloux.me`.
+
+Les adresses temporaires (confidentialité) sont désactivées
+(`networking.tempAddresses`) : Scaleway ne laisse sortir que l'adresse EUI-64,
+tout ce qui partait d'une adresse temporaire était perdu — l'IPv6 entrante
+marchait, la sortante non (#108).
+
+Les visiteurs IPv6 arrivent encore sur traefik par `docker-proxy`, qui note la
+passerelle Docker (`172.19.0.1`) au lieu du visiteur : crowdsec ne peut pas les
+bannir. Laissé tel quel volontairement, le passage des services de clochette
+derrière la passerelle pangolin règle le problème.
+
 ## Utilisateurs
 
 | Utilisateur | Shell | Rôle |

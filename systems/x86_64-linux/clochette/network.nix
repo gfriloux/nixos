@@ -15,6 +15,10 @@ _: {
       ];
     };
     defaultGateway = "51.159.34.1";
+    # IPv6 par SLAAC (annonces du routeur Scaleway). Pas d'adresses
+    # temporaires : Scaleway ne laisse sortir que l'adresse EUI-64 (celle de
+    # l'AAAA), tout ce qui part d'une adresse temporaire est perdu.
+    tempAddresses = "disabled";
     nameservers = ["51.159.47.28" "51.159.47.26"];
   };
 }
