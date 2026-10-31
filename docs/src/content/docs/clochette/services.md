@@ -10,14 +10,16 @@ All bound daemons on clochette follow sacred patterns for health, networking, se
 All monitored containers declare a health check via `extraOptions`:
 
 ```nix
-extraOptions = lib.kuri.docker.mkHealthCheck {
+extraOptions = inputs.stc.lib.docker.mkHealthCheck {
   cmd = "command-to-test";
-  startPeriod = "30s";  # delay before first check (default: 0)
+  startPeriod = "30s";  # grace period before failures count (default: 30s)
 };
 ```
 
-`mkHealthCheck` generates the flags `--health-cmd`, `--health-interval=30s`,
-`--health-timeout=10s`, `--health-retries=3`.
+`mkHealthCheck` (from the STC flake input) generates the flags `--health-cmd`,
+`--health-interval=30s`, `--health-timeout=10s`, `--health-start-period`,
+`--health-retries=3`. Pair it with the `stc.docker/health-watch` label to get
+restarts and notifications (see [The Astropath](notifications.md)).
 
 ## Docker Networks
 
@@ -32,7 +34,7 @@ networks = ["immich" "web"]; # internal + newt
 ```
 
 Networks are created by systemd services `docker-network-<name>`
-generated via `lib.kuri.docker.mkNetwork`.
+generated via `inputs.stc.lib.docker.mkNetwork pkgs "<name>"`.
 
 ## Secrets
 

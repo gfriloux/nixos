@@ -14,8 +14,9 @@ What must be guarded is the **rescue key**, the only key that is not tied to a d
 | exampleHost | Boot of exampleHost | `/etc/sops/age/keys.txt` (clear, `0640 root:users`) | `kuri_exampleHost.yaml` |
 | clochette | Boot of clochette | derived from `/etc/ssh/ssh_host_ed25519_key` | `clochette.yaml` |
 | RogueLeader | Boot of RogueLeader | derived from `/etc/ssh/ssh_host_ed25519_key` | `RogueLeader.yaml` |
-| YubiKey | Editing with `sops` | YubiKey 5 NFC (serial 36644572), PIV slot 1 | all three |
-| Rescue | Editing if the YubiKey is lost | offline, off every shrine | all three |
+| skitarii | Boot of skitarii | derived from `/etc/ssh/ssh_host_ed25519_key` | `skitarii.yaml` |
+| YubiKey | Editing with `sops` | YubiKey 5 NFC (serial 36644572), PIV slot 1 | all four |
+| Rescue | Editing if the YubiKey is lost | offline, off every shrine | all four |
 
 Public keys and recipients per file are in `.sops.yaml`.
 
@@ -136,8 +137,8 @@ A reinstall generates a **new SSH host key**, so the derived age key changes.
 |---|---|---|
 | exampleHost's boot key | exampleHost cannot decrypt its secrets at boot | Reinstall procedure above, with the YubiKey |
 | A server's SSH host key | That server cannot decrypt its secrets | Server reinstall procedure above |
-| YubiKey | No more editing with it | Use the rescue key, enrol a new YubiKey, `updatekeys` all three files, remove the old `&admin_yubikey` |
-| Rescue key | No fallback if the YubiKey is lost | Generate a new one, `updatekeys` all three files with the YubiKey |
+| YubiKey | No more editing with it | Use the rescue key, enrol a new YubiKey, `updatekeys` all four files, remove the old `&admin_yubikey` |
+| Rescue key | No fallback if the YubiKey is lost | Generate a new one, `updatekeys` all four files with the YubiKey |
 | YubiKey **and** rescue key | No admin key left | Each file can still be read on its own shrine with its host key: re-encrypt from there to new admin keys |
 
 :::danger[Interdict]

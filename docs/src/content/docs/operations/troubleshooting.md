@@ -18,7 +18,7 @@ docker logs <name> --tail 50
 systemctl restart docker-<name>
 ```
 
-The timer `docker-health-watch@<name>` automatically kills an `unhealthy` daemon
+The timer `stc-docker-health-watch@<name>` automatically kills an `unhealthy` daemon
 every 30 seconds, triggering a systemd restart.
 If the daemon loops, inspect its logs.
 

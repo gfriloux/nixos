@@ -21,8 +21,9 @@ Deux sortes de clés, aux rôles distincts :
 | exampleHost | Machine, fichier age dédié | `/etc/sops/age/keys.txt` | `kuri_exampleHost.yaml` |
 | clochette | Machine, dérivée de la clé SSH host | `/etc/ssh/ssh_host_ed25519_key` | `clochette.yaml` |
 | RogueLeader | Machine, dérivée de la clé SSH host | `/etc/ssh/ssh_host_ed25519_key` | `RogueLeader.yaml` |
-| YubiKey | Administration, identité age en PIV slot 1 | sur la YubiKey, non extractible | les trois |
-| Secours | Administration, clé age simple | hors ligne, sur aucune machine | les trois |
+| skitarii | Machine, dérivée de la clé SSH host | `/etc/ssh/ssh_host_ed25519_key` | `skitarii.yaml` |
+| YubiKey | Administration, identité age en PIV slot 1 | sur la YubiKey, non extractible | les quatre |
+| Secours | Administration, clé age simple | hors ligne, sur aucune machine | les quatre |
 
 ## Fichiers de Reliquaires
 
@@ -31,6 +32,7 @@ Deux sortes de clés, aux rôles distincts :
 | `secrets/kuri_exampleHost.yaml` | exampleHost + YubiKey + secours |
 | `secrets/clochette.yaml` | clochette + YubiKey + secours |
 | `secrets/RogueLeader.yaml` | RogueLeader + YubiKey + secours |
+| `secrets/skitarii.yaml` | skitarii + YubiKey + secours |
 
 ## Déchiffrement au Démarrage
 

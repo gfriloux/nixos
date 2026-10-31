@@ -1,9 +1,9 @@
 ---
 title: Vaults of the Machine-Spirit — Storage & Filesystems
-description: ZFS configuration on exampleHost, ext4 on clochette and RogueLeader, backup strategies.
+description: ZFS configuration on exampleHost, ext4 on clochette, RogueLeader and skitarii, backup strategies.
 ---
 
-The Forge's data is inscribed across three shrines in accordance with the machine-spirit's demands: ZFS mirrors on the workstation, ext4 on the VPS and home-shrine, and the sacred snapshots guard against loss.
+The Forge's data is inscribed across four shrines in accordance with the machine-spirit's demands: ZFS mirrors on the workstation, ext4 on the VPSes and home-shrine, and the sacred snapshots guard against loss.
 
 ## exampleHost — The Mirror Pool
 

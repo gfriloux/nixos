@@ -3,13 +3,13 @@ title: Sacred Geometry — Architecture Overview
 description: Structure of the KURI Forge — snowfall-lib, deployment patterns, secrets, and services.
 ---
 
-The Forge is structured as a snowfall-lib NixOS flake, its three machine-shrines declared beneath `systems/x86_64-linux/` and its bound daemons managed through composable sacred patterns.
+The Forge is structured as a snowfall-lib NixOS flake, its four machine-shrines declared beneath `systems/x86_64-linux/` and its bound daemons managed through composable sacred patterns.
 
 ## Sacred Geometry — Flake Structure
 
 The repository uses [snowfall-lib](https://github.com/snowfallorg/lib) to orchestrate the Forge. Each machine-shrine is a system declared under `systems/x86_64-linux/<name>/`; each Sanctum (user environment) under `homes/x86_64-linux/<user>@<machine>/`.
 
-Reusable sacred patterns live in `modules/nixos/` and are exposed via `lib.kuri`.
+There is no local NixOS module. Reusable sacred patterns come from the STC flake input (`inputs.stc`): relics enabled through `stc.relics.*` options (Docker notifications, CrowdSec, SSH hardening, Nix housekeeping) and helpers such as `inputs.stc.lib.docker.mkHealthCheck` and `inputs.stc.lib.docker.mkNetwork`. The only local module is `modules/home/dank-shell`, a Home Manager desktop bar.
 
 :::note[Marginalia]
 snowfall-lib does **not** propagate modules globally — each shrine must explicitly import the patterns it requires.
@@ -20,6 +20,7 @@ snowfall-lib does **not** propagate modules globally — each shrine must explic
 - **exampleHost**: `nh os switch .` (local sanctification)
 - **clochette**: `nixos-rebuild switch --target-host ...` (via Tailscale SSH)
 - **RogueLeader**: `nixos-rebuild switch --target-host ...` (via local network)
+- **skitarii**: `nixos-rebuild switch --target-host ...` (via Tailscale SSH)
 
 ## The Reliquary
 
@@ -35,7 +36,7 @@ its CrowdSec guards every route. See [The Gate](../skitarii/gateway.md).
 
 ## The Astropath
 
-The `notify-docker` pattern watches all containers bearing the label `friloux.me/health-watch = "true"` and heralds their omens via ntfy.sh if they fall into `unhealthy` state or enter failure.
+STC's `relics-docker-notify` relic (`stc.relics.docker.notify`) watches all containers bearing the label `stc.docker/health-watch = "true"` on every host, kills those that turn `unhealthy`, and heralds their omens through each host's `notifyCommand` (an ntfy.sh call) when their unit enters failure. See [The Astropath](../clochette/notifications.md).
 
 ## Principles of Consecration
 

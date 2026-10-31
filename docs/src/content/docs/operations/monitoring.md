@@ -7,17 +7,18 @@ Overview of surveillance mechanisms across the Forge.
 
 ## Failure Notifications (ntfy.sh)
 
-All daemons on clochette with the label `friloux.me/health-watch = "true"`
-are automatically watched by the `notify-docker` pattern.
+On every host that runs containers (clochette, RogueLeader, skitarii), daemons
+with the label `stc.docker/health-watch = "true"` are automatically watched by
+STC's `relics-docker-notify` relic. See [The Astropath](../clochette/notifications.md).
 
 Two mechanisms:
 
 | Mechanism | Trigger | Action |
 |---|---|---|
-| `notify-failure@` | systemd service → `failed` state | ntfy.sh notification |
-| `docker-health-watch@` (30s timer) | `docker inspect` returns `unhealthy` | `docker kill` → systemd restart → ntfy.sh |
+| `stc-notify-failure@` | systemd service → `failed` state | `notifyCommand` → ntfy.sh notification |
+| `stc-docker-health-watch@` (30s timer) | `docker inspect` returns `unhealthy` | `docker kill` → systemd restart → ntfy.sh |
 
-Notifications arrive on the topic in `services/ntfy/topic`.
+Notifications arrive on the topic in `services/ntfy/topic`. The examples below are taken on clochette.
 
 ## Check Container Status
 
@@ -85,9 +86,11 @@ sudo tail -f /srv/docker/pangolin.friloux.me/traefik-logs/access.log
 journalctl -u logrotate --since today
 ```
 
-## Uptime Kuma (Planned)
+## Uptime Kuma
 
-Uptime Kuma will be installed on a future NixOS shrine to provide
-external monitoring independent of clochette.
+Uptime Kuma runs on RogueLeader (`uptime-kuma` container) and serves the status
+page at `status.friloux.me`, published through the pangolin gateway. If skitarii
+goes down the public page goes with it, but Uptime Kuma keeps running at home
+and keeps alerting through ntfy.
 
-See [Design & Prerequisites — RogueLeader](../rogueleader/planning.md).
+See [RogueLeader](../rogueleader/overview.md).

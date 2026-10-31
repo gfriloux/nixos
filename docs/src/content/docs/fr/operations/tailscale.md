@@ -12,7 +12,7 @@ Procédure de ré-enrôlement Tailscale après réinstallation d'une machine.
 | exampleHost | client/admin | via Tailscale ou local |
 | clochette | serveur exposé | **uniquement via Tailscale** |
 | RogueLeader | serveur interne | via réseau local ou Tailscale |
-| skitarii | serveur exposé (futur gateway) | **uniquement via Tailscale** |
+| skitarii | serveur exposé (passerelle pangolin) | **uniquement via Tailscale** |
 
 SSH sur clochette n'est accessible que depuis `100.64.0.0/10` (réseau Tailscale).
 Après une réinstallation sans Tailscale opérationnel, utiliser la console série.

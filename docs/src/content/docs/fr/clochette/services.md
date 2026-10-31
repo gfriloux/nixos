@@ -10,14 +10,16 @@ Patterns standards appliqués à tous les containers Docker sur clochette pour l
 Tous les containers surveillés déclarent un health check via `extraOptions` :
 
 ```nix
-extraOptions = lib.kuri.docker.mkHealthCheck {
+extraOptions = inputs.stc.lib.docker.mkHealthCheck {
   cmd = "commande-de-test";
-  startPeriod = "30s";  # délai avant premier check (défaut: 0)
+  startPeriod = "30s";  # délai de grâce avant que les échecs comptent (défaut: 30s)
 };
 ```
 
-`mkHealthCheck` génère les flags `--health-cmd`, `--health-interval=30s`,
-`--health-timeout=10s`, `--health-retries=3`.
+`mkHealthCheck` (fourni par l'input de flake STC) génère les flags `--health-cmd`,
+`--health-interval=30s`, `--health-timeout=10s`, `--health-start-period`,
+`--health-retries=3`. L'associer au label `stc.docker/health-watch` pour obtenir
+redémarrages et notifications (voir [Notifications de Pannes](notifications.md)).
 
 ## Réseaux Docker
 
@@ -32,7 +34,7 @@ networks = ["immich" "web"]; # interne + newt
 ```
 
 Les réseaux sont créés par des services systemd `docker-network-<nom>`
-générés via `lib.kuri.docker.mkNetwork`.
+générés via `inputs.stc.lib.docker.mkNetwork pkgs "<nom>"`.
 
 ## Secrets
 

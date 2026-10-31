@@ -14,8 +14,9 @@ Ce qu'il faut protéger, c'est la **clé de secours**, la seule qui ne soit lié
 | exampleHost | Démarrage d'exampleHost | `/etc/sops/age/keys.txt` (en clair, `0640 root:users`) | `kuri_exampleHost.yaml` |
 | clochette | Démarrage de clochette | dérivée de `/etc/ssh/ssh_host_ed25519_key` | `clochette.yaml` |
 | RogueLeader | Démarrage de RogueLeader | dérivée de `/etc/ssh/ssh_host_ed25519_key` | `RogueLeader.yaml` |
-| YubiKey | Édition avec `sops` | YubiKey 5 NFC (série 36644572), PIV slot 1 | les trois |
-| Secours | Édition si la YubiKey est perdue | hors ligne, sur aucune machine | les trois |
+| skitarii | Démarrage de skitarii | dérivée de `/etc/ssh/ssh_host_ed25519_key` | `skitarii.yaml` |
+| YubiKey | Édition avec `sops` | YubiKey 5 NFC (série 36644572), PIV slot 1 | les quatre |
+| Secours | Édition si la YubiKey est perdue | hors ligne, sur aucune machine | les quatre |
 
 Les clés publiques et les destinataires de chaque fichier sont dans `.sops.yaml`.
 
@@ -144,8 +145,8 @@ dérivée change.
 |---|---|---|
 | Clé de démarrage d'exampleHost | exampleHost ne déchiffre plus ses secrets au démarrage | Procédure de réinstallation ci-dessus, avec la YubiKey |
 | Clé SSH host d'un serveur | Ce serveur ne déchiffre plus ses secrets | Procédure de réinstallation serveur ci-dessus |
-| YubiKey | Plus d'édition avec elle | Prendre la clé de secours, enrôler une nouvelle YubiKey, `updatekeys` sur les trois fichiers, retirer l'ancien `&admin_yubikey` |
-| Clé de secours | Plus de solution de repli si la YubiKey est perdue | En générer une nouvelle, `updatekeys` sur les trois fichiers avec la YubiKey |
+| YubiKey | Plus d'édition avec elle | Prendre la clé de secours, enrôler une nouvelle YubiKey, `updatekeys` sur les quatre fichiers, retirer l'ancien `&admin_yubikey` |
+| Clé de secours | Plus de solution de repli si la YubiKey est perdue | En générer une nouvelle, `updatekeys` sur les quatre fichiers avec la YubiKey |
 | YubiKey **et** clé de secours | Plus aucune clé d'administration | Chaque fichier reste lisible sur sa propre machine avec sa clé : le rechiffrer depuis là vers de nouvelles clés d'administration |
 
 :::danger[Interdit]

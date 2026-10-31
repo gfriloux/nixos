@@ -7,17 +7,19 @@ Vue d'ensemble des mécanismes de surveillance en place sur l'infrastructure.
 
 ## Notifications de Pannes (ntfy.sh)
 
-Tous les containers sur clochette avec le label `friloux.me/health-watch = "true"`
-sont surveillés automatiquement par le module `notify-docker`.
+Sur chaque machine qui fait tourner des containers (clochette, RogueLeader,
+skitarii), les containers portant le label `stc.docker/health-watch = "true"`
+sont surveillés automatiquement par la relic `relics-docker-notify` de STC.
+Voir [Notifications de Pannes](../clochette/notifications.md).
 
 Deux mécanismes :
 
 | Mécanisme | Déclencheur | Action |
 |---|---|---|
-| `notify-failure@` | Service systemd passe en `failed` | Notification ntfy.sh |
-| `docker-health-watch@` (timer 30s) | `docker inspect` retourne `unhealthy` | `docker kill` → systemd restart → ntfy.sh |
+| `stc-notify-failure@` | Service systemd passe en `failed` | `notifyCommand` → notification ntfy.sh |
+| `stc-docker-health-watch@` (timer 30s) | `docker inspect` retourne `unhealthy` | `docker kill` → systemd restart → ntfy.sh |
 
-Les notifications arrivent sur le topic ntfy.sh configuré dans `services/ntfy/topic`.
+Les notifications arrivent sur le topic ntfy.sh configuré dans `services/ntfy/topic`. Les exemples ci-dessous sont pris sur clochette.
 
 ## Vérifier l'État des Containers
 
@@ -85,9 +87,11 @@ sudo tail -f /srv/docker/pangolin.friloux.me/traefik-logs/access.log
 journalctl -u logrotate --since today
 ```
 
-## Uptime Kuma (à Venir)
+## Uptime Kuma
 
-Uptime Kuma sera installé sur une prochaine machine NixOS pour fournir
-une surveillance externe indépendante de clochette.
+Uptime Kuma tourne sur RogueLeader (container `uptime-kuma`) et sert la page de
+statut `status.friloux.me`, publiée par la passerelle pangolin. Si skitarii
+tombe, la page publique tombe avec lui, mais Uptime Kuma continue de tourner à
+la maison et d'alerter par ntfy.
 
-Voir [RogueLeader — Planification](../rogueleader/planning.md).
+Voir [RogueLeader](../rogueleader/overview.md).

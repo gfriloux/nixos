@@ -20,8 +20,9 @@ Two kinds of keys, with separate jobs:
 | exampleHost | Host, dedicated age file | `/etc/sops/age/keys.txt` | `kuri_exampleHost.yaml` |
 | clochette | Host, derived from SSH host key | `/etc/ssh/ssh_host_ed25519_key` | `clochette.yaml` |
 | RogueLeader | Host, derived from SSH host key | `/etc/ssh/ssh_host_ed25519_key` | `RogueLeader.yaml` |
-| YubiKey | Admin, age identity in PIV slot 1 | on the YubiKey, not extractable | all three |
-| Rescue | Admin, plain age key | offline, off every shrine | all three |
+| skitarii | Host, derived from SSH host key | `/etc/ssh/ssh_host_ed25519_key` | `skitarii.yaml` |
+| YubiKey | Admin, age identity in PIV slot 1 | on the YubiKey, not extractable | all four |
+| Rescue | Admin, plain age key | offline, off every shrine | all four |
 
 ## Sealed Vaults
 
@@ -30,6 +31,7 @@ Two kinds of keys, with separate jobs:
 | `secrets/kuri_exampleHost.yaml` | exampleHost + YubiKey + rescue |
 | `secrets/clochette.yaml` | clochette + YubiKey + rescue |
 | `secrets/RogueLeader.yaml` | RogueLeader + YubiKey + rescue |
+| `secrets/skitarii.yaml` | skitarii + YubiKey + rescue |
 
 ## Unsealing at Boot
 

@@ -3,13 +3,13 @@ title: Géométrie Sacrée — Vue d'ensemble de l'architecture
 description: Structure de la Forge KURI — snowfall-lib, motifs de déploiement, reliquaires, et services liés.
 ---
 
-La Forge est structurée comme un flake NixOS snowfall-lib, ses trois sanctuaires-machines déclarés sous `systems/x86_64-linux/` et ses démons liés gérés par des motifs sacrés composables.
+La Forge est structurée comme un flake NixOS snowfall-lib, ses quatre sanctuaires-machines déclarés sous `systems/x86_64-linux/` et ses démons liés gérés par des motifs sacrés composables.
 
 ## Géométrie Sacrée — Structure du Flake
 
 Le dépôt utilise [snowfall-lib](https://github.com/snowfallorg/lib) pour orchestrer la Forge. Chaque sanctuaire-machine est un système déclaré sous `systems/x86_64-linux/<nom>/` ; chaque Sanctum (environnement utilisateur) sous `homes/x86_64-linux/<utilisateur>@<machine>/`.
 
-Les motifs sacrés réutilisables vivent dans `modules/nixos/` et sont exposés via `lib.kuri`.
+Il n'y a aucun module NixOS local. Les motifs sacrés réutilisables viennent de l'input de flake STC (`inputs.stc`) : des relics activées par des options `stc.relics.*` (notifications Docker, CrowdSec, durcissement SSH, entretien Nix) et des helpers comme `inputs.stc.lib.docker.mkHealthCheck` et `inputs.stc.lib.docker.mkNetwork`. Le seul module local est `modules/home/dank-shell`, une barre de bureau Home Manager.
 
 :::note[Marginalia]
 snowfall-lib **ne propage pas** les modules globalement — chaque sanctuaire doit importer explicitement les motifs qu'il requiert.
@@ -20,6 +20,7 @@ snowfall-lib **ne propage pas** les modules globalement — chaque sanctuaire do
 - **exampleHost** : `nh os switch .` (sanctification locale)
 - **clochette** : `nixos-rebuild switch --target-host ...` (via SSH Tailscale)
 - **RogueLeader** : `nixos-rebuild switch --target-host ...` (via réseau local)
+- **skitarii** : `nixos-rebuild switch --target-host ...` (via SSH Tailscale)
 
 ## Le Reliquaire
 
@@ -36,7 +37,7 @@ gère les certificats Let's Encrypt et son CrowdSec garde toutes les routes. Voi
 
 ## L'Astropathe
 
-Le motif `notify-docker` observe tous les containers portant le label `friloux.me/health-watch = "true"` et annonce leurs présages via ntfy.sh s'ils tombent en état `unhealthy` ou entrent en défaillance.
+La relic `relics-docker-notify` de STC (`stc.relics.docker.notify`) observe tous les containers portant le label `stc.docker/health-watch = "true"` sur chaque machine, tue ceux qui passent `unhealthy`, et annonce leurs présages par le `notifyCommand` de la machine (un appel ntfy.sh) quand leur unité entre en défaillance. Voir [Notifications de Pannes](../clochette/notifications.md).
 
 ## Principes de Consécration
 

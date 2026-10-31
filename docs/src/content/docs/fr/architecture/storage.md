@@ -1,9 +1,9 @@
 ---
 title: Reliquaires & Systèmes de Fichiers
-description: Configuration du stockage et des datasets — ZFS pour exampleHost, ext4 pour clochette et RogueLeader.
+description: Configuration du stockage et des datasets — ZFS pour exampleHost, ext4 pour clochette, RogueLeader et skitarii.
 ---
 
-Le stockage varie selon chaque sanctuaire-machine : ZFS en miroir pour le sanctuaire de travail principal, ext4 simple pour le VPS et le serveur dédié.
+Le stockage varie selon chaque sanctuaire-machine : ZFS en miroir pour le sanctuaire de travail principal, ext4 simple pour les VPS et le serveur dédié.
 
 ## exampleHost — ZFS
 

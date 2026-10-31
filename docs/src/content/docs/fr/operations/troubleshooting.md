@@ -18,7 +18,7 @@ docker logs <nom-container> --tail 50
 systemctl restart docker-<nom-container>
 ```
 
-Le timer `docker-health-watch@<nom>` tue automatiquement un container `unhealthy`
+Le timer `stc-docker-health-watch@<nom>` tue automatiquement un container `unhealthy`
 toutes les 30 secondes, ce qui déclenche un restart systemd.
 Si le container reste en boucle, vérifier ses logs.
 

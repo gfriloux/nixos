@@ -12,7 +12,7 @@ Procedure to re-enroll a shrine with Tailscale after reinstallation.
 | exampleHost | client/admin | via Tailscale or local |
 | clochette | exposed server | **only via Tailscale** |
 | RogueLeader | internal server | via local network or Tailscale |
-| skitarii | exposed server (future gateway) | **only via Tailscale** |
+| skitarii | exposed server (pangolin gateway) | **only via Tailscale** |
 
 SSH to clochette is accessible only from `100.64.0.0/10` (Tailscale subnet).
 After reinstall without Tailscale operational, use the serial console.
