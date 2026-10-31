@@ -12,6 +12,16 @@
     labels.type = "traefik";
   };
 
+  # AppSec : le bouncer envoie chaque requête à crowdsec avant de la laisser
+  # passer, qui la juge sur les règles des collections appsec-* (default.nix).
+  # Sur le réseau pangolin seulement, aucun port publié.
+  crowdsecAppsecAcquis = yaml.generate "appsec.yaml" {
+    source = "appsec";
+    listen_addr = "0.0.0.0:7422";
+    appsec_config = "crowdsecurity/appsec-default";
+    labels.type = "appsec";
+  };
+
   # Calqué sur le compose officiel (fosrl/pangolin, install/config/traefik/).
   # Différences voulues : pas de dashboard traefik exposé, logs sur stdout.
   traefikConfig = yaml.generate "traefik_config.yml" {
@@ -81,6 +91,11 @@
           crowdsecLapiScheme = "http";
           crowdsecLapiHost = "crowdsec:8080";
           crowdsecLapiKeyFile = "/etc/traefik/crowdsec-bouncer-key";
+          # Clé : celle de la LAPI. Défauts gardés (Failure/UnreachableBlock) :
+          # si crowdsec ne répond plus, tout est bloqué, comme déjà pour la LAPI
+          # en mode live.
+          crowdsecAppsecEnabled = true;
+          crowdsecAppsecHost = "crowdsec:7422";
         };
         redirect-to-https.redirectScheme.scheme = "https";
       };
@@ -257,6 +272,7 @@ in {
       volumes = [
         "${dataDir}/traefik-logs:/var/log/traefik:ro"
         "${crowdsecAcquis}:/etc/crowdsec/acquis.d/traefik.yaml:ro"
+        "${crowdsecAppsecAcquis}:/etc/crowdsec/acquis.d/appsec.yaml:ro"
         "${config.sops.templates."crowdsec-whitelist.yaml".path}:/etc/crowdsec/parsers/s02-enrich/skitarii-whitelist.yaml:ro"
       ];
       networks = ["pangolin"];

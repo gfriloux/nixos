@@ -169,6 +169,27 @@ Resource events only fire for targets with a health check.
   crowdsec`, `crowdsec@file does not exist` on internal routers) stop within
   seconds of a restart. If they persist, they are real.
 
-## Not Done Yet
+## AppSec
 
-- AppSec (request inspection) in crowdsec
+The bouncer sends every request to crowdsec's AppSec server (`crowdsec:7422`,
+`pangolin` network only) before letting it through. Rules: collections
+`crowdsecurity/appsec-virtual-patching` (known CVEs) and
+`crowdsecurity/appsec-generic-rules`, set in `default.nix`; acquisition and
+bouncer settings in `docker-pangolin.nix`.
+
+- Inline blocking ignores the parser whitelist: requests from the tailnet or
+  the box are inspected too.
+- Failure and unreachable defaults kept: if crowdsec is down every request is
+  blocked, as already for the LAPI in `live` mode.
+- Only the first 10 MB of a body are inspected (bouncer default): large
+  uploads (immich, papra) still pass.
+
+Check (expect `403`; a normal page stays `200`):
+
+```bash
+curl -sS -o /dev/null -w '%{http_code}\n' https://cuisine.friloux.me/.env
+```
+
+A false positive shows as a `403` on a legitimate request: find the rule with
+`docker exec crowdsec cscli alerts list | grep -E "vpatch|appsec"` before
+disabling anything.

@@ -62,7 +62,7 @@
     # blocklists et allowlists de la console). L'image le rejoue à chaque
     # démarrage ; une fois enrôlé, cscli répond par un simple warning.
     templates."crowdsec.env".content = ''
-      COLLECTIONS=crowdsecurity/traefik crowdsecurity/http-cve
+      COLLECTIONS=crowdsecurity/traefik crowdsecurity/http-cve crowdsecurity/appsec-virtual-patching crowdsecurity/appsec-generic-rules
       BOUNCER_KEY_traefik=${config.sops.placeholder."services/crowdsec/bouncer-key"}
       ENROLL_KEY=${config.sops.placeholder."services/crowdsec/enroll-key"}
       ENROLL_INSTANCE_NAME=skitarii

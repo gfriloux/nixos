@@ -177,6 +177,27 @@ cibles qui ont un health check.
   internes) : elles cessent quelques secondes après un redémarrage. Si elles
   durent, elles sont réelles.
 
-## Pas Encore Fait
+## AppSec
 
-- AppSec (inspection des requêtes) dans crowdsec
+Le bouncer envoie chaque requête au serveur AppSec de crowdsec
+(`crowdsec:7422`, réseau `pangolin` uniquement) avant de la laisser passer.
+Règles : collections `crowdsecurity/appsec-virtual-patching` (CVE connues) et
+`crowdsecurity/appsec-generic-rules`, dans `default.nix` ; acquisition et
+réglages du bouncer dans `docker-pangolin.nix`.
+
+- Le blocage en ligne ignore la whitelist du parsing : les requêtes du tailnet
+  ou de la box sont inspectées aussi.
+- Défauts gardés en cas d'échec ou d'injoignabilité : si crowdsec tombe, toute
+  requête est bloquée, comme déjà pour la LAPI en mode `live`.
+- Seuls les 10 premiers Mo d'un corps sont inspectés (défaut du bouncer) : les
+  gros envois (immich, papra) passent quand même.
+
+Vérification (attendu `403` ; une page normale reste en `200`) :
+
+```bash
+curl -sS -o /dev/null -w '%{http_code}\n' https://cuisine.friloux.me/.env
+```
+
+Un faux positif se voit comme un `403` sur une requête légitime : trouver la
+règle avec `docker exec crowdsec cscli alerts list | grep -E "vpatch|appsec"`
+avant de désactiver quoi que ce soit.
