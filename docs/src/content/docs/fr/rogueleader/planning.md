@@ -1,5 +1,5 @@
 ---
-title: Design & Prérequis
+title: "Conception & prérequis"
 description: Architecture de RogueLeader — partitionnement, accès réseau, évolutions prévues.
 ---
 

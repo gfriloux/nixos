@@ -1,5 +1,5 @@
 ---
-title: Papra — Document Management
+title: "Papra"
 description: Self-hosted document vault accessible at docs.friloux.me.
 ---
 

@@ -1,5 +1,5 @@
 ---
-title: GPU AMD
+title: "GPU AMD"
 description: Configuration du GPU AMD — amdgpu, ROCM, accélération vidéo.
 ---
 

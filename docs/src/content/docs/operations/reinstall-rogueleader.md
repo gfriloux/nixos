@@ -1,5 +1,5 @@
 ---
-title: Rite of Resurrection — RogueLeader
+title: "Reinstall RogueLeader"
 description: Complete reinstallation guide for the domestic dedicated server.
 ---
 

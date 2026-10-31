@@ -1,5 +1,5 @@
 ---
-title: The Sacred Desktop — Plasma 6 & Wayland
+title: "Plasma 6"
 description: SDDM, Plasma 6 configuration, Pipewire audio, XDG portal setup.
 ---
 

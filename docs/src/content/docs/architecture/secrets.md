@@ -1,5 +1,5 @@
 ---
-title: The Reliquary — Secrets & Encryption
+title: "Secrets"
 description: sops-nix, age key management, storage locations, and access patterns.
 ---
 

@@ -1,5 +1,5 @@
 ---
-title: Monitoring & Observabilité
+title: "Monitoring"
 description: Surveillance des services — health checks, timers, logs, Borg backup.
 ---
 

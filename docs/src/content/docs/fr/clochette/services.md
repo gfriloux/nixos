@@ -1,5 +1,5 @@
 ---
-title: Services — Vue d'Ensemble
+title: "Services"
 description: Patterns communs — health checks, réseaux Docker, secrets, UIDs/GIDs, dépendances.
 ---
 
@@ -24,7 +24,7 @@ redémarrages et notifications (voir [Notifications de Pannes](notifications.md)
 ## Réseaux Docker
 
 Les containers publiés par la passerelle pangolin rejoignent le réseau `web`,
-où `newt` les joint par leur nom (voir [La Porte](../skitarii/gateway.md)).
+où `newt` les joint par leur nom (voir [La Porte](../skitarii/gateway.mdx)).
 Les containers à usage interne (bases de données) ont leur propre réseau isolé.
 
 ```nix

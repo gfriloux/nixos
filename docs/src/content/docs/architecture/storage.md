@@ -1,5 +1,5 @@
 ---
-title: Vaults of the Machine-Spirit — Storage & Filesystems
+title: "Storage"
 description: ZFS configuration on exampleHost, ext4 on clochette, RogueLeader and skitarii, backup strategies.
 ---
 

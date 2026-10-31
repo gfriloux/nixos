@@ -1,5 +1,5 @@
 ---
-title: Reliquaires & Systèmes de Fichiers
+title: "Stockage"
 description: Configuration du stockage et des datasets — ZFS pour exampleHost, ext4 pour clochette, RogueLeader et skitarii.
 ---
 

@@ -1,5 +1,5 @@
 ---
-title: La Catéchèse
+title: "Introduction"
 description: Doctrine opérationnelle de la Forge KURI — un flake NixOS personnel régissant quatre sanctuaires-machines.
 ---
 

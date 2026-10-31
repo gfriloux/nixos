@@ -44,9 +44,10 @@ just docs-preview   # serve the built dist
 
 **Key config invariants** (`docs/astro.config.mjs`):
 
-- `base` is extracted as a `const` at the top and reused everywhere — including the `grimoire-fx.js` script src (`${base}/grimoire-fx.js`) and hero action links in `index.mdx` (`/nixos/introduction/`). Starlight does NOT auto-prefix absolute paths with the base.
+- `base` is extracted as a `const` at the top and reused everywhere — including hero action links in `index.mdx` (`/nixos/introduction/`). Starlight does NOT auto-prefix absolute paths with the base.
 - Starlight 0.39+ requires `autogenerate` to be wrapped in `items`: `items: [{ autogenerate: { directory: '...' } }]`.
 - Content config lives at `src/content.config.ts` (Astro v6 — the old `src/content/config.ts` location is gone).
+- Diagrams are archify specs in `docs/diagrams/<name>.architecture.json` (one `.fr` copy per diagram), rendered to `docs/public/diagrams/<name>.html` with `node ~/.claude/skills/archify/bin/archify.mjs deliver architecture <spec> <html> --quality showcase`, and embedded with `src/components/Archify.astro` (embed mode, theme synced with Starlight's toggle).
 - Custom `Header.astro` component moves the search bar into the right group (next to ThemeSelect/LanguageSelect) — the default Starlight header centers it.
 
 **CI**: `.github/workflows/docs.yml` — triggers on push to `main` when `docs/**` changes, builds with Node 22, deploys to GitHub Pages via `actions/upload-pages-artifact` + `actions/deploy-pages`.

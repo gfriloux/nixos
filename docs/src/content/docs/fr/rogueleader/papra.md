@@ -1,5 +1,5 @@
 ---
-title: Papra
+title: "Papra"
 description: Gestionnaire de documents — configuration, health check, secrets, exposition.
 ---
 

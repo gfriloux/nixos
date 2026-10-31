@@ -1,5 +1,5 @@
 ---
-title: The Noosphere — Networking & DNS
+title: "Networking & DNS"
 description: Topology, Tailscale integration, firewall rules, and service routing.
 ---
 
@@ -62,7 +62,7 @@ DNS       : 51.159.47.28, 51.159.47.26  (Scaleway nameservers)
 ## Open Ports on clochette
 
 None on the public interface. `newt` opens an outbound tunnel to the pangolin
-gateway on skitarii, which terminates TLS (see [The Gate](../skitarii/gateway.md));
+gateway on skitarii, which terminates TLS (see [The Gate](../skitarii/gateway.mdx));
 SSH answers on Tailscale only.
 
 ## SMTP — Note on Scaleway

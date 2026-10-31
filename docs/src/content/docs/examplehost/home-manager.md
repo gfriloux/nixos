@@ -1,5 +1,5 @@
 ---
-title: The Sanctum — Home Manager on exampleHost
+title: "Home Manager"
 description: User environment configuration, SSH setup, shell variables, and Git signing.
 ---
 

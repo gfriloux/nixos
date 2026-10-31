@@ -1,5 +1,5 @@
 ---
-title: Rite of Resurrection — clochette
+title: "Reinstall clochette"
 description: Complete reinstallation guide for the VPS on Scaleway with its bound daemons.
 ---
 

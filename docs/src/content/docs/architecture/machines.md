@@ -1,5 +1,5 @@
 ---
-title: The Four Machine-Shrines
+title: "Machines"
 description: Details of exampleHost, clochette, RogueLeader, and skitarii — their hardware, roles, and bound daemons.
 ---
 
@@ -81,4 +81,4 @@ box.
 
 **Bound daemons:** pangolin (pangolin.friloux.me), gerbil, traefik, crowdsec,
 crowdsec-manager (crowdsec.friloux.me, behind pangolin SSO). See
-[The Gate](../skitarii/gateway.md).
+[The Gate](../skitarii/gateway.mdx).

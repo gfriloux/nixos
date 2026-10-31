@@ -1,5 +1,5 @@
 ---
-title: Tailscale — Ré-enrôlement
+title: "Ré-enrôlement Tailscale"
 description: Procédure de ré-enrôlement Tailscale après réinstallation — authentification, vérification.
 ---
 

@@ -1,5 +1,5 @@
 ---
-title: Configuration ZFS
+title: "ZFS"
 description: Pools ZFS, datasets, snapshots, zrepl, maintenance — exampleHost.
 ---
 

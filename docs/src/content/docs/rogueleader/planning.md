@@ -1,5 +1,5 @@
 ---
-title: Design & Prerequisites — RogueLeader Architecture
+title: "Design & prerequisites"
 description: Disk partitioning with disko, local network access, and future enhancements.
 ---
 

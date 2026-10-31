@@ -1,5 +1,5 @@
 ---
-title: Réinstallation — exampleHost
+title: "Réinstaller exampleHost"
 description: Guide complet de réinstallation — partitionnement, secrets, première démarrage, vérification.
 ---
 

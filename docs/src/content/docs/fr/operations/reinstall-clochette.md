@@ -1,5 +1,5 @@
 ---
-title: Réinstallation — clochette
+title: "Réinstaller clochette"
 description: Guide complet de réinstallation du VPS Scaleway — mode rescue, partitionnement, secrets, vérification.
 ---
 

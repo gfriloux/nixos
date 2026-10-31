@@ -1,5 +1,5 @@
 ---
-title: The Astropath & Observability — Monitoring Services
+title: "Monitoring"
 description: Health checks, container status, Borg backups, and log inspection.
 ---
 

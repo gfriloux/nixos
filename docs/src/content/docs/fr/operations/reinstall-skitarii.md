@@ -1,5 +1,5 @@
 ---
-title: Réinstallation — skitarii
+title: "Réinstaller skitarii"
 description: Réinstaller le VPS OVH depuis le mode rescue avec nixos-anywhere — clé hôte, nom du disque, Tailscale.
 ---
 

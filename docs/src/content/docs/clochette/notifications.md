@@ -1,5 +1,5 @@
 ---
-title: The Astropath — Container Failure Notifications
+title: "Failure notifications"
 description: STC's docker-notify relic — health watch timers, failure detection, and ntfy.sh alerts.
 ---
 

@@ -1,5 +1,5 @@
 ---
-title: The Ethereal Link — Tailscale Re-enrollment
+title: "Tailscale re-enrollment"
 description: Connecting shrines to the Tailscale mesh after reinstallation or network changes.
 ---
 

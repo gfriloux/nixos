@@ -1,0 +1,33 @@
+---
+// Embeds an archify diagram (public/diagrams/<name>.html) in embed mode and keeps
+// its light/dark theme in step with Starlight's theme toggle.
+// Sources live in docs/diagrams/<name>.architecture.json.
+interface Props { name: string; title: string; caption?: string; ratio?: string }
+const { name, title, caption, ratio = '1150 / 660' } = Astro.props;
+const src = `${import.meta.env.BASE_URL.replace(/\/$/, '')}/diagrams/${name}.html`;
+const open = Astro.currentLocale === 'fr' ? 'Ouvrir le schéma interactif (zoom, recherche).' : 'Open the interactive diagram (zoom, search).';
+---
+
+<figure class="lb-frame archify">
+  <iframe data-archify={src} title={title} loading="lazy" style={`aspect-ratio: ${ratio}`}></iframe>
+  <figcaption>
+    {caption} <a href={src} target="_blank" rel="noopener">{open}</a>
+  </figcaption>
+</figure>
+
+<script>
+  const sync = () => {
+    const theme = document.documentElement.dataset.theme === 'light' ? 'light' : 'dark';
+    document.querySelectorAll<HTMLIFrameElement>('iframe[data-archify]').forEach((f) => {
+      const url = `${f.dataset.archify}?embed=1&theme=${theme}`;
+      if (f.getAttribute('src') !== url) f.setAttribute('src', url);
+    });
+  };
+  sync();
+  new MutationObserver(sync).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+</script>
+
+<style>
+  .archify { padding: 0.5rem; }
+  iframe { display: block; width: 100%; height: auto; border: 0; }
+</style>

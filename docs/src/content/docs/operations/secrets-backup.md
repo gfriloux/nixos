@@ -1,5 +1,5 @@
 ---
-title: Reliquary Backup & Restoration — Age Key Management
+title: "Age key backup"
 description: Who holds which key, how to edit secrets with the YubiKey, and how to recover from a lost key or a reinstall.
 ---
 

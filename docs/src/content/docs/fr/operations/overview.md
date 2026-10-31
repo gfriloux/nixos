@@ -1,6 +1,9 @@
 ---
-title: Rites Opérationnels — Vue d'Ensemble
+title: "Exploitation"
 description: Procédures opérationnelles — déploiement, secrets, surveillance, dépannage, réinstallation.
+sidebar:
+  order: 1
+  label: "Vue d’ensemble"
 ---
 
 Cette section regroupe toutes les procédures opérationnelles de la Forge.

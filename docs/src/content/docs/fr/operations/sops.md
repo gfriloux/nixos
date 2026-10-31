@@ -1,5 +1,5 @@
 ---
-title: sops-nix & Secrets
+title: "sops-nix"
 description: Gestion quotidienne des secrets — édition, lecture, ajout, rotation.
 ---
 

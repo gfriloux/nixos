@@ -1,6 +1,9 @@
 ---
-title: skitarii — The Gate-Shrine
+title: "skitarii"
 description: OVH VPS-1, pangolin gateway (POC). SSH over Tailscale, sops, static IPv6.
+sidebar:
+  order: 1
+  label: "Overview"
 ---
 
 Behold skitarii — the gate-shrine, raised on an OVH VPS-1 to stand before

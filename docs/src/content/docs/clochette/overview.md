@@ -1,6 +1,9 @@
 ---
-title: clochette — The VPS-Shrine
+title: "clochette"
 description: Scaleway VPS hosting Immich, published through the pangolin gateway, with Docker-based bound daemons.
+sidebar:
+  order: 1
+  label: "Overview"
 ---
 
 Behold clochette — the VPS-shrine exposed to the noosphere, where bound daemons serve personal domains across the network frontier.
@@ -20,7 +23,7 @@ Behold clochette — the VPS-shrine exposed to the noosphere, where bound daemon
 publishes it, and `newt` carries the traffic through an outbound tunnel to
 `immich-server` on the `web` network (created by `docker-newt.nix`). TLS,
 crowdsec and the certificates live on skitarii (see
-[The Gate](../skitarii/gateway.md)). clochette runs no traefik and no crowdsec
+[The Gate](../skitarii/gateway.mdx)). clochette runs no traefik and no crowdsec
 and opens no web port; SSH is reachable over Tailscale only.
 
 No pangolin SSO on this resource: the Immich mobile app could not get through

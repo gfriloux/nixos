@@ -1,5 +1,5 @@
 ---
-title: BookStack
+title: "BookStack"
 description: Wiki personnel — stack Docker, données, health checks, backup/restauration.
 ---
 

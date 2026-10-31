@@ -1,5 +1,5 @@
 ---
-title: Rite of Resurrection — skitarii
+title: "Reinstall skitarii"
 description: Reinstalling the OVH VPS from the rescue mode with nixos-anywhere — host key, disk naming, Tailscale.
 ---
 

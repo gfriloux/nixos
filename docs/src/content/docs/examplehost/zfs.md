@@ -1,5 +1,5 @@
 ---
-title: Pools & Mirrors — ZFS on exampleHost
+title: "ZFS"
 description: Commands for inspecting and maintaining ZFS mirrors, snapshots, and the zrepl backup system.
 ---
 

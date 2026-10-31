@@ -1,5 +1,5 @@
 ---
-title: Restauration des Données depuis Borg
+title: "Restaurer depuis Borg"
 description: Ce que contient chaque archive Borg, ce qu'elle exclut volontairement, et comment remettre chaque base en service.
 ---
 

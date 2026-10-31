@@ -1,6 +1,9 @@
 ---
-title: Géométrie Sacrée — Vue d'ensemble de l'architecture
+title: "Architecture"
 description: Structure de la Forge KURI — snowfall-lib, motifs de déploiement, reliquaires, et services liés.
+sidebar:
+  order: 1
+  label: "Vue d’ensemble"
 ---
 
 La Forge est structurée comme un flake NixOS snowfall-lib, ses quatre sanctuaires-machines déclarés sous `systems/x86_64-linux/` et ses démons liés gérés par des motifs sacrés composables.
@@ -33,7 +36,7 @@ publiés par la passerelle pangolin de skitarii. Chaque machine fait tourner un
 container `newt` qui porte le trafic par un tunnel sortant : aucune des deux ne
 fait tourner traefik ou crowdsec, ni n'ouvre de port web. Le traefik de skitarii
 gère les certificats Let's Encrypt et son CrowdSec garde toutes les routes. Voir
-[La Porte](../skitarii/gateway.md).
+[La Porte](../skitarii/gateway.mdx).
 
 ## L'Astropathe
 

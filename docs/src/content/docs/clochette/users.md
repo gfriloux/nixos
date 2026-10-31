@@ -1,5 +1,5 @@
 ---
-title: Pilgrims & Sanctums — System Users & Home Manager
+title: "Users"
 description: User accounts (guillaume, weechat), SSH keys, and Home Manager configuration.
 ---
 

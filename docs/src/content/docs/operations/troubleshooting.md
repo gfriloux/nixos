@@ -1,5 +1,5 @@
 ---
-title: Diagnosis & Recovery — Troubleshooting
+title: "Troubleshooting"
 description: Common issues and diagnostic procedures for the Forge.
 ---
 
@@ -50,7 +50,7 @@ sudo docker exec crowdsec cscli decisions list --ip <IP>
 ```
 
 The rest (bouncer, certificates, resources) is in
-[The Gate](../skitarii/gateway.md).
+[The Gate](../skitarii/gateway.mdx).
 
 ## sops Cannot Decrypt Secrets
 

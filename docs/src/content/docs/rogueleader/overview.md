@@ -1,6 +1,9 @@
 ---
-title: RogueLeader — The Home-Shrine
+title: "RogueLeader"
 description: Domestic dedicated server with Borg, Mealie, Uptime Kuma, Papra, and BookStack (public via the pangolin gateway).
+sidebar:
+  order: 1
+  label: "Overview"
 ---
 
 Behold RogueLeader — the home-shrine, tending the domestic sanctuary on the local network frontier at `192.168.0.10`.
@@ -35,7 +38,7 @@ Every web daemon (mealie, borg-ui, uptime-kuma, papra, BookStack) is published
 by the pangolin gateway on skitarii: each name is a CNAME to
 `skitarii.friloux.me`, and `newt` carries the traffic through an outbound tunnel
 to the containers on the `web` network. TLS, crowdsec and the certificates live
-on skitarii (see [The Gate](../skitarii/gateway.md)). RogueLeader runs no
+on skitarii (see [The Gate](../skitarii/gateway.mdx)). RogueLeader runs no
 traefik and no crowdsec, opens no web port, and needs no port-forward on the
 box.
 

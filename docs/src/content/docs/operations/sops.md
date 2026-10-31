@@ -1,5 +1,5 @@
 ---
-title: The Reliquary & sops-nix — Daily Secret Management
+title: "sops-nix"
 description: Unsealing and rotating secrets, declaring new secrets, adding machines to the keychain.
 ---
 

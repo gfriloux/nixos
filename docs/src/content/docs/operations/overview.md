@@ -1,6 +1,9 @@
 ---
-title: Rites Opérationnels — Deployment & Maintenance
+title: "Operations"
 description: Common operations, emergency recovery, and diagnostic procedures for the KURI Forge.
+sidebar:
+  order: 1
+  label: "Overview"
 ---
 
 This section gathers all operational ceremonies — from daily maintenance to emergency rites and recovery from calamity.

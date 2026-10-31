@@ -1,5 +1,5 @@
 ---
-title: BookStack — The Personal Wiki
+title: "BookStack"
 description: Wiki service at wow-cp.friloux.me with MariaDB backend and automated backups.
 ---
 

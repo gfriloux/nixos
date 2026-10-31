@@ -1,5 +1,5 @@
 ---
-title: Plasma 6
+title: "Plasma 6"
 description: Configuration de KDE Plasma 6 en Wayland — SDDM, thème, audio pipewire.
 ---
 

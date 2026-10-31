@@ -1,5 +1,5 @@
 ---
-title: Réseau & Noosphère
+title: "Réseau & DNS"
 description: Topologie du réseau — Tailscale, DNS, réseaux Docker, pare-feu.
 ---
 
@@ -65,7 +65,7 @@ DNS      : 51.159.47.28, 51.159.47.26  (Scaleway)
 
 Aucun sur l'interface publique. `newt` ouvre un tunnel sortant vers la
 passerelle pangolin de skitarii, qui termine le TLS (voir
-[La Porte](../skitarii/gateway.md)) ; SSH ne répond que par Tailscale.
+[La Porte](../skitarii/gateway.mdx)) ; SSH ne répond que par Tailscale.
 
 :::caution[Garde]
 Scaleway bloque les ports 465 et 587 par défaut.

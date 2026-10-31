@@ -1,6 +1,9 @@
 ---
-title: rogueleader — Serveur Dédié
+title: "RogueLeader"
 description: Configuration du serveur dédié domestique — services Docker internes, Papra et BookStack publics via la passerelle pangolin, backup.
+sidebar:
+  order: 1
+  label: "Vue d’ensemble"
 ---
 
 Serveur dédié domestique hébergeant les services internes : monitoring de disponibilité, gestion de recettes, interface backup.
@@ -35,7 +38,7 @@ Chaque service web (mealie, borg-ui, uptime-kuma, papra, BookStack) est publié
 par la passerelle pangolin de skitarii : chaque nom est un CNAME vers
 `skitarii.friloux.me`, et `newt` achemine le trafic par un tunnel sortant
 jusqu'aux conteneurs du réseau `web`. TLS, crowdsec et les certificats vivent sur
-skitarii (voir [La Porte](../skitarii/gateway.md)). RogueLeader ne fait tourner
+skitarii (voir [La Porte](../skitarii/gateway.mdx)). RogueLeader ne fait tourner
 ni traefik ni crowdsec, n'ouvre aucun port web et n'a besoin d'aucune
 redirection de port sur la box.
 

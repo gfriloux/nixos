@@ -1,5 +1,5 @@
 ---
-title: Rite of Resurrection — exampleHost
+title: "Reinstall exampleHost"
 description: Complete reinstallation guide for the workstation-shrine with ZFS mirrors and AMD GPU.
 ---
 

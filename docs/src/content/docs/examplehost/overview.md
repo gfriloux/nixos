@@ -1,6 +1,9 @@
 ---
-title: exampleHost — The Workstation-Shrine
+title: "exampleHost"
 description: Primary machine-shrine running Plasma 6 on NixOS with ZFS mirror storage.
+sidebar:
+  order: 1
+  label: "Overview"
 ---
 
 Behold exampleHost — the Techpriest's primary workstation, where the machine-spirit tends both labour and leisure. A ZFS-mirrored sanctuary running NixOS with Plasma 6 at its core.

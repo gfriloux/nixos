@@ -1,10 +1,11 @@
 ---
-title: The Gate — Pangolin, Gerbil, Traefik & CrowdSec
+title: "Gateway"
 description: How the pangolin gateway on skitarii is wired, what lives where, and the traps already met.
 ---
 
-The gate-shrine runs the pangolin stack, backed up nightly to storage2,
-with healthchecks and ntfy notifications on every container.
+import Archify from '../../../components/Archify.astro';
+
+<Archify name="web-flow" title="Web traffic through the pangolin gateway" caption="Every public service enters through skitarii. clochette and RogueLeader publish no port: newt opens the tunnel outward." />
 
 ## Layout
 

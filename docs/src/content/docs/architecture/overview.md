@@ -1,6 +1,9 @@
 ---
-title: Sacred Geometry — Architecture Overview
+title: "Architecture"
 description: Structure of the KURI Forge — snowfall-lib, deployment patterns, secrets, and services.
+sidebar:
+  order: 1
+  label: "Overview"
 ---
 
 The Forge is structured as a snowfall-lib NixOS flake, its four machine-shrines declared beneath `systems/x86_64-linux/` and its bound daemons managed through composable sacred patterns.
@@ -32,7 +35,7 @@ All web services run as bound daemons (Docker containers) published by the
 pangolin gateway on skitarii. Each host runs a `newt` container that carries the
 traffic through an outbound tunnel: neither host runs traefik or crowdsec, nor
 opens a web port. skitarii's traefik manages the Let's Encrypt certificates and
-its CrowdSec guards every route. See [The Gate](../skitarii/gateway.md).
+its CrowdSec guards every route. See [The Gate](../skitarii/gateway.mdx).
 
 ## The Astropath
 

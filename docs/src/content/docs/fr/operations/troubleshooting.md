@@ -1,5 +1,5 @@
 ---
-title: Dépannage
+title: "Dépannage"
 description: Problèmes courants et procédures de diagnostic — containers, secrets, SSH, ZFS.
 ---
 
@@ -51,7 +51,7 @@ sudo docker exec crowdsec cscli decisions list --ip <IP>
 ```
 
 La suite (bouncer, certificats, ressources) est dans
-[La Porte](../skitarii/gateway.md).
+[La Porte](../skitarii/gateway.mdx).
 
 ## sops ne Peut pas Déchiffrer les Secrets
 

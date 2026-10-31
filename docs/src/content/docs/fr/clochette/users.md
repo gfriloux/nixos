@@ -1,5 +1,5 @@
 ---
-title: Utilisateurs & Homes
+title: "Utilisateurs"
 description: Profils utilisateurs — guillaume (admin), weechat (IRC persistante).
 ---
 

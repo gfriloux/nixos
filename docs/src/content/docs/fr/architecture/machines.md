@@ -1,5 +1,5 @@
 ---
-title: Sanctuaires-Machines
+title: "Machines"
 description: Spécifications des quatre sanctuaires-machines — exampleHost, clochette, RogueLeader, skitarii.
 ---
 
@@ -81,4 +81,4 @@ redirection de port sur la box.
 
 Services Docker : pangolin (pangolin.friloux.me), gerbil, traefik, crowdsec,
 crowdsec-manager (crowdsec.friloux.me, derrière le SSO pangolin). Voir
-[La Porte](../skitarii/gateway.md).
+[La Porte](../skitarii/gateway.mdx).

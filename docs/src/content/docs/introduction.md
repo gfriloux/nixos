@@ -1,5 +1,5 @@
 ---
-title: The Catechism
+title: "Introduction"
 description: Operational doctrine of the KURI Forge — a personal NixOS flake governing four machine-shrines and the reliquaries that guard their secrets.
 ---
 

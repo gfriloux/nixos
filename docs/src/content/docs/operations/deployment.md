@@ -1,5 +1,5 @@
 ---
-title: Rites of Anointment — Deployment Commands
+title: "Deployment"
 description: Building and deploying NixOS configurations to exampleHost, clochette, and RogueLeader.
 ---
 

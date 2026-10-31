@@ -1,5 +1,5 @@
 ---
-title: Sauvegarde & Restauration des Secrets
+title: "Sauvegarde des clés age"
 description: Qui détient quelle clé, éditer les secrets avec la YubiKey, et se remettre d'une clé perdue ou d'une réinstallation.
 ---
 

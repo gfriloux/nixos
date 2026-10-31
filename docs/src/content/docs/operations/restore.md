@@ -1,5 +1,5 @@
 ---
-title: Rite of Restoration — Service Data from Borg
+title: "Restore from Borg"
 description: What each Borg archive holds, what it deliberately leaves out, and how to bring every database back.
 ---
 

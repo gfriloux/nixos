@@ -1,6 +1,9 @@
 ---
-title: skitarii — Le Sanctuaire-Porte
+title: "skitarii"
 description: VPS-1 OVH, passerelle pangolin (POC). SSH via Tailscale, sops, IPv6 statique.
+sidebar:
+  order: 1
+  label: "Vue d’ensemble"
 ---
 
 Voici skitarii — le sanctuaire-porte, dressé sur un VPS-1 OVH comme point

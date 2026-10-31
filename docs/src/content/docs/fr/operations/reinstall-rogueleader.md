@@ -1,5 +1,5 @@
 ---
-title: Réinstallation — RogueLeader
+title: "Réinstaller RogueLeader"
 description: Guide complet de réinstallation du serveur dédié — disko, secrets, restauration Borg.
 ---
 

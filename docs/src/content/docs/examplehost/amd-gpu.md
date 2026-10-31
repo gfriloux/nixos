@@ -1,5 +1,5 @@
 ---
-title: The Machine-Vision — AMD GPU Configuration
+title: "AMD GPU"
 description: AMDGPU driver setup, verification, and Wayland integration with Plasma 6.
 ---
 

@@ -1,5 +1,5 @@
 ---
-title: Commandes de Déploiement
+title: "Déploiement"
 description: Référence des commandes de construction et de déploiement — build, install, rollback.
 ---
 

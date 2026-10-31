@@ -1,6 +1,9 @@
 ---
-title: clochette — Serveur VPS
+title: "clochette"
 description: Configuration du VPS Scaleway — services Docker, exposition via la passerelle pangolin, utilisateurs.
+sidebar:
+  order: 1
+  label: "Vue d’ensemble"
 ---
 
 VPS Scaleway hébergeant les services web personnels, publiés par la passerelle pangolin de skitarii.
@@ -19,7 +22,7 @@ VPS Scaleway hébergeant les services web personnels, publiés par la passerelle
 `photos.friloux.me` est un CNAME vers `skitarii.friloux.me` : la passerelle
 pangolin le publie, et `newt` porte le trafic par un tunnel sortant jusqu'à
 `immich-server` sur le réseau `web` (créé par `docker-newt.nix`). TLS, crowdsec
-et les certificats vivent sur skitarii (voir [La Porte](../skitarii/gateway.md)).
+et les certificats vivent sur skitarii (voir [La Porte](../skitarii/gateway.mdx)).
 clochette ne fait tourner ni traefik ni crowdsec et n'ouvre aucun port web ; SSH
 n'est joignable que par Tailscale.
 

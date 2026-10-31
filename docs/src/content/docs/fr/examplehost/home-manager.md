@@ -1,5 +1,5 @@
 ---
-title: Home Manager
+title: "Home Manager"
 description: Configuration de l'environnement utilisateur kuri — SSH, Fish, Git, Secrets.
 ---
 

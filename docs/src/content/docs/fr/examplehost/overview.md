@@ -1,6 +1,9 @@
 ---
-title: exampleHost — Sanctuaire de Travail
+title: "exampleHost"
 description: Configuration du sanctuaire de travail principal — Plasma 6, ZFS, AMD GPU, Home Manager.
+sidebar:
+  order: 1
+  label: "Vue d’ensemble"
 ---
 
 Sanctuaire de travail principal. Bureau KDE Plasma 6 sur NixOS avec ZFS en miroir, GPU AMD, et environnement utilisateur entièrement géré par Home Manager.

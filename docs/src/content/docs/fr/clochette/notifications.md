@@ -1,5 +1,5 @@
 ---
-title: Notifications de Pannes
+title: "Notifications de panne"
 description: Relic docker-notify de STC — surveillance automatique, timers, flux ntfy.sh.
 ---
 

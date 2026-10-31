@@ -1,5 +1,5 @@
 ---
-title: Bound Daemons — Common Patterns
+title: "Services"
 description: Health checks, Docker networks, secrets, UIDs, and startup dependencies.
 ---
 
@@ -24,7 +24,7 @@ restarts and notifications (see [The Astropath](notifications.md)).
 ## Docker Networks
 
 Containers published through the pangolin gateway join the `web` network,
-where `newt` reaches them by name (see [The Gate](../skitarii/gateway.md)).
+where `newt` reaches them by name (see [The Gate](../skitarii/gateway.mdx)).
 Containers for internal use (databases) have their own isolated network.
 
 ```nix

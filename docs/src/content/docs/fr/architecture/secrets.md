@@ -1,5 +1,5 @@
 ---
-title: Reliquaires de Secrets
+title: "Secrets"
 description: Gestion des secrets via sops-nix et age — modèle de clés, fichiers chiffrés, références.
 ---
 
