@@ -1,46 +1,21 @@
 ---
 title: "Utilisateurs"
-description: Profils utilisateurs — guillaume (admin), weechat (IRC persistante).
+description: "Comptes de clochette : guillaume (admin), weechat (IRC persistant)."
 ---
 
-Deux utilisateurs gèrent le sanctuaire clochette : l'administrateur et le gardien de la session IRC.
-
-## guillaume
-
-Utilisateur admin principal.
-
-| Paramètre | Valeur |
-|---|---|
-| Shell | fish |
-| Groupes | `wheel`, `docker` |
-| Mot de passe | sops (`users/guillaume/hashed-password`, `neededForUsers = true`) |
-| SSH | clé ed25519 + clé sk-ssh-ed25519 (YubiKey) |
-| Home Manager | `homes/x86_64-linux/guillaume@clochette/` |
-
-## weechat
-
-Utilisateur dédié à la session IRC persistante.
-
-| Paramètre | Valeur |
-|---|---|
-| Shell | fish |
-| Groupes | — |
-| SSH | clé ed25519 + clé sk-ssh-ed25519 (YubiKey weechat) |
-| Home Manager | `homes/x86_64-linux/weechat@clochette/` |
-
-Le shell et SSH sont intentionnels : l'utilisateur `weechat` est utilisé
-pour attacher à une session zellij/weechat persistante.
+| | `guillaume` | `weechat` |
+|---|---|---|
+| Rôle | admin | session IRC persistante (zellij + weechat) |
+| Shell | fish | fish (voulu) |
+| Groupes | `wheel`, `docker` | aucun |
+| Mot de passe | sops `users/guillaume/hashed-password` (`neededForUsers = true`) | aucun |
+| SSH | ed25519 + sk-ssh-ed25519 (YubiKey) | ed25519 + sk-ssh-ed25519 (YubiKey weechat) |
+| Home Manager | `homes/x86_64-linux/guillaume@clochette/` | `homes/x86_64-linux/weechat@clochette/` |
 
 ```bash
-# Se connecter à la session IRC
-ssh irc.friloux.me
+ssh irc.friloux.me   # en tant que weechat
 zellij attach
 ```
 
-## Politique
-
-`users.mutableUsers = false` — NixOS gère entièrement `/etc/shadow`.
-Toute modification de mot de passe passe par sops + redéploiement.
-
-Les clés SSH autorisées sont déclarées directement dans `users.nix`
-(hardcodées, pas via sops) car elles ne sont pas secrètes.
+- `users.mutableUsers = false` : un changement de mot de passe passe par sops + redéploiement.
+- Les clés SSH autorisées sont dans `users.nix`, pas dans sops (elles ne sont pas secrètes).

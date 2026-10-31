@@ -34,12 +34,7 @@ Scaleway blocks outbound 465 and 587: no direct mail. Notifications go through n
 
 ## Users
 
-| User | Shell | Role |
-|---|---|---|
-| `guillaume` | fish | admin, `wheel` + `docker` |
-| `weechat` | fish | persistent IRC session in zellij |
-
-SSH keys: ed25519 and sk-ssh-ed25519 (YubiKey). Details: [Users](/nixos/clochette/users/).
+`guillaume` (admin) and `weechat` (persistent IRC): [Users](/nixos/clochette/users/).
 
 ## Data and backup
 

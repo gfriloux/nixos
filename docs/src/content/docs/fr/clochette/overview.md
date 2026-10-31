@@ -34,12 +34,7 @@ Scaleway bloque le 465 et le 587 en sortie : pas de mail direct. Les notificatio
 
 ## Utilisateurs
 
-| Utilisateur | Shell | Rôle |
-|---|---|---|
-| `guillaume` | fish | admin, `wheel` + `docker` |
-| `weechat` | fish | session IRC persistante dans zellij |
-
-Clés SSH : ed25519 et sk-ssh-ed25519 (YubiKey). Détails : [Utilisateurs](/nixos/fr/clochette/users/).
+`guillaume` (admin) et `weechat` (IRC persistant) : [Utilisateurs](/nixos/fr/clochette/users/).
 
 ## Données et sauvegarde
 
