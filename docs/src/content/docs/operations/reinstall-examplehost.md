@@ -71,7 +71,7 @@ No GRUB at boot: it is installed as removable, pick the NVMe in the UEFI menu.
 ## 6. After the first boot
 
 1. Log in as `kuri` (sops password).
-2. Tailscale: [Tailscale re-enrollment](/nixos/operations/tailscale/).
+2. Tailscale: [Tailscale](/nixos/operations/tailscale/).
 3. Recover the copied repository and commit the new key:
 
    ```bash

@@ -1,132 +1,51 @@
 ---
-title: "Tailscale re-enrollment"
-description: Connecting shrines to the Tailscale mesh after reinstallation or network changes.
+title: "Tailscale"
+description: Who is on the tailnet, enrolling a machine, what to do without SSH.
 ---
 
-Procedure to re-enroll a shrine with Tailscale after reinstallation.
+Tailscale SaaS, GitHub account `gfriloux`.
 
-## Current Topology
-
-| Shrine | Tailscale Role | SSH Access |
+| Machine | Tailnet | SSH |
 |---|---|---|
-| exampleHost | client/admin | via Tailscale or local |
-| clochette | exposed server | **only via Tailscale** |
-| RogueLeader | internal server | via local network or Tailscale |
-| skitarii | exposed server (pangolin gateway) | **only via Tailscale** |
+| exampleHost | yes | local |
+| clochette | yes, `clochette` | tailnet only (`100.64.0.0/10` + trusted `tailscale0`) |
+| skitarii | yes, `skitarii` | tailnet only (trusted `tailscale0`) |
+| RogueLeader | **no** | LAN, `192.168.0.10` |
 
-SSH to clochette is accessible only from `100.64.0.0/10` (Tailscale subnet).
-After reinstall without Tailscale operational, use the serial console.
+exampleHost's ssh block targets the MagicDNS names (`HostName = "clochette"`).
 
-## Before Reinstalling — Delete Old Entry
+## Enroll
 
-From the Tailscale Admin panel:
-<https://login.tailscale.com/admin/machines>
-
-Find the shrine (state "offline" or "expired"), then **Delete** or **Expire**.
-
-If not deleted, re-enrollment creates a duplicate with the same hostname.
-
-## Standard Re-enrollment (Interactive Method)
-
-On the shrine to enroll:
+1. [Admin console](https://login.tailscale.com/admin/machines): delete the
+   old entry, otherwise the node becomes `clochette-1` and the ssh block
+   points at a dead name.
+2. On the machine: `sudo tailscale up`, open the URL.
+3. Admin console, on the line: **⋯ → Disable key expiry**.
+4. From exampleHost:
 
 ```bash
-sudo tailscale up
+tailscale status --json | jq '.Peer[] | select(.HostName=="clochette") | {TailscaleIPs, KeyExpiry}'   # no KeyExpiry = disabled
+ssh-keygen -R clochette
+ssh clochette.friloux.me true
 ```
 
-Tailscale displays an authentication URL:
+No browser: [generate a one-time auth key](https://login.tailscale.com/admin/settings/keys),
+`sudo tailscale up --authkey=tskey-auth-…`, then delete it.
 
-```text
-To authenticate, visit:
+## Without SSH
 
-        https://login.tailscale.com/a/XXXXXXXXXX
-```
+The tailnet is the only SSH door to clochette and skitarii: without it, no
+deploy gets through.
 
-Open the URL in a browser, log into Tailscale, approve the shrine.
+| Machine | Fallback |
+|---|---|
+| clochette | Dedibox serial console, login `guillaume`, `sudo tailscale up` |
+| skitarii | No console: [reinstall](/nixos/operations/reinstall-skitarii/) |
 
-Verify:
+Diagnosis, once connected:
 
 ```bash
 tailscale status
-# The shrine should appear in the list with a 100.x.x.x address
-```
-
-## Re-enrollment Without Browser (authkey)
-
-If the server has no graphical interface and the serial console cannot easily display the URL, generate an authkey from the panel:
-
-1. Go to <https://login.tailscale.com/admin/settings/keys>
-2. **Generate auth key** → One-time use, no short expiration
-3. Copy the key
-
-On the shrine:
-
-```bash
-sudo tailscale up --authkey=tskey-auth-XXXXXXXXXXXXXXXX
-```
-
-The shrine enrols without browser interaction.
-
-:::note[Marginalia]
-Delete the authkey from the panel after use.
-:::
-
-## Connectivity Verification
-
-From exampleHost, after enrollment:
-
-```bash
-# Global status
-tailscale status
-
-# Latency to clochette
-tailscale ping clochette
-
-# SSH via Tailscale
-ssh guillaume@clochette.friloux.me
-
-# SSH to RogueLeader
-ssh guillaume@rogueleader.home
-```
-
-## If SSH Remains Inaccessible After Enrollment
-
-On clochette, verify the firewall rule (from serial console):
-
-```bash
-# Rule should accept port 22 from 100.64.0.0/10
-sudo nft list ruleset | grep -A3 "100.64"
-# or
-sudo iptables -L INPUT -n | grep 22
-```
-
-Verify the Tailscale interface is `tailscale0`:
-
-```bash
 ip link show tailscale0
-tailscale ip -4
+sudo nft list ruleset | grep -A3 100.64     # clochette
 ```
-
-If the interface has a different name, verify NixOS config:
-
-```nix
-# clochette/default.nix
-networking.firewall.trustedInterfaces = ["tailscale0"];
-```
-
-## Re-enrollment Without Console Access (Emergency)
-
-If the serial console is unreachable and Tailscale is not operational,
-the only option is to temporarily open public SSH.
-
-Edit `clochette/network.nix` to add a temporary rule:
-
-```nix
-networking.firewall.extraInputRules = ''
-  ip saddr 100.64.0.0/10 tcp dport 22 accept
-  ip saddr YOUR.PUBLIC.IP.HERE tcp dport 22 accept  # temporary
-'';
-```
-
-Deploy from exampleHost, complete Tailscale re-enrollment,
-then **immediately** remove the temporary rule and redeploy.

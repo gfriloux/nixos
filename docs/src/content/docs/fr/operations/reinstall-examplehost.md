@@ -71,7 +71,7 @@ GRUB absent au boot : il est installé en mode amovible, choisir le NVMe dans le
 ## 6. Après le premier boot
 
 1. Se connecter en `kuri` (mot de passe sops).
-2. Tailscale : [Ré-enrôlement Tailscale](/nixos/fr/operations/tailscale/).
+2. Tailscale : [Tailscale](/nixos/fr/operations/tailscale/).
 3. Récupérer le dépôt copié et commiter la nouvelle clé :
 
    ```bash
