@@ -1,121 +1,40 @@
 ---
 title: "Deployment"
-description: Building and deploying NixOS configurations to exampleHost, clochette, and RogueLeader.
+description: just recipes to build, deploy, roll back, update.
 ---
 
-Reference of the rites used to forge and anoint NixOS configurations.
-All `just` commands execute from the repository root.
+From the repository root, on exampleHost.
 
-## exampleHost — Local Sanctification
+| Machine | Build only | Deploy | Access |
+|---|---|---|---|
+| exampleHost | `just build` | `just install` (`nh os switch`, Home Manager included) | local |
+| clochette | `just build_clochette` | `just install_clochette` | Tailscale |
+| skitarii | `just build_skitarii` | `just install_skitarii` | Tailscale |
+| RogueLeader | `just build_rogueleader` | `just install_rogueleader`, `just home_rogueleader` (HM only) | LAN |
+
+Remote deploys use `nixos-rebuild --target-host guillaume@<host>` and ask for the
+sudo password (`--ask-sudo-password` is already in the recipe).
+
+## Before
 
 ```bash
-# Test the configuration without applying it
-just build
-
-# Apply the configuration (equivalent to nixos-rebuild switch)
-just install
+just test          # pre-commit: statix, deadnix, alejandra
+nix flake check    # STC purity seals: nix, gitleaks, markdown
 ```
 
-`just install` executes `nh os switch .`, which applies the system configuration
-and activates Home Manager for the current user.
-
-## clochette — Remote VPS Anointment via Tailscale
+## Roll back
 
 ```bash
-# Build only
-just build_clochette
-
-# Deploy
-just install_clochette --ask-sudo-password
-```
-
-The underlying full command:
-
-```bash
-nixos-rebuild switch \
-  --flake .#clochette \
-  --target-host guillaume@clochette.friloux.me \
-  --sudo \
-  --ask-sudo-password
-```
-
-**Prerequisites**: Tailscale active on both machines, `clochette.friloux.me`
-resolves to the Tailscale IP, and SSH is functional.
-
-## RogueLeader — Home-Shrine Anointment via Local Network
-
-```bash
-# Build only
-just build_rogueleader
-
-# Deploy the system
-just install_rogueleader --ask-sudo-password
-
-# Deploy Home Manager only
-just home_rogueleader
-```
-
-## Pre-deployment Verification
-
-```bash
-# Run all linters (statix, deadnix, alejandra) via pre-commit
-just test
-
-# Evaluate the flake without building
-nix flake check
-```
-
-## Rollback
-
-If a deployment produces an unstable system:
-
-```bash
-# List NixOS generations
 nixos-rebuild list-generations
-
-# Revert to previous generation
-nixos-rebuild switch --rollback
-
-# Or select a specific generation at boot (via GRUB)
+sudo nixos-rebuild switch --rollback   # on the target machine
 ```
 
-For clochette via SSH:
+Or pick an earlier generation in GRUB at reboot.
 
-```bash
-ssh guillaume@clochette.friloux.me \
-  "sudo nixos-rebuild switch --rollback"
-```
+## Other recipes
 
-## Editing Secrets
-
-```bash
-# exampleHost secrets
-just secrets
-
-# clochette secrets
-just secrets_clochette
-
-# RogueLeader secrets
-just secrets_rogueleader
-```
-
-These commands open the encrypted file in `$EDITOR` via `sops`.
-Save and quit automatically re-encrypts.
-
-## Docker Image Security Scan
-
-```bash
-just scan
-```
-
-Runs Trivy on all Docker images in the clochette configuration
-and displays HIGH and CRITICAL vulnerabilities.
-
-## Update Flake Dependencies
-
-```bash
-just update
-```
-
-Updates `flake.lock` with the latest revisions of all inputs.
-Follow with `just build_clochette` to verify nothing breaks.
+| Recipe | Effect |
+|---|---|
+| `just update` | `nix flake update` (build every machine afterwards) |
+| `just secrets`, `just secrets_<machine>` | `sops` on the machine's file, see [Secrets](/nixos/architecture/secrets/) |
+| `just scan` | Trivy (HIGH, CRITICAL) on clochette's Docker images |
