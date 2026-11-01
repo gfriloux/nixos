@@ -4,7 +4,7 @@
 
 Snowfall-lib flake with four systems:
 
-- `clochette` — VPS (Scaleway), Docker-based services published through the pangolin gateway
+- `clochette` — dedicated server (Scaleway Dedibox), Docker-based services published through the pangolin gateway
 - `exampleHost` — desktop workstation (ZFS mirror, AMD GPU, Plasma 6)
 - `RogueLeader` — local dedicated server, Docker-based services
 - `skitarii` — VPS (OVH VPS-1), pangolin gateway: single entry point for every public web service

@@ -18,7 +18,7 @@ Uptime Kuma tourne à la maison : si skitarii tombe, la page publique tombe, les
 ```bash
 docker ps --format "table {{.Names}}\t{{.Status}}"
 docker inspect --format '{{json .State.Health}}' immich-server   # statut + sortie des derniers checks
-journalctl -u docker-immich-server --since "1 hour ago"
+journalctl -u immich-server --since "1 hour ago"
 systemctl list-timers | grep health-watch
 ```
 

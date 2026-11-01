@@ -13,4 +13,4 @@ description: "Docker patterns: health checks, networks, secrets, UIDs, startup o
 | Secrets as env vars | `environmentFiles = [ config.sops.secrets."services/<name>/env".path ];` (plain `KEY=value`) |
 | Rootless container | `users.users.<name>` / `users.groups.<name>` with fixed uid/gid in the same file, data dirs via `systemd.tmpfiles.rules` |
 | Start after another container | `dependsOn = ["immich-postgres" "immich-redis"];` |
-| Other systemd ordering | `systemd.services."docker-<name>"` (e.g. `web` network before newt in `docker-newt.nix`) |
+| Other systemd ordering | `systemd.services.<unit>`, named after the container, `docker-newt` for newt (e.g. `web` network before newt in `docker-newt.nix`) |

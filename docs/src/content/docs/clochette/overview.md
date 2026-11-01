@@ -1,6 +1,6 @@
 ---
 title: "clochette"
-description: Scaleway VPS hosting Immich, published through the pangolin gateway.
+description: Scaleway Dedibox hosting Immich, published through the pangolin gateway.
 sidebar:
   order: 1
   label: "Overview"

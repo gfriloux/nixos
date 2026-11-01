@@ -13,4 +13,4 @@ description: "Motifs Docker : healthchecks, réseaux, secrets, UID, ordre de dé
 | Secrets en variables d'env | `environmentFiles = [ config.sops.secrets."services/<nom>/env".path ];` (`CLÉ=valeur` en clair) |
 | Conteneur rootless | `users.users.<nom>` / `users.groups.<nom>` avec uid/gid fixes dans le même fichier, dossiers de données via `systemd.tmpfiles.rules` |
 | Démarrer après un autre conteneur | `dependsOn = ["immich-postgres" "immich-redis"];` |
-| Autre ordre systemd | `systemd.services."docker-<nom>"` (ex. réseau `web` avant newt dans `docker-newt.nix`) |
+| Autre ordre systemd | `systemd.services.<unité>`, du nom du conteneur, `docker-newt` pour newt (ex. réseau `web` avant newt dans `docker-newt.nix`) |

@@ -6,7 +6,7 @@ description: Les quatre machines en un tableau, avec un lien vers la page de cha
 | | exampleHost | clochette | skitarii | RogueLeader |
 |---|---|---|---|---|
 | Rôle | Poste de travail | Immich | Passerelle web | Services perso |
-| Où | Maison | Scaleway | OVH VPS-1 | Maison |
+| Où | Maison | Dedibox Scaleway | OVH VPS-1 | Maison |
 | IP publique | | `51.159.34.135` | `5.196.4.180`, `2001:41d0:404:200::487d` | |
 | Disque | ZFS miroir (2× NVMe 980 PRO), `/data2` ext4 | ext4, MBR | ext4, disko, GPT/BIOS | ext4, disko, GPT |
 | Clé sops | `/etc/sops/age/keys.txt` | clé SSH d'hôte | clé SSH d'hôte | clé SSH d'hôte |

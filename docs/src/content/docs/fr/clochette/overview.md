@@ -1,6 +1,6 @@
 ---
 title: "clochette"
-description: VPS Scaleway qui héberge Immich, publié par la passerelle pangolin.
+description: Dedibox Scaleway qui héberge Immich, publié par la passerelle pangolin.
 sidebar:
   order: 1
   label: "Vue d’ensemble"
