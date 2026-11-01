@@ -1,182 +1,121 @@
 ---
 title: "Réinstaller RogueLeader"
-description: Guide complet de réinstallation du serveur dédié — disko, secrets, restauration Borg.
+description: De l'ISO NixOS au premier déploiement, par nixos-anywhere depuis exampleHost.
 ---
 
-:::caution[Garde]
-Guide de réinstallation complète du serveur dédié domestique RogueLeader.
+:::danger
+L'étape 4 efface le disque de RogueLeader. Les services publiés par son newt
+sont coupés jusqu'à la restauration Borg (étape 7).
 :::
 
-## Informations de Référence
-
-| Paramètre | Valeur |
+| | |
 |---|---|
-| Accès réseau local | `192.168.0.10` (alias `rogueleader.home`) |
-| Disque | `/dev/sda` (BIOS/GPT via disko) |
-| Architecture | x86_64, Intel KVM |
-| SSH | Accessible directement (clé publique uniquement, pas de Tailscale) |
-| sops | Clé age dérivée de `/etc/ssh/ssh_host_ed25519_key` |
+| Réseau | DHCP, `192.168.0.10` (`rogueleader.home`) |
+| Disque | `/dev/sda`, BIOS, GPT + EF02 (`disko.nix`) |
+| sops | clé age dérivée de `/etc/ssh/ssh_host_ed25519_key` |
+| SSH | LAN, `guillaume`, clé `root@rogueleader` |
 
-## Pré-Requis
+## Avant
 
-- [ ] Accès physique ou console au serveur
-- [ ] Clé USB NixOS ISO prête
-- [ ] Connexion réseau local (DHCP)
-- [ ] Clé age de exampleHost disponible (pour re-chiffrer les secrets après install)
-      Voir [Sauvegarde & Restauration des Secrets](/nixos/fr/operations/secrets-backup/)
-- [ ] Sauvegarde Borg vérifiée :
-      `BORG_PASSPHRASE=... borg list ssh://backup@storage2.friloux.me/~/rogueleader.friloux.me`
+- Accès physique (écran, clavier), une clé USB avec l'ISO NixOS minimale.
+- La YubiKey (`sops`).
+- Une archive Borg récente : [Restaurer depuis Borg](/nixos/fr/operations/restore/).
 
-## Résumé du Partitionnement (disko)
+## 1. Générer la clé hôte
 
-Disque unique `/dev/sda`, GPT :
-
-| Partition | Taille | Rôle |
-|---|---|---|
-| part1 | 1 Mo | GRUB BIOS boot |
-| part2 | 4 Go | swap |
-| part3 | reste | `/` ext4 |
-
-Contrairement à clochette, disko gère les `fileSystems` NixOS — pas besoin de mettre
-à jour des UUIDs manuellement après réinstallation.
-
-## Étape 1 — Démarrer sur l'ISO NixOS
-
-Brancher la clé USB, démarrer sur l'ISO NixOS.
-
-Vérifier la connexion réseau (DHCP LAN) :
+Sans elle, la machine neuve ne lit pas son fichier sops : pas de mot de passe,
+pas de sudo, aucun déploiement possible.
 
 ```bash
-ip addr show
-ping -c3 192.168.0.1
+mkdir -p /tmp/rogueleader-extra/etc/ssh
+ssh-keygen -q -t ed25519 -N "" -C root@RogueLeader -f /tmp/rogueleader-extra/etc/ssh/ssh_host_ed25519_key
+nix shell nixpkgs#ssh-to-age -c ssh-to-age < /tmp/rogueleader-extra/etc/ssh/ssh_host_ed25519_key.pub
+ssh-keygen -lf /tmp/rogueleader-extra/etc/ssh/ssh_host_ed25519_key.pub   # empreinte à vérifier à l'étape 5
 ```
 
-## Étape 2 — Récupérer le Dépôt
+Mettre la clé age dans `&server_rogueleader` (`.sops.yaml`), puis :
 
 ```bash
-git clone https://github.com/gfriloux/nixos /tmp/nixos
-cd /tmp/nixos
+sops updatekeys secrets/RogueLeader.yaml   # YubiKey
 ```
 
-## Étape 3 — Partitionnement et Formatage avec disko
+## 2. Booter l'ISO
 
-:::danger[Interdit]
-**Destructif et irréversible.** Efface entièrement `/dev/sda`.
-:::
+Sur la console de RogueLeader :
 
 ```bash
-sudo nix run github:nix-community/disko/latest -- \
-  --mode destroy,format,mount \
-  --flake /tmp/nixos#RogueLeader
+passwd                # mot de passe jetable pour l'utilisateur nixos
+ip -4 addr            # IP de l'ISO
+lsblk                 # le disque interne, pas la clé USB
 ```
 
-disko partitionne `/dev/sda`, formate en ext4 et monte tout sous `/mnt`.
+Si le disque interne n'est pas `sda` (la clé USB l'a pris), mettre son nom
+dans `disko.nix` le temps de l'installation, puis revenir à `/dev/sda`
+(comme pour [skitarii](/nixos/fr/operations/reinstall-skitarii/)).
 
-Vérifier :
+## 3. Copier la clé
 
 ```bash
-df -h /mnt
-mount | grep /mnt
+ssh-copy-id -o PubkeyAuthentication=no -i ~/.ssh/id_ed25519 nixos@<ip-iso>
 ```
 
-## Étape 4 — Installation NixOS
+## 4. Installer
+
+L'ISO est déjà NixOS : pas de phase `kexec`. L'utilisateur `nixos` a sudo
+sans mot de passe.
 
 ```bash
-sudo nixos-install --flake /tmp/nixos#RogueLeader --no-root-passwd
+ssh-add ~/.ssh/id_ed25519
+nix run github:nix-community/nixos-anywhere -- \
+  --flake .#RogueLeader \
+  --target-host nixos@<ip-iso> \
+  --ssh-option IdentitiesOnly=yes \
+  --ssh-option IdentityFile=$HOME/.ssh/id_ed25519.pub \
+  --phases disko,install \
+  --extra-files /tmp/rogueleader-extra
 ```
 
-:::note[Marginalia]
-Contrairement à exampleHost, **aucune clé age à placer manuellement** avant l'install.
-sops-nix dérive la clé age depuis la clé SSH host générée automatiquement au premier
-démarrage — les secrets ne sont déchiffrables qu'après ce premier boot.
+Attendu : `Imported /etc/ssh/ssh_host_ed25519_key as age key`, puis
+`### Done! ###`. L'empreinte age doit être celle de `.sops.yaml`.
 
-En conséquence, le mot de passe utilisateur (`neededForUsers = true`) ne sera
-disponible qu'après le premier démarrage complet. L'accès initial se fait par clé SSH.
-:::
+## 5. Premier boot
 
-## Étape 5 — Premier Démarrage
+Retirer la clé USB, redémarrer. Puis :
 
 ```bash
-reboot
+ssh-keygen -R 192.168.0.10
+ssh -t rogueleader.home sudo true
 ```
 
-Retirer la clé USB. Le système démarre sur GRUB → NixOS.
+N'accepter que l'empreinte notée à l'étape 1.
 
-SSH est accessible directement depuis le réseau local via la clé publique déclarée dans `users.nix` :
-
-```bash
-# Depuis exampleHost
-ssh guillaume@rogueleader.home
-```
-
-## Étape 6 — Mise à Jour de la Clé Age dans sops
-
-La nouvelle installation a généré une nouvelle clé SSH host → nouvelle clé age.
-Sans cette mise à jour, sops ne pourra pas déchiffrer les secrets depuis RogueLeader.
-
-**Depuis RogueLeader** (connecté via SSH) :
+## 6. Déployer
 
 ```bash
-nix run nixpkgs#ssh-to-age -- -i /etc/ssh/ssh_host_ed25519_key.pub
-```
-
-**Depuis exampleHost**, mettre à jour `.sops.yaml` avec la nouvelle clé publique :
-
-```bash
-cd ~/Apps/github/gfriloux/nixos
-nano .sops.yaml
-# Remplacer la valeur de &server_rogueleader par la nouvelle clé age
-```
-
-Re-chiffrer `secrets/RogueLeader.yaml` :
-
-```bash
-sops updatekeys secrets/RogueLeader.yaml
-# Confirmer avec 'y'
-
-# Vérifier
-sops -d secrets/RogueLeader.yaml
-```
-
-Committer et pousser :
-
-```bash
-git add .sops.yaml secrets/RogueLeader.yaml
-git commit -m "chore(secrets): rotate RogueLeader age key after reinstall"
-git push
-```
-
-## Étape 7 — Déploiement Complet depuis exampleHost
-
-```bash
-just install_rogueleader --ask-sudo-password
-```
-
-Cette commande déploie la configuration complète avec les secrets désormais
-déchiffrables par la nouvelle clé SSH host.
-
-Pour déployer Home Manager :
-
-```bash
+just install_rogueleader
 just home_rogueleader
 ```
 
-## Étape 8 — Restauration des Données depuis Borg (si Nécessaire)
+Commiter `.sops.yaml` et `secrets/RogueLeader.yaml`, puis
+`rm -r /tmp/rogueleader-extra`.
 
-Suivre [Restauration des Données depuis Borg](/nixos/fr/operations/restore/). L'archive ne
-contient aucune base vivante : après l'extraction, la base de BookStack doit
-être chargée depuis son dump, et celles des services SQLite remises en place
-depuis `sqlite-snapshots/`, sinon elles démarrent vides.
+## 7. Restaurer
 
-## Étape 9 — Vérification Finale
+Les archives ne contiennent aucune base vivante :
+
+- BookStack : recharger le dump MariaDB,
+  [BookStack (RogueLeader)](/nixos/fr/operations/restore/#bookstack-rogueleader).
+- Uptime Kuma, Papra, Mealie : remettre les copies de
+  `sqlite-snapshots/`,
+  [Services SQLite (RogueLeader)](/nixos/fr/operations/restore/#services-sqlite-rogueleader).
+
+## 8. Vérifier
 
 ```bash
-# Containers en cours d'exécution
-docker ps --format "table {{.Names}}\t{{.Status}}"
-
-# Secrets déchiffrés
-ls /run/secrets/
-
-# Backup Borg
-systemctl status borgbackup-job-remote
+docker ps --format "table {{.Names}}\t{{.Status}}"   # tout healthy
+docker logs newt --tail 20                           # tunnel vers skitarii
+systemctl start borgbackup-job-remote && systemctl status borgbackup-job-remote
 ```
+
+`https://status.friloux.me`, `wow-cp`, `docs`, `cuisine` et `borg-ui`
+répondent.
