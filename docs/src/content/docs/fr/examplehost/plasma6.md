@@ -1,45 +1,31 @@
 ---
 title: "Plasma 6"
-description: Configuration de KDE Plasma 6 en Wayland — SDDM, thème, audio pipewire.
+description: SDDM, Plasma 6 sous Wayland, Pipewire, portails XDG, thème.
 ---
 
-KDE Plasma 6 configuré en session Wayland native pour un environnement de bureau moderne et fluide.
-
-## Configuration
+`stc.relics.plasma6` (clavier `fr`, thème sddm `catppuccin-mocha-mauve`) et `stc.cogitator.workstation` dans `default.nix`. Config effective (évaluée) :
 
 ```nix
 services.displayManager.sddm = {
   enable = true;
   wayland.enable = true;
+  theme = "catppuccin-mocha-mauve";      # paquet catppuccin-sddm
 };
 services.desktopManager.plasma6.enable = true;
+services.xserver.enable = false;         # Wayland uniquement ; xwayland-satellite installé pour les applis X11
+services.xserver.xkb.layout = "fr";
+console.keyMap = "fr";
+
+services.pulseaudio.enable = false;
+services.pipewire = { enable = true; alsa.enable = true; pulse.enable = true; };
+
+xdg.portal.enable = true;                # portails : kde, gtk, kwallet
+services.gvfs.enable = true;             # intégration du gestionnaire de fichiers
 ```
 
-Session Wayland native. `services.xserver.enable = false` (Xwayland disponible
-via `xwayland-satellite` pour les applications X11 si nécessaire).
-
-Disposition clavier : `fr` (console et Xkb).
-
-## Thème
-
-Thème Dracula configuré via Home Manager (paquet `dracula-theme`).
-GTK4 : `gtk-application-prefer-dark-theme=1`.
-
-## Pipewire / Audio
-
-PulseAudio est désactivé. Pipewire gère l'audio avec compatibilité ALSA et PulseAudio :
+Thème (Home Manager) : `catppuccin-kde`, police GTK Iosevka 7, GTK4 `gtk-application-prefer-dark-theme=1`.
 
 ```bash
-# Vérifier que Pipewire tourne
 systemctl --user status pipewire wireplumber
-
-# Mixer (CLI)
-pulsemixer
-# ou
-pavucontrol  # UI graphique
+pulsemixer       # ou pavucontrol
 ```
-
-## Applications XDG
-
-Portal XDG activé avec `xdg-desktop-portal-gtk` en backend secondaire.
-`services.gvfs.enable = true` pour l'intégration gestionnaire de fichiers.

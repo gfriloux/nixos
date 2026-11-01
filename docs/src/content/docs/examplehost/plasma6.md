@@ -1,44 +1,31 @@
 ---
 title: "Plasma 6"
-description: SDDM, Plasma 6 configuration, Pipewire audio, XDG portal setup.
+description: SDDM, Plasma 6 on Wayland, Pipewire, XDG portals, theme.
 ---
 
-The sacred desktop environment runs Plasma 6 in native Wayland mode, blessed with Pipewire for audio.
-
-## Configuration
+`stc.relics.plasma6` (layout `fr`, sddm theme `catppuccin-mocha-mauve`) and `stc.cogitator.workstation` in `default.nix`. Effective config (evaluated):
 
 ```nix
 services.displayManager.sddm = {
   enable = true;
   wayland.enable = true;
+  theme = "catppuccin-mocha-mauve";      # package catppuccin-sddm
 };
 services.desktopManager.plasma6.enable = true;
+services.xserver.enable = false;         # Wayland only; xwayland-satellite installed for X11 apps
+services.xserver.xkb.layout = "fr";
+console.keyMap = "fr";
+
+services.pulseaudio.enable = false;
+services.pipewire = { enable = true; alsa.enable = true; pulse.enable = true; };
+
+xdg.portal.enable = true;                # portals: kde, gtk, kwallet
+services.gvfs.enable = true;             # file manager integration
 ```
 
-Native Wayland session. `services.xserver.enable = false` (Xwayland available via `xwayland-satellite` for X11 applications if needed).
-
-Keyboard layout: `fr` (console and Xkb).
-
-## Theme
-
-Dracula theme configured via Home Manager (package `dracula-theme`).
-GTK4: `gtk-application-prefer-dark-theme=1`.
-
-## Pipewire — The Sound Spirit
-
-PulseAudio is absent. Pipewire orchestrates audio with ALSA and PulseAudio compatibility:
+Theme (Home Manager): `catppuccin-kde`, GTK font Iosevka 7, GTK4 `gtk-application-prefer-dark-theme=1`.
 
 ```bash
-# Verify Pipewire runs
 systemctl --user status pipewire wireplumber
-
-# Command-line mixer
-pulsemixer
-# or
-pavucontrol  # graphical UI
+pulsemixer       # or pavucontrol
 ```
-
-## XDG Applications Portal
-
-XDG portal is activated with `xdg-desktop-portal-gtk` as secondary backend.
-`services.gvfs.enable = true` for file manager integration.
