@@ -1,78 +1,54 @@
 ---
 title: "Secrets"
-description: sops-nix, age key management, storage locations, and access patterns.
+description: sops-nix and age, which key opens which file, editing, referencing a secret.
 ---
 
-Secrets are sealed with [sops](https://github.com/getsops/sops) and [age](https://age-encryption.org/) keys via the NixOS [sops-nix](https://github.com/Mic92/sops-nix) pattern. Treat the reliquary with reverence — guard its keys with extreme care.
+[sops-nix](https://github.com/Mic92/sops-nix), [age](https://age-encryption.org/) encryption.
+A machine key opens its own file only; admin keys open everything but live on no machine.
 
-## The Key Model
+| File | Machine key (at boot) | Admin keys (editing) |
+|---|---|---|
+| `secrets/kuri_exampleHost.yaml` | `/etc/sops/age/keys.txt` | YubiKey + rescue |
+| `secrets/clochette.yaml` | derived from `/etc/ssh/ssh_host_ed25519_key` | YubiKey + rescue |
+| `secrets/RogueLeader.yaml` | derived from `/etc/ssh/ssh_host_ed25519_key` | YubiKey + rescue |
+| `secrets/skitarii.yaml` | derived from `/etc/ssh/ssh_host_ed25519_key` | YubiKey + rescue |
 
-Two kinds of keys, with separate jobs:
+- **YubiKey**: age identity in PIV slot 1, not extractable. Needs `age-plugin-yubikey` and the PIV PIN (not the GPG PIN).
+- **Rescue**: offline age key, for a lost YubiKey.
+- No machine key is a recipient of another machine's file (#94).
 
-- **Host keys** decrypt a shrine's own file at boot. Each one opens a single
-  file, so a shrine whose disk is read exposes its own secrets, not the
-  others'.
-- **Admin keys** edit the files with `sops`. They are recipients of every
-  file and never sit in clear on a shrine.
-
-| Key | Kind | Private part | Opens |
-|---|---|---|---|
-| exampleHost | Host, dedicated age file | `/etc/sops/age/keys.txt` | `kuri_exampleHost.yaml` |
-| clochette | Host, derived from SSH host key | `/etc/ssh/ssh_host_ed25519_key` | `clochette.yaml` |
-| RogueLeader | Host, derived from SSH host key | `/etc/ssh/ssh_host_ed25519_key` | `RogueLeader.yaml` |
-| skitarii | Host, derived from SSH host key | `/etc/ssh/ssh_host_ed25519_key` | `skitarii.yaml` |
-| YubiKey | Admin, age identity in PIV slot 1 | on the YubiKey, not extractable | all four |
-| Rescue | Admin, plain age key | offline, off every shrine | all four |
-
-## Sealed Vaults
-
-| File | Unsealable by |
-|---|---|
-| `secrets/kuri_exampleHost.yaml` | exampleHost + YubiKey + rescue |
-| `secrets/clochette.yaml` | clochette + YubiKey + rescue |
-| `secrets/RogueLeader.yaml` | RogueLeader + YubiKey + rescue |
-| `secrets/skitarii.yaml` | skitarii + YubiKey + rescue |
-
-## Unsealing at Boot
-
-sops-nix deposits decrypted secrets in `/run/secrets/` when the shrine awakens.
-Secrets marked `neededForUsers = true` are deposited in `/run/secrets-for-users/` before user creation (for hashed passwords).
-
-On exampleHost, Home Manager places its secrets in `/run/user/1000/secrets/`.
-
-## The Configuration (`.sops.yaml`)
+Recipients in `.sops.yaml`, one rule per file:
 
 ```yaml
-keys:
-  - &desktop_examplehost age1xr32hdvanup0zk63v8hrcv2u2c09wplz6fd42w47mkjrd49j39xqaqqckq
-  - &server_clochette     age18594hnd4mk3736a36a5fqc5w55sanac86tv8du0hz67rfk558srs3y9jwa
-  - &server_rogueleader   age1nttxr633hf6r43szc9ffl2a0avmtmhtl7hhnjjuyd3sc4au705nqffyfwe
-  - &admin_yubikey        age1yubikey1qtsqgx98tq7d005aue4lqth3z5hgu67e9eee490mpf0phfx7znghqr8x67l
-  - &admin_rescue         age1faz4m9gj9xyz4rm26gndwgjkwrwr9ppnzm48slcrne7uvf3afqcsxtv8hs
+- path_regex: secrets/skitarii.yaml$
+  key_groups:
+  - age: [*server_skitarii, *admin_yubikey, *admin_rescue]
 ```
 
-Each file's sealing rules are defined under `creation_rules`.
+## Edit
 
-## Declaring Secrets in NixOS
+```bash
+just secrets_skitarii                  # sops secrets/skitarii.yaml, YubiKey plugged in
+sops updatekeys secrets/skitarii.yaml  # after a recipient change (reinstall)
+```
 
-Always reference via `config.sops.secrets."<path>".path` — never hardcode `/run/secrets/...`:
+## Reference
+
+Declare the secret next to its service, read its path through `config`, never hardcode `/run/secrets/...`:
 
 ```nix
 sops.secrets."services/papra/env" = {};
+environmentFiles = [config.sops.secrets."services/papra/env".path];
 
-environmentFiles = [
-  config.sops.secrets."services/papra/env".path
-];
+# User password: decrypted before accounts are created
+sops.secrets."users/guillaume/hashed-password".neededForUsers = true;
+users.users.guillaume.hashedPasswordFile = config.sops.secrets."users/guillaume/hashed-password".path;
 ```
 
-For user passwords:
+| Where | Path |
+|---|---|
+| System | `/run/secrets/` |
+| `neededForUsers` | `/run/secrets-for-users/` |
+| Home Manager (exampleHost) | `/run/user/1000/secrets/` |
 
-```nix
-sops.secrets."users/kuri/hashed-password".neededForUsers = true;
-users.users.kuri.hashedPasswordFile =
-  config.sops.secrets."users/kuri/hashed-password".path;
-```
-
-:::caution[Ward]
-This reliquary is sealed for a reason. Never make a host key a recipient of another shrine's file: that is how one stolen disk would expose every shrine.
-:::
+Key backup: [Secrets backup](/nixos/operations/secrets-backup/).
