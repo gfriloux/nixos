@@ -30,7 +30,11 @@ Recipients in `.sops.yaml`, one rule per file:
 ```bash
 just secrets_skitarii                  # sops secrets/skitarii.yaml, YubiKey plugged in
 sops updatekeys secrets/skitarii.yaml  # after a recipient change (reinstall)
+sops -d --extract '["services"]["ntfy"]["topic"]' secrets/clochette.yaml   # read one value
 ```
+
+After changing a value: deploy, then `systemctl restart <container>`. No secret
+has `restartUnits`, so the container keeps the old value until restarted.
 
 ## Reference
 

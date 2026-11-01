@@ -20,7 +20,7 @@ Garder un shell root ouvert avant de toucher à sudo ou aux utilisateurs. Détai
 
 | Tâche | Page |
 |---|---|
-| Éditer un secret | [sops-nix](/nixos/fr/operations/sops/) |
+| Éditer un secret | [Secrets](/nixos/fr/architecture/secrets/) |
 | Surveiller | [Monitoring](/nixos/fr/operations/monitoring/), [Notifications de panne](/nixos/fr/operations/notifications/) |
 | Diagnostiquer | [Dépannage](/nixos/fr/operations/troubleshooting/) |
 

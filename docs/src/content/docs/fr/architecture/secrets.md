@@ -30,7 +30,11 @@ Destinataires dans `.sops.yaml`, une règle par fichier :
 ```bash
 just secrets_skitarii                  # sops secrets/skitarii.yaml, YubiKey branchée
 sops updatekeys secrets/skitarii.yaml  # après un changement de destinataires (réinstallation)
+sops -d --extract '["services"]["ntfy"]["topic"]' secrets/clochette.yaml   # lire une valeur
 ```
+
+Après un changement de valeur : déployer, puis `systemctl restart <conteneur>`.
+Aucun secret n'a de `restartUnits` : le conteneur garde l'ancienne valeur jusqu'au restart.
 
 ## Référencer
 

@@ -20,7 +20,7 @@ Keep a root shell open before touching sudo or users. Details: [Deployment](/nix
 
 | Task | Page |
 |---|---|
-| Edit a secret | [sops-nix](/nixos/operations/sops/) |
+| Edit a secret | [Secrets](/nixos/architecture/secrets/) |
 | Monitor | [Monitoring](/nixos/operations/monitoring/), [Failure notifications](/nixos/operations/notifications/) |
 | Diagnose | [Troubleshooting](/nixos/operations/troubleshooting/) |
 
