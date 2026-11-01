@@ -1,50 +1,48 @@
 ---
 title: "Architecture"
-description: Structure de la Forge KURI — snowfall-lib, motifs de déploiement, reliquaires, et services liés.
+description: Structure du flake, inputs, déploiement et principes communs aux quatre machines.
 sidebar:
   order: 1
   label: "Vue d’ensemble"
 ---
 
-La Forge est structurée comme un flake NixOS snowfall-lib, ses quatre sanctuaires-machines déclarés sous `systems/x86_64-linux/` et ses démons liés gérés par des motifs sacrés composables.
+Flake [snowfall-lib](https://github.com/snowfallorg/lib), quatre machines.
 
-## Géométrie Sacrée — Structure du Flake
+```text
+systems/x86_64-linux/<machine>/        # une config NixOS par machine
+homes/x86_64-linux/<user>@<machine>/   # une config Home Manager par utilisateur
+modules/home/dank-shell/               # seul module local (barre de bureau)
+secrets/                               # sops, un fichier par machine
+```
 
-Le dépôt utilise [snowfall-lib](https://github.com/snowfallorg/lib) pour orchestrer la Forge. Chaque sanctuaire-machine est un système déclaré sous `systems/x86_64-linux/<nom>/` ; chaque Sanctum (environnement utilisateur) sous `homes/x86_64-linux/<utilisateur>@<machine>/`.
+snowfall-lib n'injecte pas les modules : chaque machine importe ceux qu'elle utilise.
 
-Il n'y a aucun module NixOS local. Les motifs sacrés réutilisables viennent de l'input de flake STC (`inputs.stc`) : des relics activées par des options `stc.relics.*` (notifications Docker, CrowdSec, durcissement SSH, entretien Nix) et des helpers comme `inputs.stc.lib.docker.mkHealthCheck` et `inputs.stc.lib.docker.mkNetwork`. Le seul module local est `modules/home/dank-shell`, une barre de bureau Home Manager.
+## Inputs
 
-:::note[Marginalia]
-snowfall-lib **ne propage pas** les modules globalement — chaque sanctuaire doit importer explicitement les motifs qu'il requiert.
-:::
+| Input | Apporte |
+|---|---|
+| `stc` | Relics `stc.relics.*` (docker, crowdsec, notify, SSH, entretien Nix), helpers `stc.lib.docker.*`, purity seals |
+| `sops-nix` | Secrets chiffrés age |
+| `disko` | Partitionnement déclaratif |
+| `home-manager` | Environnements utilisateur |
+| `dms` | Barre de bureau DankMaterialShell |
+| `pgpilot`, `noosphere`, `astropath` | Outils perso |
 
-## Les Rites d'Onction
+## Déployer
 
-- **exampleHost** : `nh os switch .` (sanctification locale)
-- **clochette** : `nixos-rebuild switch --target-host ...` (via SSH Tailscale)
-- **RogueLeader** : `nixos-rebuild switch --target-host ...` (via réseau local)
-- **skitarii** : `nixos-rebuild switch --target-host ...` (via SSH Tailscale)
+| Machine | Commande | Accès |
+|---|---|---|
+| exampleHost | `just install` | local (`nh os switch`) |
+| clochette | `just install_clochette` | Tailscale |
+| skitarii | `just install_skitarii` | Tailscale |
+| RogueLeader | `just install_rogueleader` | LAN, `rogueleader.home` |
 
-## Le Reliquaire
+Détail : [Déploiement](/nixos/fr/operations/deployment/).
 
-Tous les secrets sont scellés avec age + sops-nix. La clé de chaque machine n'ouvre que son propre reliquaire ; l'édition passe par des clés d'administration qui ne sont sur aucune machine (une YubiKey et une clé de secours hors ligne). Voir [Reliquaires de Secrets](/nixos/fr/architecture/secrets/).
+## Principes
 
-## Démons Liés — Services Web (clochette, RogueLeader)
-
-Tous les services web fonctionnent comme des démons liés (containers Docker)
-publiés par la passerelle pangolin de skitarii. Chaque machine fait tourner un
-container `newt` qui porte le trafic par un tunnel sortant : aucune des deux ne
-fait tourner traefik ou crowdsec, ni n'ouvre de port web. Le traefik de skitarii
-gère les certificats Let's Encrypt et son CrowdSec garde toutes les routes. Voir
-[La Porte](/nixos/fr/skitarii/gateway/).
-
-## L'Astropathe
-
-La relic `relics-docker-notify` de STC (`stc.relics.docker.notify`) observe tous les containers portant le label `stc.docker/health-watch = "true"` sur chaque machine, tue ceux qui passent `unhealthy`, et annonce leurs présages par le `notifyCommand` de la machine (un appel ntfy.sh) quand leur unité entre en défaillance. Voir [Notifications de panne](/nixos/fr/operations/notifications/).
-
-## Principes de Consécration
-
-- `users.mutableUsers = false` sur tous les sanctuaires — NixOS possède `/etc/shadow`
-- Les secrets sont déclarés près du service qui les utilise (dans les fichiers `docker-*.nix`)
-- Les fichiers de config statiques utilisent `systemd.tmpfiles.rules` avec `L+` (symlink vers le Nix store)
-- Les configurations mono-machine évitent l'abstraction `mkOption`/`cfg.*` — utilisent des options NixOS directes
+- `users.mutableUsers = false` partout : NixOS possède `/etc/shadow`.
+- Un secret se déclare à côté du service qui le lit (`docker-*.nix`). Clé et fichiers : [Secrets](/nixos/fr/architecture/secrets/).
+- Fichiers de config statiques : `systemd.tmpfiles.rules` en `L+` (lien vers le store), jamais `C`.
+- Config mono-machine : options NixOS directes, pas de `mkOption`/`cfg.*`.
+- Web public : uniquement par la [passerelle](/nixos/fr/skitarii/gateway/) de skitarii. Conteneurs : [Motifs Docker](/nixos/fr/architecture/docker/).
