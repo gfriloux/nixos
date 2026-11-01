@@ -1,0 +1,128 @@
+/* KURI · logbook — a Rogue Trader ship's log, mapped onto Starlight tokens.
+   Gold marks titles and frames only; body text stays ivory (dark) or ink (light). */
+
+:root {
+  --lb-f-title: 'Cormorant Garamond', Georgia, serif;
+  --lb-f-body: 'Spectral', Georgia, serif;
+  --lb-f-mono: 'IBM Plex Mono', ui-monospace, monospace;
+
+  --lb-bg: #11131a;
+  --lb-bg-raised: #191b24;
+  --lb-ink: #e6e0d0;
+  --lb-gold: #d1ad62;
+  --lb-gold-dim: #5c4a28;
+  --lb-muted: #a89c84;
+  --lb-line: #2c2b30;
+  --lb-node-line: #4a4436;
+
+  --sl-color-accent-low: #2e2618;
+  --sl-color-accent: #d1ad62;
+  --sl-color-accent-high: #ecd59f;
+  --sl-color-white: #f3ead6;
+  --sl-color-gray-1: #e6e0d0;
+  --sl-color-gray-2: #c9c1ae;
+  --sl-color-gray-3: #a89c84;
+  --sl-color-gray-4: #6e6656;
+  --sl-color-gray-5: #2c2b30;
+  --sl-color-gray-6: #191b24;
+  --sl-color-black: #11131a;
+  --sl-color-bg-nav: #0d0f15;
+  --sl-color-bg-sidebar: #0d0f15;
+  --sl-color-hairline-light: #2c2b30;
+  --sl-color-hairline: #24232a;
+  --sl-color-text-accent: #d1ad62;
+
+  --sl-font: var(--lb-f-body);
+  --sl-font-mono: var(--lb-f-mono);
+}
+
+:root[data-theme='light'] {
+  --lb-bg: #f4efe3;
+  --lb-bg-raised: #ebe4d3;
+  --lb-ink: #1b1e2a;
+  --lb-gold: #7a5a17;
+  --lb-gold-dim: #c8b383;
+  --lb-muted: #5a5244;
+  --lb-line: #d6ccb6;
+  --lb-node-line: #a99a7a;
+
+  --sl-color-accent-low: #ebdcb8;
+  --sl-color-accent: #7a5a17;
+  --sl-color-accent-high: #4e3a0f;
+  --sl-color-white: #12141c;
+  --sl-color-gray-1: #1b1e2a;
+  --sl-color-gray-2: #33343c;
+  --sl-color-gray-3: #5a5244;
+  --sl-color-gray-4: #8a806c;
+  --sl-color-gray-5: #d6ccb6;
+  --sl-color-gray-6: #ebe4d3;
+  --sl-color-gray-7: #f0eadc;
+  --sl-color-black: #f4efe3;
+  --sl-color-bg-nav: #efe8d8;
+  --sl-color-bg-sidebar: #efe8d8;
+  --sl-color-hairline-light: #ddd3bd;
+  --sl-color-hairline: #d6ccb6;
+  --sl-color-text-accent: #7a5a17;
+}
+
+/* Titles: engraved serif, the log's voice. */
+h1, h2, h3, h4,
+.site-title,
+.sidebar-content .group-label .large,
+.hero h1 {
+  font-family: var(--lb-f-title);
+  font-weight: 700;
+  letter-spacing: 0.01em;
+}
+.sl-markdown-content h2 { border-bottom: 1px solid var(--lb-gold-dim); padding-bottom: 0.2em; }
+.sl-markdown-content :is(h1, h2, h3, h4) { color: var(--sl-color-white); }
+.site-title { color: var(--lb-gold); font-size: 1.5rem; }
+.site-title img { color: var(--lb-gold); }
+
+/* Sidebar: gold group labels, current page underlined in gold. */
+.sidebar-content .group-label .large { color: var(--lb-gold); font-size: 1.1rem; }
+.sidebar-content a[aria-current='page'] {
+  background: transparent;
+  color: var(--sl-color-white);
+  font-weight: 600;
+  box-shadow: inset 2px 0 0 var(--lb-gold);
+}
+
+/* Identity motif: gilt corners on framed figures (diagrams, hero). */
+.lb-frame {
+  position: relative;
+  margin: 1.5rem 0;
+  padding: 1rem;
+  background: var(--lb-bg-raised);
+}
+.lb-frame::before,
+.lb-frame::after {
+  content: '';
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  border: 1.5px solid var(--lb-gold);
+}
+.lb-frame::before { top: 0; left: 0; border-right: 0; border-bottom: 0; }
+.lb-frame::after { bottom: 0; right: 0; border-left: 0; border-top: 0; }
+.lb-frame figcaption {
+  margin-top: 0.5rem;
+  font-size: var(--sl-text-sm);
+  font-style: italic;
+  color: var(--lb-muted);
+}
+
+/* Splash page: plain hero, no tagline theatre. */
+.hero h1 { color: var(--lb-gold); }
+.hero .tagline { font-style: italic; color: var(--sl-color-gray-2); }
+.hero { padding-block: clamp(2rem, 6vw, 4rem); }
+.hero-html img { width: 100%; height: auto; border: 1px solid var(--lb-gold-dim); }
+
+/* Starlight caps the content column at 45rem; widen it on large screens,
+   where tables, diagrams and command blocks gain more than prose loses. */
+@media (min-width: 100rem) {
+  :root { --sl-content-width: 60rem; }
+}
+@media (min-width: 120rem) {
+  :root { --sl-content-width: 72rem; }
+}

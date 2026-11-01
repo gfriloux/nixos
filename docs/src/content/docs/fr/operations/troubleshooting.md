@@ -1,187 +1,89 @@
 ---
-title: Dépannage
-description: Problèmes courants et procédures de diagnostic — containers, secrets, SSH, ZFS.
+title: "Dépannage"
+description: Conteneurs, web public, sops, déploiement, SSH, Borg, ZFS, weechat.
 ---
 
-Problèmes courants et procédures de diagnostic.
+## Conteneurs
 
-## Un Container est en État `unhealthy`
+Une unité par conteneur, du nom du conteneur (`immich-server`, `papra`…),
+sauf newt : `docker-newt`.
 
 ```bash
-# Voir les derniers résultats du health check
-docker inspect --format='{{json .State.Health}}' <nom-container> | jq
-
-# Voir les logs du container
-docker logs <nom-container> --tail 50
-
-# Redémarrer manuellement
-systemctl restart docker-<nom-container>
+docker inspect --format='{{json .State.Health}}' <nom> | jq   # derniers healthchecks
+docker logs <nom> --tail 50
+systemctl reset-failed <unité> && systemctl start <unité>
 ```
 
-Le timer `stc-docker-health-watch@<nom>` tue automatiquement un container `unhealthy`
-toutes les 30 secondes, ce qui déclenche un restart systemd.
-Si le container reste en boucle, vérifier ses logs.
+`stc-docker-health-watch@<nom>` regarde toutes les 30 s et tue un conteneur
+`unhealthy` : systemd le relance. Si les relances échouent, l'unité passe `failed` et ntfy prévient.
 
-## Un Service systemd est en `failed`
+## Un site public ne répond plus
+
+Tout passe par skitarii : le newt de la machine, puis la passerelle.
 
 ```bash
-# Voir le statut et les logs
-systemctl status docker-<nom>
-journalctl -u docker-<nom> --since "30 minutes ago"
-
-# Réinitialiser le compteur d'échecs avant de redémarrer
-systemctl reset-failed docker-<nom>
-systemctl start docker-<nom>
+docker logs newt --tail 50                                   # clochette ou RogueLeader
+sudo docker logs traefik --tail 100                          # skitarii
+sudo docker exec crowdsec cscli decisions list --ip <IP>     # skitarii, IP bannie ?
 ```
 
-## photos.friloux.me ne Répond Plus
+Suite : [La passerelle](/nixos/fr/skitarii/gateway/).
 
-clochette ne fait pas tourner traefik : Immich est publié par la passerelle
-pangolin de skitarii, à travers le tunnel `newt` de clochette. Vérifier les deux
-bouts.
+## sops ne déchiffre pas
+
+La clé de la machine doit être celle de `.sops.yaml` :
 
 ```bash
-# Sur clochette : tunnel et cible
-docker inspect --format='{{.Name}} : {{.State.Health.Status}}' newt immich-server
-docker logs newt --tail 50
-
-# Sur skitarii : routage, certificats, bannissements crowdsec
-sudo docker logs traefik --tail 100
-sudo docker exec crowdsec cscli decisions list --ip <IP>
+sudo nix shell nixpkgs#age -c age-keygen -y /etc/sops/age/keys.txt                    # exampleHost
+nix shell nixpkgs#ssh-to-age -c ssh-to-age < /etc/ssh/ssh_host_ed25519_key.pub        # serveurs
 ```
 
-La suite (bouncer, certificats, ressources) est dans
-[La Porte](../skitarii/gateway.md).
+Différente : [Clé perdue](/nixos/fr/operations/secrets-backup/#clé-perdue).
 
-## sops ne Peut pas Déchiffrer les Secrets
+## Le déploiement échoue
 
 ```bash
-# Vérifier que la clé age est présente
-ls -la /etc/sops/age/keys.txt
-
-# Vérifier la clé publique
-age-keygen -y /etc/sops/age/keys.txt
-# Doit correspondre à celle dans .sops.yaml
-
-# Test de déchiffrement
-sops -d secrets/clochette.yaml
+just build_clochette    # construire sans déployer (build, build_rogueleader, build_skitarii)
+just test               # pre-commit sur tout le dépôt
 ```
 
-Si la clé publique ne correspond pas : voir [Sauvegarde & Restauration des Secrets](secrets-backup.md).
+Erreur réseau : relancer. Erreur d'évaluation : lire le message en entier.
 
-## Déploiement nixos-rebuild Échoue
+## Pas de SSH
 
-```bash
-# Construire sans déployer pour voir l'erreur
-just build_clochette
+clochette et skitarii : [Tailscale](/nixos/fr/operations/tailscale/#sans-ssh).
+`Connection reset by peer` après un login raté : ban d'une heure
+(`PerSourcePenalties`), voir [skitarii](/nixos/fr/operations/reinstall-skitarii/#dépannage).
 
-# Vérifier les linters
-just test
-
-# Vérifier l'évaluation du flake
-nix flake check
-```
-
-Si l'erreur est réseau (timeout lors du téléchargement), relancer.
-Si c'est une erreur d'évaluation Nix, lire le message d'erreur complet :
-les erreurs sops ou de type manquant sont souvent explicites.
-
-## SSH vers clochette Inaccessible
-
-Ordre de vérification :
-
-1. Tailscale est-il actif sur les deux machines ?
-
-   ```bash
-   tailscale status  # depuis exampleHost
-   ```
-
-2. clochette est-elle joignable via ping Tailscale ?
-
-   ```bash
-   tailscale ping clochette
-   ```
-
-3. Le démon SSH tourne-t-il sur clochette ?
-   Utiliser la console série Scaleway pour vérifier :
-
-   ```bash
-   systemctl status sshd
-   ```
-
-4. La règle firewall est-elle en place ?
-
-   ```bash
-   sudo nft list ruleset | grep 100.64
-   ```
-
-## Docker Storage Driver ZFS (exampleHost)
-
-Si Docker ne démarre pas sur exampleHost avec une erreur ZFS :
+## Borg échoue
 
 ```bash
-# Vérifier que le dataset Docker existe
-zfs list | grep docker
-
-# Docker utilise rpool/nixos/var/lib comme base
-# Le dataset docker est dans /var/lib/docker
-docker info | grep "Storage Driver"
-
-# Si Docker a laissé un état corrompu
-sudo systemctl stop docker
-sudo rm -rf /var/lib/docker/devicemapper  # ou le sous-dossier problématique
-sudo systemctl start docker
-```
-
-## Borg Backup Échoue
-
-```bash
-# Dernier statut
 journalctl -u borgbackup-job-remote --since today
-
-# Tester la connexion SSH vers le serveur de backup
-ssh -i /run/secrets/services/borg/key/private backup@storage2.friloux.me
-
-# Tester l'accès au dépôt
-BORG_PASSPHRASE=$(cat /run/secrets/services/borg/passphrase) \
-BORG_RSH="ssh -i /run/secrets/services/borg/key/private" \
-borg info ssh://backup@storage2.friloux.me/~/clochette.friloux.me
+sudo BORG_PASSPHRASE=$(sudo cat /run/secrets/services/borg/passphrase) \
+  BORG_RSH="ssh -i /run/secrets/services/borg/key/private" \
+  borg info ssh://backup@storage2.friloux.me/~/clochette.friloux.me
 ```
 
-Causes fréquentes :
+| Cause | Remède |
+|---|---|
+| Clé hôte de storage2 changée | `knownHostsFiles` dans `backup.nix` |
+| storage2 plein | côté storage2 |
+| Verrou resté | `borg break-lock <dépôt>` |
 
-- Clé SSH du serveur de backup changée → mettre à jour `backup.nix` `knownHostsFiles`
-- Espace disque plein sur le serveur de backup
-- Verrou Borg bloqué : `borg break-lock ssh://backup@storage2.friloux.me/~/clochette.friloux.me`
-
-## ZFS Pool Dégradé (exampleHost)
+## Pool ZFS dégradé (exampleHost)
 
 ```bash
-# État des pools
-zpool status
-
-# Si un disque est DEGRADED / FAULTED
-zpool status -v  # détail des erreurs
-
-# Après remplacement physique d'un disque
-zpool replace rpool /dev/disk/by-id/ANCIEN_ID /dev/disk/by-id/NOUVEAU_ID
-# Suivre la résilver
-zpool status -w rpool
+zpool status -v
 ```
 
-## Préemptions WeeCHAT / Session zellij Perdue
+Nouveau disque : copier la table de l'autre (`sgdisk -R <nouveau> <restant>`,
+puis `sgdisk -G <nouveau>`), `zpool replace` sur **bpool et rpool**, mettre
+son ID dans `disko.nix` **et** `boot.nix`, puis `just install` (GRUB sur les
+deux disques). Suivre : `zpool status -w rpool`.
+
+## Session weechat perdue
 
 ```bash
-# Se connecter à la session weechat existante
 ssh irc.friloux.me
-# Dans le shell weechat :
-zellij attach
-```
-
-Si la session zellij n'existe plus :
-
-```bash
-zellij  # crée une nouvelle session
-# Puis relancer weechat manuellement
-weechat
+zellij attach      # ou `zellij` puis `weechat` si la session n'existe plus
 ```

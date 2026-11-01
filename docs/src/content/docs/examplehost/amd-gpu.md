@@ -1,42 +1,22 @@
 ---
-title: The Machine-Vision — AMD GPU Configuration
-description: AMDGPU driver setup, verification, and Wayland integration with Plasma 6.
+title: "AMD GPU"
+description: amdgpu through STC's amdGpu relic, checks.
 ---
 
-The machine-spirit's vision is blessed with an AMD GPU. The `amdgpu` driver is consecrated at boot.
-
-## Configuration
+`stc.relics.amdGpu.initrd = true;` in `default.nix`. What the relic sets (evaluated):
 
 ```nix
+boot.initrd.kernelModules = [ "amdgpu" ];   # display from early boot
 hardware.graphics = {
   enable = true;
   enable32Bit = true;
-  extraPackages = with pkgs; [
-    libvdpau
-    libva-vdpau-driver
-  ];
+  extraPackages = with pkgs; [ libvdpau libva-vdpau-driver ];
 };
+services.xserver.enable = false;   # Plasma on Wayland (KMS), SDDM in Wayland mode
 ```
-
-The `amdgpu` kernel module is loaded in the initrd for display at boot.
-
-## Verification
 
 ```bash
-# Active renderer
-glxinfo | grep "OpenGL renderer"
-# Example: AMD Radeon RX 6700 XT (navi22, LLVM ...)
-
-# Video acceleration (VA-API)
-vainfo
-
-# GPU info
-clinfo | head -20  # if OpenCL available
+glxinfo | grep "OpenGL renderer"   # active renderer
+vainfo                             # VA-API video acceleration
+clinfo | head -20                  # OpenCL, if available
 ```
-
-## Plasma 6 & Wayland
-
-Wayland display natively uses `amdgpu` via KMS.
-No Xorg configuration is required (`services.xserver.enable = false`).
-
-KWin (Plasma) runs in native Wayland mode via SDDM Wayland.

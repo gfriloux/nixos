@@ -1,16 +1,11 @@
 ---
-title: Restauration des Données depuis Borg
+title: "Restaurer depuis Borg"
 description: Ce que contient chaque archive Borg, ce qu'elle exclut volontairement, et comment remettre chaque base en service.
 ---
 
-Les archives Borg ne contiennent jamais une base de données vivante. Une base
-copiée fichier par fichier pendant qu'elle écrit n'est pas restaurable : chaque
-base est donc sauvegardée via une copie cohérente, et ses fichiers vivants sont
-exclus.
-
-**Restaurer se fait donc en deux temps** : extraire les fichiers, puis charger
-chaque base depuis sa copie. Démarrer un conteneur de base sur les seuls
-fichiers extraits donne une base vide.
+Aucune archive ne contient de base vivante : chaque base est sauvegardée par
+une copie cohérente, ses fichiers vivants sont exclus. **Restaurer = extraire,
+puis charger chaque base depuis sa copie**, sinon elle démarre vide.
 
 ## Contenu des archives
 

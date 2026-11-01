@@ -1,0 +1,125 @@
+---
+title: "Gateway"
+description: The pangolin gateway on skitarii, how to publish a service, checks and known traps.
+---
+
+import Archify from '../../../components/Archify.astro';
+
+<Archify name="web-flow" title="Web traffic through the pangolin gateway" caption="Every public service enters through skitarii. clochette and RogueLeader publish no port: newt opens the tunnel outward." />
+
+## Containers
+
+All on the `pangolin` Docker network (IPv4 + `fd49:e7d1:9e38::/64`). Nix:
+`docker-pangolin.nix`, `docker-crowdsec-manager.nix`, crowdsec relic in `default.nix`.
+
+| Container | Image | Role |
+|---|---|---|
+| `gerbil` | `fosrl/gerbil` | Publishes 80/443 TCP and 443/51820/21820 UDP (WireGuard for newt) |
+| `traefik` | `traefik` | Runs in gerbil's netns. Let's Encrypt HTTP-01, plugins badger + crowdsec bouncer |
+| `pangolin` | `fosrl/pangolin:ee-*` | Dashboard and API, SQLite in `/srv/docker/pangolin.friloux.me/config`. Free personal-use EE license at `/admin/license` |
+| `crowdsec` | `crowdsecurity/crowdsec` | STC relic, reads traefik's access log, AppSec on `:7422` |
+| `crowdsec-manager` | `hhftechnology/crowdsec-manager` | CrowdSec UI, raw Docker socket |
+
+## Where the configuration comes from
+
+| Source | Content | Written by |
+|---|---|---|
+| traefik HTTP provider | Resources, routes, auth rules | pangolin, live, from its database |
+| `dynamic_config.yml` | Dashboard routes, middlewares `badger`, `crowdsec`, `redirect-to-https` | Nix (read-only) |
+| `traefik_config.yml` | Entrypoints, plugins, ACME, access log | Nix (read-only) |
+| pangolin `config.yml` | Dashboard URL, base domain `friloux.me`, flags | sops template (`server.secret`) |
+
+crowdsec-manager cannot edit traefik's files: those changes go through Nix.
+
+Secrets in `secrets/skitarii.yaml`: `services/pangolin/secret`,
+`services/crowdsec/bouncer-key` (registered as `BOUNCER_KEY_traefik`, read by traefik from a mounted file).
+
+## Publish a service
+
+1. CNAME `<name>` → `skitarii.friloux.me.` at Gandi, **before** anything queries the name (a cached `NXDOMAIN` lasts 3 h).
+2. pangolin: a resource on the right node. **Local** for a container on skitarii's `pangolin` network, a newt node otherwise.
+3. Keep SSO on unless the service is public. **Save** the authentication tab: an unsaved SSO switch stays on, and a browser with a dashboard session hides it (`curl` gets `401`).
+
+`photos.friloux.me` has no SSO (the Immich app cannot pass it). The crowdsec
+scenario `LePresidente/http-generic-401-bf` bans `POST` bursts answered with 401.
+
+## Add a newt node
+
+1. pangolin: **Nodes** → add a node, type **Newt**. Copy the id and secret (shown once).
+2. Host's sops file: `services/newt/id`, `services/newt/secret`.
+3. Copy RogueLeader's `docker-newt.nix`: newt on the network of the services it serves (`web`). Without a host traefik, create `web` with `stc.lib.docker.mkNetwork` (see clochette's).
+4. Deploy. `docker logs newt` shows `Tunnel connection to server established successfully!`, the node turns **Online**.
+5. Resource targets: container name and internal port (`http://mealie:9000`).
+
+Tunnelled traffic still goes through skitarii's traefik: the bouncer sees the
+real visitor and bans apply.
+
+## crowdsec-manager
+
+Pangolin resource `crowdsec.friloux.me` (local node, `http://crowdsec-manager:8080`),
+behind SSO **and TOTP**. It holds the raw Docker socket: reaching it means root on skitarii.
+
+:::caution
+pangolin security keys are a login method, not a second factor. Only an enabled TOTP asks for a code. Check in a private window.
+:::
+
+## AppSec
+
+The bouncer sends every request to `crowdsec:7422` before letting it through.
+Collections `crowdsecurity/appsec-virtual-patching` and `crowdsecurity/appsec-generic-rules`
+in `default.nix`, bouncer settings in `docker-pangolin.nix`.
+
+- Inline blocking ignores the parser whitelist: tailnet and LAN requests are inspected too.
+- crowdsec down means every request is blocked (fail closed, like the LAPI in `live` mode).
+- Only the first 10 MB of a body are inspected: large uploads (immich, papra) pass.
+
+## Checks
+
+```bash
+# Bouncer registered, access log read
+sudo docker exec crowdsec cscli bouncers list
+sudo docker exec crowdsec cscli metrics show acquisition
+
+# Address seen by traefik (must be the visitor's)
+sudo tail -n 3 /srv/docker/pangolin.friloux.me/traefik-logs/access.log \
+  | nix run nixpkgs#jq -- -r '[.ClientHost, .RouterName, .DownstreamStatus] | @tsv'
+
+# Ban test (5 min), wait 70 s before testing
+sudo docker exec crowdsec cscli decisions add --ip <IP> --duration 5m --reason test
+
+# AppSec: expect 403
+curl -sS -o /dev/null -w '%{http_code}\n' https://cuisine.friloux.me/.env
+
+# A legitimate request got 403: find the rule before disabling anything
+docker exec crowdsec cscli alerts list | grep -E "vpatch|appsec"
+```
+
+## Backup, health, alerts
+
+| What | Where | Detail |
+|---|---|---|
+| Borg | `backup.nix` | 04:00 to `storage2.friloux.me/~/skitarii.friloux.me`, weekly `borg check`. [Restore](/nixos/operations/restore/) |
+| SQLite snapshots | `/srv/docker/sqlite-snapshots` | pangolin, crowdsec, crowdsec-manager, taken before `borg create` |
+| Log rotation | `docker-pangolin.nix` | `access.log` daily, 14 kept, rename then `USR1` |
+| Healthchecks | `docker-pangolin.nix` | pangolin `:3001/api/v1/`, gerbil `:3004/healthz`, `traefik healthcheck` |
+| Container alerts | `default.nix` | `stc.relics.docker.notify`, ntfy topic in sops |
+| Node and resource alerts | pangolin UI (database, backed up) | rules *site toggle* and *resource toggle*, webhook below |
+
+pangolin webhook: `POST https://ntfy.sh/` (the root, where ntfy reads a JSON body), body template on:
+
+```json
+{"topic":"TOPIC","title":"[pangolin] site {{siteName}} {{status}}","message":"{{event}} à {{timestamp}}"}
+```
+
+Resource rule: `{{resourceName}}` instead of `site {{siteName}}`. Resource events need a target health check.
+
+## Known traps
+
+| Symptom | Cause | Fix |
+|---|---|---|
+| Every dashboard route fails: `invalid middleware "badger@file"` | badger v1.8.0 fails traefik's integrity check, traefik disables all plugins | badger pinned to v1.7.0 (traefik/traefik#14115) |
+| Ban test returns 200 | `live` bouncer caches a clean IP 60 s | wait |
+| IPv6 visitors logged as a private address | no IPv6 on the Docker network, `docker-proxy` in the path | ULA /64 on the network. Changing it: stop containers, `docker network rm pangolin` |
+| No ntfy notification, no error | ntfy.sh rate-limits IPv6 per /64, shared with OVH neighbours (`429`) | `curl -4 --fail` everywhere |
+| `{{resourceName}}` left as-is | dashboard *Test* button sends fake data | real alerts are fine |
+| `connection refused` on `pangolin:3001`, `no such host crowdsec`, `crowdsec@file does not exist` at start | startup order | gone within seconds; if not, real |

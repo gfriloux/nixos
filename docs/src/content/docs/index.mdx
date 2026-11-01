@@ -1,33 +1,43 @@
 ---
-title: KURI · Codex Mechanica
-description: "In the dark millennium, infrastructure is liturgy."
+title: KURI
+description: NixOS flake for four machines.
 template: splash
 hero:
   title: KURI
-  tagline: "In the dark millennium, infrastructure is liturgy. One Codex to forge the shrines. Praise the Omnissiah."
+  image:
+    html: '<img src="/nixos/kuri-portrait.webp" width="1200" height="675" alt="A starship captain on the bridge, the house banner behind him" />'
+  tagline: "NixOS flake for four machines: what runs where, how to deploy, how to rebuild."
   actions:
-    - text: The Catechism
+    - text: Read the introduction
       link: /nixos/introduction/
-      icon: right-arrow
       variant: primary
     - text: GitHub
       link: https://github.com/gfriloux/nixos
       icon: external
+      variant: minimal
 ---
 
-import { CardGrid, Card } from '@astrojs/starlight/components';
+import { CardGrid, LinkCard } from '@astrojs/starlight/components';
+import Archify from '../../components/Archify.astro';
+
+## Hosts
 
 <CardGrid>
-  <Card title="Machine-Shrines" icon="laptop">
-    Four consecrated hosts — `exampleHost`, `clochette`, `RogueLeader`, `skitarii` — each a machine-shrine tended by the Techpriest.
-  </Card>
-  <Card title="Sacred Geometry" icon="document">
-    The architecture of the Forge: snowfall-lib structure, ZFS storage, noosphere networking, reliquary secrets.
-  </Card>
-  <Card title="Sacred Patterns" icon="puzzle">
-    Reusable relics from STC — `docker.crowdsec`, `docker.notify`, `hardening.ssh` — the holy patterns consecrating each shrine.
-  </Card>
-  <Card title="Rites Opérationnels" icon="setting">
-    Deployment rites, sops-nix reliquaries, reinstallation liturgies, and troubleshooting canticles.
-  </Card>
+  <LinkCard title="exampleHost" description="Desktop. ZFS mirror, AMD GPU, Plasma 6." href="/nixos/examplehost/overview/" />
+  <LinkCard title="clochette" description="Scaleway Dedibox. Immich." href="/nixos/clochette/overview/" />
+  <LinkCard title="RogueLeader" description="Home server. BookStack, Mealie, Papra, Uptime Kuma, Borg UI." href="/nixos/rogueleader/overview/" />
+  <LinkCard title="skitarii" description="OVH VPS. pangolin gateway, the only public entry point." href="/nixos/skitarii/overview/" />
 </CardGrid>
+
+## Common tasks
+
+<CardGrid>
+  <LinkCard title="Deploy" description="just install, install_clochette, install_rogueleader, install_skitarii." href="/nixos/operations/deployment/" />
+  <LinkCard title="Reinstall a machine" description="One procedure per host." href="/nixos/operations/overview/" />
+  <LinkCard title="Restore a backup" description="Borg, from storage2." href="/nixos/operations/restore/" />
+  <LinkCard title="Troubleshooting" description="Known failures and their fix." href="/nixos/operations/troubleshooting/" />
+</CardGrid>
+
+## Web traffic
+
+<Archify name="web-flow" title="Web traffic through the pangolin gateway" caption="Every public service enters through skitarii. clochette and RogueLeader publish no port: newt opens the tunnel outward." />

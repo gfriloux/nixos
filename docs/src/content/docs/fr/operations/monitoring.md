@@ -1,97 +1,44 @@
 ---
-title: Monitoring & Observabilité
-description: Surveillance des services — health checks, timers, logs, Borg backup.
+title: "Monitoring"
+description: Ce qui surveille quoi, et les commandes pour vérifier à la main.
 ---
 
-Vue d'ensemble des mécanismes de surveillance en place sur l'infrastructure.
-
-## Notifications de Pannes (ntfy.sh)
-
-Sur chaque machine qui fait tourner des containers (clochette, RogueLeader,
-skitarii), les containers portant le label `stc.docker/health-watch = "true"`
-sont surveillés automatiquement par la relic `relics-docker-notify` de STC.
-Voir [Notifications de Pannes](../clochette/notifications.md).
-
-Deux mécanismes :
-
-| Mécanisme | Déclencheur | Action |
+| Quoi | Par | Alerte |
 |---|---|---|
-| `stc-notify-failure@` | Service systemd passe en `failed` | `notifyCommand` → notification ntfy.sh |
-| `stc-docker-health-watch@` (timer 30s) | `docker inspect` retourne `unhealthy` | `docker kill` → systemd restart → ntfy.sh |
+| Conteneurs (healthcheck) | `stc-docker-health-watch@`, toutes les 30 s : `unhealthy` → `docker kill` → restart systemd | ntfy, voir [Notifications de panne](/nixos/fr/operations/notifications/) |
+| Unités en échec | `stc-notify-failure@` (`OnFailure`) | ntfy |
+| Borg | job quotidien (`postHook`) + `borgbackup-check` hebdo (`--verify-data`), sur clochette, skitarii, RogueLeader | ntfy à chaque run, succès ou échec |
+| Services web vus de dehors | Uptime Kuma sur RogueLeader, page `status.friloux.me` | ntfy |
+| Nœuds et ressources pangolin | règles d'alerte pangolin | ntfy, voir [Passerelle](/nixos/fr/skitarii/gateway/) |
 
-Les notifications arrivent sur le topic ntfy.sh configuré dans `services/ntfy/topic`. Les exemples ci-dessous sont pris sur clochette.
+Uptime Kuma tourne à la maison : si skitarii tombe, la page publique tombe, les alertes continuent.
 
-## Vérifier l'État des Containers
+## Conteneurs
 
 ```bash
-# Vue rapide — tous les containers
-docker ps --format "table {{.Names}}\t{{.Status}}\t{{.RunningFor}}"
-
-# Santé détaillée d'un container
-docker inspect --format='{{.Name}} : {{.State.Health.Status}}' immich-server
-
-# Santé de tous les containers surveillés
-for c in newt immich-server immich-postgres immich-redis; do
-  echo "$c : $(docker inspect --format='{{.State.Health.Status}}' $c 2>/dev/null || echo 'not found')"
-done
+docker ps --format "table {{.Names}}\t{{.Status}}"
+docker inspect --format '{{json .State.Health}}' immich-server   # statut + sortie des derniers checks
+journalctl -u immich-server --since "1 hour ago"
+systemctl list-timers | grep health-watch
 ```
 
-## Health Check Endpoints
+Les healthchecks tournent dans le conteneur : un `curl localhost:<port>` depuis l'hôte
+échoue, aucun port n'est publié. Tester avec `docker exec <conteneur> <cmd>`.
 
-| Service | Commande de Test |
-|---|---|
-| newt | `docker exec newt test -f /tmp/healthy` |
-| immich | `curl -s http://localhost:2283/api/server/ping` |
-| postgres | `docker exec immich-postgres pg_isready -U immich -d immich` |
-| redis | `docker exec immich-redis redis-cli ping` |
-
-## Timers systemd Actifs
+## Borg
 
 ```bash
-# Lister tous les timers et leur prochain déclenchement
-systemctl list-timers --all
-
-# Timers spécifiques à surveiller
-systemctl list-timers | grep -E "borg|health-watch|logrotate"
-```
-
-## Borg Backup
-
-```bash
-# Statut du dernier backup
 systemctl status borgbackup-job-remote
-
-# Journal du dernier backup
 journalctl -u borgbackup-job-remote --since today
-
-# Liste des archives disponibles
-BORG_PASSPHRASE=$(cat /run/secrets/services/borg/passphrase) \
-BORG_RSH="ssh -i /run/secrets/services/borg/key/private" \
-borg list ssh://backup@storage2.friloux.me/~/clochette.friloux.me
-
-# Vérification d'intégrité manuelle
-systemctl start borgbackup-check
+sudo systemctl start borgbackup-check      # vérification d'intégrité à la main
 ```
 
-## Logs
+Lister les archives : [Restaurer depuis Borg](/nixos/fr/operations/restore/).
+
+## Logs web
+
+Tout passe par le traefik de skitarii :
 
 ```bash
-# Logs d'un service Docker via journald
-journalctl -u docker-newt -f
-journalctl -u docker-immich-server --since "1 hour ago"
-
-# Les logs d'accès web sont sur skitarii, dont le traefik tient la passerelle
 sudo tail -f /srv/docker/pangolin.friloux.me/traefik-logs/access.log
-
-# Logrotate — vérifier la dernière exécution
-journalctl -u logrotate --since today
 ```
-
-## Uptime Kuma
-
-Uptime Kuma tourne sur RogueLeader (container `uptime-kuma`) et sert la page de
-statut `status.friloux.me`, publiée par la passerelle pangolin. Si skitarii
-tombe, la page publique tombe avec lui, mais Uptime Kuma continue de tourner à
-la maison et d'alerter par ntfy.
-
-Voir [RogueLeader](../rogueleader/overview.md).

@@ -1,37 +1,34 @@
 ---
-title: Rites Opérationnels — Deployment & Maintenance
-description: Common operations, emergency recovery, and diagnostic procedures for the KURI Forge.
+title: "Operations"
+description: Procedures, day to day and when something breaks.
+sidebar:
+  order: 1
+  label: "Overview"
 ---
 
-This section gathers all operational ceremonies — from daily maintenance to emergency rites and recovery from calamity.
+## Change the config
 
-## Common Rites
+```bash
+just test                 # linters (pre-commit)
+just build_<machine>      # build without deploying (just build for exampleHost)
+just install_<machine>    # deploy (just install for exampleHost)
+```
+
+Keep a root shell open before touching sudo or users. Details: [Deployment](/nixos/operations/deployment/).
+
+## Day to day
 
 | Task | Page |
 |---|---|
-| Deploy a configuration | [Rites of Anointment](deployment.md) |
-| Edit a sops secret | [The Reliquary & sops-nix](sops.md) |
-| Monitor services | [The Astropath & Observability](monitoring.md) |
-| Diagnose failure | [Dépannage](troubleshooting.md) |
+| Edit a secret | [Secrets](/nixos/architecture/secrets/) |
+| Monitor | [Monitoring](/nixos/operations/monitoring/), [Failure notifications](/nixos/operations/notifications/) |
+| Diagnose | [Troubleshooting](/nixos/operations/troubleshooting/) |
 
-## Recovery Rites
+## When something breaks
 
 | Task | Page |
 |---|---|
-| Backup/restore age keys | [Reliquary Backup & Restoration](secrets-backup.md) |
-| Restore service data from Borg | [Rite of Restoration](restore.md) |
-| Reinstall exampleHost | [Rite of Resurrection: exampleHost](reinstall-examplehost.md) |
-| Reinstall clochette | [Rite of Resurrection: clochette](reinstall-clochette.md) |
-| Reinstall skitarii | [Rite of Resurrection: skitarii](reinstall-skitarii.md) |
-| Re-enroll Tailscale | [Tailscale — Re-enrollment](tailscale.md) |
-
-## General Principle
-
-Every change to the flake follows this cycle:
-
-1. Modify `.nix` files
-2. `just test` (linters via pre-commit)
-3. `just build` or `just build_clochette` (build without deploying)
-4. `just install` or `just install_clochette` (deploy)
-5. Validate expected behaviour
-6. Commit + push
+| Restore data | [Restore from Borg](/nixos/operations/restore/) |
+| Recover the age keys | [Age key backup](/nixos/operations/secrets-backup/) |
+| Reinstall | [exampleHost](/nixos/operations/reinstall-examplehost/), [clochette](/nixos/operations/reinstall-clochette/), [skitarii](/nixos/operations/reinstall-skitarii/), [RogueLeader](/nixos/operations/reinstall-rogueleader/) |
+| Re-enroll Tailscale | [Tailscale](/nixos/operations/tailscale/) |

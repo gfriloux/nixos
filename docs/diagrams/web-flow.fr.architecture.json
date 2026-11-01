@@ -1,0 +1,216 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "Trafic web par la passerelle pangolin",
+    "quality_profile": "showcase"
+  },
+  "components": [
+    {
+      "id": "internet",
+      "type": "external",
+      "label": "Internet",
+      "sublabel": "visiteurs",
+      "pos": [
+        40,
+        280
+      ],
+      "size": [
+        140,
+        64
+      ]
+    },
+    {
+      "id": "edge",
+      "type": "security",
+      "label": "gerbil + traefik",
+      "sublabel": ":443 · WireGuard",
+      "pos": [
+        280,
+        280
+      ],
+      "size": [
+        160,
+        64
+      ]
+    },
+    {
+      "id": "crowdsec",
+      "type": "security",
+      "label": "crowdsec",
+      "sublabel": "bouncer + AppSec",
+      "pos": [
+        280,
+        110
+      ],
+      "size": [
+        160,
+        64
+      ]
+    },
+    {
+      "id": "pangolin",
+      "type": "backend",
+      "label": "pangolin",
+      "sublabel": "ressources + SSO",
+      "pos": [
+        280,
+        450
+      ],
+      "size": [
+        160,
+        64
+      ]
+    },
+    {
+      "id": "newt-cl",
+      "type": "backend",
+      "label": "newt",
+      "sublabel": "clochette",
+      "pos": [
+        600,
+        170
+      ],
+      "size": [
+        150,
+        64
+      ]
+    },
+    {
+      "id": "immich",
+      "type": "frontend",
+      "label": "immich",
+      "sublabel": "photos.friloux.me",
+      "pos": [
+        840,
+        170
+      ],
+      "size": [
+        170,
+        64
+      ]
+    },
+    {
+      "id": "newt-rl",
+      "type": "backend",
+      "label": "newt",
+      "sublabel": "RogueLeader",
+      "pos": [
+        600,
+        390
+      ],
+      "size": [
+        150,
+        64
+      ]
+    },
+    {
+      "id": "rl-apps",
+      "type": "frontend",
+      "label": "services web",
+      "sublabel": "5 applis",
+      "tag": "bookstack, mealie, papra…",
+      "pos": [
+        840,
+        390
+      ],
+      "size": [
+        170,
+        64
+      ]
+    }
+  ],
+  "boundaries": [
+    {
+      "kind": "region",
+      "label": "skitarii · OVH VPS",
+      "wraps": [
+        "edge",
+        "crowdsec",
+        "pangolin"
+      ]
+    },
+    {
+      "kind": "region",
+      "label": "clochette · Scaleway",
+      "wraps": [
+        "newt-cl",
+        "immich"
+      ]
+    },
+    {
+      "kind": "region",
+      "label": "RogueLeader · maison",
+      "wraps": [
+        "newt-rl",
+        "rl-apps"
+      ]
+    }
+  ],
+  "connections": [
+    {
+      "id": "https-in",
+      "from": "internet",
+      "to": "edge",
+      "label": "HTTPS",
+      "variant": "emphasis"
+    },
+    {
+      "id": "bouncer",
+      "from": "edge",
+      "to": "crowdsec",
+      "label": "contrôle",
+      "variant": "security"
+    },
+    {
+      "id": "routes",
+      "from": "pangolin",
+      "to": "edge",
+      "label": "routes"
+    },
+    {
+      "id": "tunnel-cl",
+      "from": "newt-cl",
+      "to": "edge",
+      "label": "tunnel ouvert par newt",
+      "variant": "dashed"
+    },
+    {
+      "id": "tunnel-rl",
+      "from": "newt-rl",
+      "to": "edge",
+      "label": "tunnel ouvert par newt",
+      "variant": "dashed"
+    },
+    {
+      "id": "cl-http",
+      "from": "newt-cl",
+      "to": "immich",
+      "label": "http"
+    },
+    {
+      "id": "rl-http",
+      "from": "newt-rl",
+      "to": "rl-apps",
+      "label": "http"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "rose",
+      "title": "Entrée unique",
+      "items": [
+        "Seul skitarii publie des ports",
+        "crowdsec inspecte chaque requête"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "Tunnels sortants",
+      "items": [
+        "clochette et RogueLeader ne publient rien",
+        "newt se connecte à gerbil en WireGuard"
+      ]
+    }
+  ]
+}

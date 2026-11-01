@@ -1,105 +1,75 @@
 ---
-title: Réinstallation — skitarii
-description: Réinstaller le VPS OVH depuis le mode rescue avec nixos-anywhere — clé hôte, nom du disque, Tailscale.
+title: "Réinstaller skitarii"
+description: Du rescue OVH au premier déploiement, par nixos-anywhere depuis exampleHost.
 ---
 
-Guide complet de réinstallation du sanctuaire-porte skitarii. OVH ne propose
-pas d'image NixOS et un VPS-1 n'a pas de console KVM : tout passe par le
-**mode rescue** et nixos-anywhere, lancé depuis exampleHost.
-
-:::caution[Garde]
-Le SSH de skitarii n'est joignable que via Tailscale. Une machine fraîchement
-installée n'est pas encore sur le tailnet : le SSH public est donc rouvert le
-temps de la réinstallation (étape 1) et refermé à la fin (étape 8). Ne pas
-sauter la dernière étape.
+:::danger
+L'étape 4 efface le disque de skitarii. Tous les services publics passent
+par skitarii : ils sont coupés jusqu'à la restauration Borg (étape 8).
 :::
 
-## Informations de Référence
-
-| Paramètre | Valeur |
+| | |
 |---|---|
-| IPv4 publique | `5.196.4.180` |
+| IP | `5.196.4.180` (DHCP), IPv6 statique dans `network.nix` |
 | Disque | `/dev/sda` en boot normal, **`/dev/sdb` en rescue** |
-| Boot | BIOS, GRUB (GPT + partition EF02 via disko) |
-| sops | Clé age dérivée de `/etc/ssh/ssh_host_ed25519_key` |
-| SSH après réinstallation | Uniquement via Tailscale, `ssh skitarii.friloux.me` |
+| Boot | BIOS, GPT + EF02 (`disko.nix`) |
+| Console | aucune (VPS-1, pas de KVM) |
+| sops | clé age dérivée de `/etc/ssh/ssh_host_ed25519_key` |
+| SSH | Tailscale seulement |
 
-## Pré-Requis
+## Avant
 
-- [ ] Accès au manager OVH (redémarrage en rescue / en mode normal)
-- [ ] La YubiKey (identité age pour `sops`, clé ssh `ssh:skitarii`)
-- [ ] Accès à la console d'admin Tailscale (connexion GitHub, `gfriloux`)
+- Accès au manager OVH (redémarrer en rescue ou en mode normal).
+- La YubiKey (`sops`) et la console d'admin Tailscale.
+- Une archive Borg récente : [Restaurer depuis Borg](/nixos/fr/operations/restore/).
 
-## Pourquoi le Nom du Disque Change
+En rescue, le disque de rescue OVH prend `sda` et celui du VPS devient `sdb`.
+disko tire le device de GRUB de `disko.nix` : on installe sur `sdb`, puis on
+revient à `sda` (étape 6). Les `by-id` suivent l'adresse SCSI et changent
+aussi.
 
-En mode rescue, OVH attache son propre disque de rescue en `sda` ; le disque
-du VPS devient `sdb`. En boot normal, il redevient `sda`. Les noms
-`/dev/disk/by-id` n'aident pas : ils suivent l'adresse SCSI, qui change aussi.
+## 1. Modifications temporaires
 
-disko déduit `boot.loader.grub.devices` de son `device` : l'installation doit
-donc viser `/dev/sdb`, et la config doit revenir à `/dev/sda` avant le switch
-suivant — sinon `grub-install` vise un disque qui n'existe pas.
-
-## Étape 1 — Modifications Temporaires du Flake
-
-Dans `systems/x86_64-linux/skitarii/disko.nix` :
+Ne pas commiter.
 
 ```nix
+# disko.nix
 device = "/dev/sdb"; # TEMPORAIRE : réinstallation depuis le rescue
-```
 
-Dans `systems/x86_64-linux/skitarii/network.nix` :
-
-```nix
+# network.nix
 services.openssh.openFirewall = true; # TEMPORAIRE : pas encore sur le tailnet
 ```
 
-Ne pas commiter ces deux changements.
-
-## Étape 2 — Générer la Clé Hôte à l'Avance
-
-La clé hôte détermine la clé age : elle est donc créée sur exampleHost et
-remise à l'installeur. sops fonctionne dès le premier boot.
+## 2. Générer la clé hôte
 
 ```bash
 mkdir -p /tmp/skitarii-extra/etc/ssh
 ssh-keygen -q -t ed25519 -N "" -C root@skitarii -f /tmp/skitarii-extra/etc/ssh/ssh_host_ed25519_key
 nix shell nixpkgs#ssh-to-age -c ssh-to-age < /tmp/skitarii-extra/etc/ssh/ssh_host_ed25519_key.pub
+ssh-keygen -lf /tmp/skitarii-extra/etc/ssh/ssh_host_ed25519_key.pub   # empreinte à vérifier à l'étape 5
 ```
 
-Remplacer la valeur de `&server_skitarii` dans `.sops.yaml` par cette clé age,
-puis re-chiffrer (YubiKey) :
+Mettre la clé age dans `&server_skitarii` (`.sops.yaml`), puis :
 
 ```bash
-sops updatekeys secrets/skitarii.yaml
+sops updatekeys secrets/skitarii.yaml   # YubiKey
 ```
 
-Noter la nouvelle empreinte, pour la vérifier à la première connexion :
+## 3. Démarrer le rescue
 
-```bash
-ssh-keygen -lf /tmp/skitarii-extra/etc/ssh/ssh_host_ed25519_key.pub
-```
-
-## Étape 3 — Démarrer le Rescue
-
-Manager OVH → le VPS → **Redémarrer en mode rescue**. OVH communique le mot
-de passe root du rescue.
-
-Depuis exampleHost, copier la clé dans le rescue. `PubkeyAuthentication=no`
-écarte les clés de l'agent : Debian coupe la connexion après 6 clés proposées.
+Manager OVH → le VPS → **Redémarrer en mode rescue**. OVH envoie le mot de
+passe root. `PubkeyAuthentication=no` écarte les clés de l'agent : Debian
+coupe après 6 clés proposées.
 
 ```bash
 ssh-keygen -R 5.196.4.180
 ssh-copy-id -o PubkeyAuthentication=no -i ~/.ssh/id_ed25519 root@5.196.4.180
 ```
 
-## Étape 4 — Installer avec nixos-anywhere
-
-:::danger[Interdit]
-Destructif et irréversible. Efface entièrement le disque du VPS.
-:::
+## 4. Installer
 
 ```bash
+ssh-add ~/.ssh/id_ed25519
 nix run github:nix-community/nixos-anywhere -- \
   --flake .#skitarii \
   --target-host root@5.196.4.180 \
@@ -109,15 +79,10 @@ nix run github:nix-community/nixos-anywhere -- \
   --extra-files /tmp/skitarii-extra
 ```
 
-- `IdentityFile` pointe sur le **`.pub`** : ssh demande la signature à l'agent
-  au lieu de redemander la passphrase à chacune des nombreuses connexions de
-  nixos-anywhere. Lancer `ssh-add ~/.ssh/id_ed25519` avant.
-- Pas de phase `reboot` : le VPS redémarrerait en rescue.
-- Après `machine will boot into nixos in 6s...` et `Shared connection
-  closed`, **attendre** : nixos-anywhere attend que l'installeur démarre,
-  puis continue seul.
-
-Attendu à la fin :
+`IdentityFile` sur le `.pub` : ssh signe par l'agent, sans redemander la
+passphrase à chaque connexion. Pas de phase `reboot` : le VPS repartirait en
+rescue. Après `Shared connection closed`, attendre, nixos-anywhere reprend
+seul. Attendu :
 
 ```text
 sops-install-secrets: Imported /etc/ssh/ssh_host_ed25519_key as age key with fingerprint age1…
@@ -125,115 +90,84 @@ installing the GRUB 2 boot loader on /dev/sdb...
 ### Done! ###
 ```
 
-L'empreinte age doit être celle inscrite dans `.sops.yaml`.
+L'empreinte age doit être celle de `.sops.yaml`.
 
-## Étape 5 — Premier Boot
+## 5. Premier boot
 
-Manager OVH → **Redémarrer** en mode normal (sortie du rescue). Environ une
-minute plus tard :
+Manager OVH → **Redémarrer** en mode normal. Une minute plus tard :
 
 ```bash
 ssh-keygen -R 5.196.4.180
 ssh -t -o HostName=5.196.4.180 skitarii.friloux.me sudo true
 ```
 
-N'accepter que l'empreinte notée à l'étape 2. Si `sudo` refuse le mot de
-passe, voir [Dépannage](#dépannage).
+N'accepter que l'empreinte notée à l'étape 2.
 
-## Étape 6 — Retour à `/dev/sda`
+## 6. Retour à `/dev/sda`
 
 Remettre `device = "/dev/sda";` dans `disko.nix`, puis :
 
 ```bash
-NIX_SSHOPTS="-o HostName=5.196.4.180" just install_skitarii
+NIX_SSHOPTS="-o HostName=5.196.4.180" just install_skitarii   # GRUB sur /dev/sda
 ```
 
-Attendu : `installing the GRUB 2 boot loader on /dev/sda...`.
+## 7. Tailscale
 
-## Étape 7 — Tailscale
-
-Dans la [console d'admin](https://login.tailscale.com/admin/machines),
-**supprimer d'abord l'ancienne entrée skitarii** : sinon le nouveau nœud
-s'appelle `skitarii-1` et le nom MagicDNS `skitarii` utilisé par le bloc ssh
-ne pointe plus nulle part.
-
-Sur skitarii :
+Console d'admin Tailscale : **supprimer l'ancienne entrée skitarii** d'abord,
+sinon le nœud devient `skitarii-1` et le bloc ssh vise un nom mort.
 
 ```bash
-sudo tailscale up
+sudo tailscale up            # sur skitarii, ouvrir l'URL
 ```
 
-Ouvrir l'URL, valider, puis sur la ligne skitarii : **⋯ → Disable key
-expiry**. Vérifier depuis exampleHost (pas de `KeyExpiry` = désactivée) :
+Puis **⋯ → Disable key expiry**. Depuis exampleHost (pas de `KeyExpiry` =
+désactivée) :
 
 ```bash
 tailscale status --json | jq '.Peer[] | select(.HostName=="skitarii") | {TailscaleIPs, KeyExpiry}'
 ssh-keygen -R skitarii
-ssh -o HostName=skitarii skitarii.friloux.me true
+ssh skitarii.friloux.me true
 ```
 
-## Étape 8 — Refermer le SSH Public
+## 8. Refermer le SSH public, restaurer
 
-Remettre `services.openssh.openFirewall = false;` dans `network.nix`, déployer
-via le tailnet et vérifier que le port 22 ne répond plus :
+Remettre `openFirewall = false;` dans `network.nix`, puis :
 
 ```bash
 just install_skitarii
-ssh skitarii.friloux.me true
 nc -zv -w 5 5.196.4.180 22    # doit échouer en timeout
 ```
 
-Remettre les données de pangolin depuis Borg (sites, ressources,
-utilisateurs, TOTP, activation de la licence, clé WireGuard de gerbil) :
-extraire la dernière archive et remettre les copies SQLite en place, comme
-décrit dans [Restauration des Données depuis Borg](restore.md). La licence
-Enterprise est liée au host ID du serveur : si `/admin/license` la montre
-inactive après la restauration, la ressaisir. crowdsec réenregistre seul le
-bouncer depuis sops.
+Restaurer pangolin depuis Borg (nœuds, ressources, utilisateurs, TOTP,
+licence, clé WireGuard de gerbil) :
+[Services SQLite (skitarii)](/nixos/fr/operations/restore/#services-sqlite-skitarii).
+La licence Enterprise suit le host ID : si `/admin/license` la montre
+inactive, la ressaisir. crowdsec réenregistre seul le bouncer depuis sops.
 
-Commiter `.sops.yaml` et `secrets/skitarii.yaml`, puis supprimer la copie
-locale de la clé hôte :
-
-```bash
-rm -r /tmp/skitarii-extra
-```
+Commiter `.sops.yaml` et `secrets/skitarii.yaml`, puis `rm -r /tmp/skitarii-extra`.
 
 ## Dépannage
 
-### `Connection reset by peer` juste après un login raté
-
-sshd a banni l'adresse source pour une heure (`PerSourcePenalties =
-authfail:3600s`). Sans console KVM, redémarrer le VPS depuis le manager OVH :
-le ban vit dans la mémoire de sshd. Puis se connecter avec la bonne clé
-uniquement (`IdentitiesOnly`).
+| Symptôme | Cause, remède |
+|---|---|
+| `Connection reset by peer` après un login raté | Ban d'une heure (`PerSourcePenalties`), en mémoire de sshd. Redémarrer depuis le manager OVH, reprendre avec `IdentitiesOnly`. |
+| `skitarii.friloux.me` ne résout pas | `NXDOMAIN` en cache 3 h (SOA Gandi) sur chaque résolveur. Vérifier avec `@1.1.1.1`, utiliser `-o HostName=…` en attendant. |
+| Home Manager : `config.fish would be clobbered` | fish a créé un `config.fish` vide au premier login. Le supprimer, relancer `home-manager-guillaume.service`. |
 
 ### `sudo` refuse le mot de passe
 
-Vérifier ce que contient sops — un hash yescrypt valide commence par `$y$j9T$` :
+Un hash yescrypt valide commence par `$y$j9T$` :
 
 ```bash
 sops -d --extract '["users"]["guillaume"]["hashed-password"]' secrets/skitarii.yaml | head -c 10; echo
 ```
 
-Un copier-coller peut perdre le préfixe. Écrire le hash sans passer par le
-presse-papier :
+Le réécrire sans passer par le presse-papier :
 
 ```bash
 sops set secrets/skitarii.yaml '["users"]["guillaume"]["hashed-password"]' "$(mkpasswd -m yescrypt | jq -R .)"
 ```
 
-Root ne peut pas se connecter en SSH et `guillaume` ne peut pas faire `sudo` :
-aucun déploiement ne peut corriger ça. Refaire la réinstallation depuis
-l'étape 3, en gardant le même `/tmp/skitarii-extra`.
-
-### `skitarii.friloux.me` ne résout pas après création de l'enregistrement
-
-Demander un nom avant qu'il existe met le `NXDOMAIN` en cache pour la durée
-minimale du SOA — 3 heures chez Gandi — sur chaque résolveur du chemin
-(`100.100.100.100` de Tailscale, la box). Vérifier avec `@1.1.1.1` ; en
-attendant, utiliser `-o HostName=…`.
-
-### Home Manager échoue : `config.fish would be clobbered`
-
-fish a écrit un `~/.config/fish/config.fish` vide au premier login, avant que
-le home existe. Le supprimer et relancer `home-manager-guillaume.service`.
+Root ne se connecte pas en SSH et `guillaume` n'a pas sudo : aucun
+déploiement ne corrige ça. Reprendre à l'étape 3, avec le même
+`/tmp/skitarii-extra`.

@@ -1,78 +1,58 @@
 ---
-title: Reliquaires de Secrets
-description: Gestion des secrets via sops-nix et age — modèle de clés, fichiers chiffrés, références.
+title: "Secrets"
+description: sops-nix et age, qui ouvre quel fichier, éditer, référencer un secret.
 ---
 
-Les secrets sont chiffrés avec [sops](https://github.com/getsops/sops) et des clés [age](https://age-encryption.org/) via le module NixOS [sops-nix](https://github.com/Mic92/sops-nix).
+[sops-nix](https://github.com/Mic92/sops-nix), chiffrement [age](https://age-encryption.org/).
+Une clé de machine n'ouvre que son fichier ; les clés d'admin ouvrent tout mais ne sont sur aucune machine.
 
-## Modèle de Clés
+| Fichier | Clé de machine (au boot) | Clés d'admin (édition) |
+|---|---|---|
+| `secrets/kuri_exampleHost.yaml` | `/etc/sops/age/keys.txt` | YubiKey + secours |
+| `secrets/clochette.yaml` | dérivée de `/etc/ssh/ssh_host_ed25519_key` | YubiKey + secours |
+| `secrets/RogueLeader.yaml` | dérivée de `/etc/ssh/ssh_host_ed25519_key` | YubiKey + secours |
+| `secrets/skitarii.yaml` | dérivée de `/etc/ssh/ssh_host_ed25519_key` | YubiKey + secours |
 
-Deux sortes de clés, aux rôles distincts :
+- **YubiKey** : identité age en PIV slot 1, non extractible. Demande `age-plugin-yubikey` et le PIN PIV (différent du PIN GPG).
+- **Secours** : clé age hors ligne, pour une YubiKey perdue.
+- Aucune clé de machine n'est destinataire du fichier d'une autre (#94).
 
-- **Les clés de machine** déchiffrent le fichier de leur machine au démarrage.
-  Chacune n'ouvre qu'un fichier : lire le disque d'une machine expose ses
-  propres secrets, pas ceux des autres.
-- **Les clés d'administration** servent à éditer les fichiers avec `sops`.
-  Elles sont destinataires de tous les fichiers et ne sont jamais en clair sur
-  une machine.
-
-| Clé | Sorte | Partie privée | Ouvre |
-|---|---|---|---|
-| exampleHost | Machine, fichier age dédié | `/etc/sops/age/keys.txt` | `kuri_exampleHost.yaml` |
-| clochette | Machine, dérivée de la clé SSH host | `/etc/ssh/ssh_host_ed25519_key` | `clochette.yaml` |
-| RogueLeader | Machine, dérivée de la clé SSH host | `/etc/ssh/ssh_host_ed25519_key` | `RogueLeader.yaml` |
-| skitarii | Machine, dérivée de la clé SSH host | `/etc/ssh/ssh_host_ed25519_key` | `skitarii.yaml` |
-| YubiKey | Administration, identité age en PIV slot 1 | sur la YubiKey, non extractible | les quatre |
-| Secours | Administration, clé age simple | hors ligne, sur aucune machine | les quatre |
-
-## Fichiers de Reliquaires
-
-| Fichier | Déchiffrable par |
-|---|---|
-| `secrets/kuri_exampleHost.yaml` | exampleHost + YubiKey + secours |
-| `secrets/clochette.yaml` | clochette + YubiKey + secours |
-| `secrets/RogueLeader.yaml` | RogueLeader + YubiKey + secours |
-| `secrets/skitarii.yaml` | skitarii + YubiKey + secours |
-
-## Déchiffrement au Démarrage
-
-sops-nix dépose les secrets déchiffrés dans `/run/secrets/` au démarrage du système.
-Les secrets `neededForUsers = true` sont déposés dans `/run/secrets-for-users/`
-avant la création des utilisateurs (pour les mots de passe hashés).
-
-Sur exampleHost, Home Manager dépose ses secrets dans `/run/user/1000/secrets/`.
-
-## Configuration sops (`.sops.yaml`)
+Destinataires dans `.sops.yaml`, une règle par fichier :
 
 ```yaml
-keys:
-  - &desktop_examplehost age1xr32hdvanup0zk63v8hrcv2u2c09wplz6fd42w47mkjrd49j39xqaqqckq
-  - &server_clochette     age18594hnd4mk3736a36a5fqc5w55sanac86tv8du0hz67rfk558srs3y9jwa
-  - &server_rogueleader   age1nttxr633hf6r43szc9ffl2a0avmtmhtl7hhnjjuyd3sc4au705nqffyfwe
-  - &admin_yubikey        age1yubikey1qtsqgx98tq7d005aue4lqth3z5hgu67e9eee490mpf0phfx7znghqr8x67l
-  - &admin_rescue         age1faz4m9gj9xyz4rm26gndwgjkwrwr9ppnzm48slcrne7uvf3afqcsxtv8hs
+- path_regex: secrets/skitarii.yaml$
+  key_groups:
+  - age: [*server_skitarii, *admin_yubikey, *admin_rescue]
 ```
 
-La règle de chiffrement pour chaque fichier est définie sous `creation_rules`.
+## Éditer
 
-## Référence dans la Config NixOS
+```bash
+just secrets_skitarii                  # sops secrets/skitarii.yaml, YubiKey branchée
+sops updatekeys secrets/skitarii.yaml  # après un changement de destinataires (réinstallation)
+sops -d --extract '["services"]["ntfy"]["topic"]' secrets/clochette.yaml   # lire une valeur
+```
 
-Toujours utiliser `config.sops.secrets."<chemin>".path` :
+Après un changement de valeur : déployer, puis `systemctl restart <conteneur>`.
+Aucun secret n'a de `restartUnits` : le conteneur garde l'ancienne valeur jusqu'au restart.
+
+## Référencer
+
+Déclarer le secret à côté du service, lire son chemin via `config`, jamais `/run/secrets/...` en dur :
 
 ```nix
 sops.secrets."services/papra/env" = {};
+environmentFiles = [config.sops.secrets."services/papra/env".path];
 
-environmentFiles = [
-  config.sops.secrets."services/papra/env".path
-];
+# Mot de passe utilisateur : déchiffré avant la création des comptes
+sops.secrets."users/guillaume/hashed-password".neededForUsers = true;
+users.users.guillaume.hashedPasswordFile = config.sops.secrets."users/guillaume/hashed-password".path;
 ```
 
-Ne jamais hardcoder `/run/secrets/...`.
+| Où | Chemin |
+|---|---|
+| Système | `/run/secrets/` |
+| `neededForUsers` | `/run/secrets-for-users/` |
+| Home Manager (exampleHost) | `/run/user/1000/secrets/` |
 
-Pour les mots de passe utilisateurs :
-
-```nix
-sops.secrets."users/kuri/hashed-password".neededForUsers = true;
-users.users.kuri.hashedPasswordFile =
-  config.sops.secrets."users/kuri/hashed-password".path;
-```
+Sauvegarde des clés : [Sauvegarde des secrets](/nixos/fr/operations/secrets-backup/).

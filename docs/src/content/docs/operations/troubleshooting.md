@@ -1,186 +1,90 @@
 ---
-title: Diagnosis & Recovery — Troubleshooting
-description: Common issues and diagnostic procedures for the Forge.
+title: "Troubleshooting"
+description: Containers, public web, sops, deploy, SSH, Borg, ZFS, weechat.
 ---
 
-Common problems and diagnostic rites.
+## Containers
 
-## A Daemon Is Unhealthy
+One unit per container, named after the container (`immich-server`,
+`papra`…), except newt: `docker-newt`.
 
 ```bash
-# View latest health check results
-docker inspect --format='{{json .State.Health}}' <name> | jq
-
-# View daemon logs
+docker inspect --format='{{json .State.Health}}' <name> | jq   # last healthchecks
 docker logs <name> --tail 50
-
-# Manual restart
-systemctl restart docker-<name>
+systemctl reset-failed <unit> && systemctl start <unit>
 ```
 
-The timer `stc-docker-health-watch@<name>` automatically kills an `unhealthy` daemon
-every 30 seconds, triggering a systemd restart.
-If the daemon loops, inspect its logs.
+`stc-docker-health-watch@<name>` looks every 30 s and kills an `unhealthy`
+container: systemd restarts it. If the restarts fail, the unit goes `failed`
+and ntfy warns.
 
-## A systemd Service Is Failed
+## A public site stops answering
+
+Everything goes through skitarii: the machine's newt, then the gateway.
 
 ```bash
-# View status and logs
-systemctl status docker-<name>
-journalctl -u docker-<name> --since "30 minutes ago"
-
-# Reset failure counter before restarting
-systemctl reset-failed docker-<name>
-systemctl start docker-<name>
+docker logs newt --tail 50                                   # clochette or RogueLeader
+sudo docker logs traefik --tail 100                          # skitarii
+sudo docker exec crowdsec cscli decisions list --ip <IP>     # skitarii, IP banned?
 ```
 
-## photos.friloux.me Is Unreachable
+Next: [The gateway](/nixos/skitarii/gateway/).
 
-clochette runs no traefik: Immich is published by the pangolin gateway on
-skitarii, through clochette's `newt` tunnel. Check both ends.
+## sops cannot decrypt
+
+The machine's key must match `.sops.yaml`:
 
 ```bash
-# On clochette: tunnel and target
-docker inspect --format='{{.Name}} : {{.State.Health.Status}}' newt immich-server
-docker logs newt --tail 50
-
-# On skitarii: routing, certificates, crowdsec bans
-sudo docker logs traefik --tail 100
-sudo docker exec crowdsec cscli decisions list --ip <IP>
+sudo nix shell nixpkgs#age -c age-keygen -y /etc/sops/age/keys.txt                    # exampleHost
+nix shell nixpkgs#ssh-to-age -c ssh-to-age < /etc/ssh/ssh_host_ed25519_key.pub        # servers
 ```
 
-The rest (bouncer, certificates, resources) is in
-[The Gate](../skitarii/gateway.md).
+Different: [Lost key](/nixos/operations/secrets-backup/#lost-key).
 
-## sops Cannot Decrypt Secrets
+## The deploy fails
 
 ```bash
-# Verify age key is present
-ls -la /etc/sops/age/keys.txt
-
-# Verify public key
-age-keygen -y /etc/sops/age/keys.txt
-# Should match the key in .sops.yaml
-
-# Test decryption
-sops -d secrets/clochette.yaml
+just build_clochette    # build without deploying (build, build_rogueleader, build_skitarii)
+just test               # pre-commit on the whole repo
 ```
 
-If the public key does not match, see [Reliquary Backup & Restoration](secrets-backup.md).
+Network error: retry. Evaluation error: read the whole message.
 
-## nixos-rebuild Deployment Fails
+## No SSH
 
-```bash
-# Build without deploying to see the error
-just build_clochette
+clochette and skitarii: [Tailscale](/nixos/operations/tailscale/#without-ssh).
+`Connection reset by peer` after a failed login: one-hour ban
+(`PerSourcePenalties`), see [skitarii](/nixos/operations/reinstall-skitarii/#troubleshooting).
 
-# Verify linters
-just test
-
-# Verify flake evaluation
-nix flake check
-```
-
-If it is a network error (download timeout), retry.
-If it is a Nix eval error, read the full error message:
-sops or missing type errors are usually explicit.
-
-## SSH to clochette Is Unreachable
-
-Verification order:
-
-1. Is Tailscale active on both shrines?
-
-   ```bash
-   tailscale status  # from exampleHost
-   ```
-
-2. Is clochette reachable via Tailscale ping?
-
-   ```bash
-   tailscale ping clochette
-   ```
-
-3. Is the SSH daemon running on clochette?
-   Use Scaleway serial console:
-
-   ```bash
-   systemctl status sshd
-   ```
-
-4. Is the firewall rule in place?
-
-   ```bash
-   sudo nft list ruleset | grep 100.64
-   ```
-
-## Docker Storage Driver ZFS (exampleHost)
-
-If Docker fails to start on exampleHost with a ZFS error:
+## Borg fails
 
 ```bash
-# Verify Docker dataset exists
-zfs list | grep docker
-
-# Docker uses rpool/nixos/var/lib as base
-# Dataset is in /var/lib/docker
-docker info | grep "Storage Driver"
-
-# If Docker left a corrupted state
-sudo systemctl stop docker
-sudo rm -rf /var/lib/docker/devicemapper  # or problematic subdirectory
-sudo systemctl start docker
-```
-
-## Borg Backup Fails
-
-```bash
-# Latest status
 journalctl -u borgbackup-job-remote --since today
-
-# Test SSH connection to backup server
-ssh -i /run/secrets/services/borg/key/private backup@storage2.friloux.me
-
-# Test repo access
-BORG_PASSPHRASE=$(cat /run/secrets/services/borg/passphrase) \
-BORG_RSH="ssh -i /run/secrets/services/borg/key/private" \
-borg info ssh://backup@storage2.friloux.me/~/clochette.friloux.me
+sudo BORG_PASSPHRASE=$(sudo cat /run/secrets/services/borg/passphrase) \
+  BORG_RSH="ssh -i /run/secrets/services/borg/key/private" \
+  borg info ssh://backup@storage2.friloux.me/~/clochette.friloux.me
 ```
 
-Common causes:
+| Cause | Fix |
+|---|---|
+| storage2's host key changed | `knownHostsFiles` in `backup.nix` |
+| storage2 full | on storage2 |
+| Stale lock | `borg break-lock <repo>` |
 
-- Backup server SSH host key changed → update `backup.nix` `knownHostsFiles`
-- Backup server disk full
-- Borg lock held: `borg break-lock ssh://backup@storage2.friloux.me/~/clochette.friloux.me`
-
-## ZFS Pool Degraded (exampleHost)
+## Degraded ZFS pool (exampleHost)
 
 ```bash
-# Pool status
-zpool status
-
-# If a disk is DEGRADED/FAULTED
-zpool status -v  # show errors
-
-# After physically replacing a disk
-zpool replace rpool /dev/disk/by-id/OLD_ID /dev/disk/by-id/NEW_ID
-# Track resilver progress
-zpool status -w rpool
+zpool status -v
 ```
 
-## WeeCHAT / zellij Session Lost
+New disk: copy the other's table (`sgdisk -R <new> <remaining>`, then
+`sgdisk -G <new>`), `zpool replace` on **bpool and rpool**, put its ID in
+`disko.nix` **and** `boot.nix`, then `just install` (GRUB on both disks).
+Follow: `zpool status -w rpool`.
+
+## Lost weechat session
 
 ```bash
-# Connect to existing weechat session
 ssh irc.friloux.me
-# In the weechat shell:
-zellij attach
-```
-
-If the zellij session no longer exists:
-
-```bash
-zellij  # creates new session
-# Then restart weechat manually
-weechat
+zellij attach      # or `zellij` then `weechat` if the session is gone
 ```

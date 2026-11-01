@@ -1,41 +1,74 @@
 ---
-title: The Sanctum — Home Manager on exampleHost
-description: User environment configuration, SSH setup, shell variables, and Git signing.
+title: "Home Manager"
+description: kuri's environment on exampleHost, secrets, SSH, fish, git, mail, software.
 ---
 
-The Sanctum is the Techpriest's personal domain — shell, SSH, mail, and rites for daily labour.
+`homes/x86_64-linux/kuri@exampleHost/`, applied by `just install` with the system.
 
-Files: `homes/x86_64-linux/kuri@exampleHost/`
-
-## Structure
-
-| File | Contents |
+| File | Content |
 |---|---|
-| `default.nix` | Primary config: packages, fish, git, sops HM |
-| `ssh.nix` | SSH config: matchBlocks, sops keys, ssh-agent |
-| `mail.nix` | Mail config (notmuch, alot) |
+| `default.nix` | STC modules, packages, sops, fish, git, theme |
+| `ssh.nix` | SSH keys (sops), ssh-agent, hosts |
+| `mail.nix` | friloux account: offlineimap, notmuch, aerc, alot, msmtp |
 
-## SSH & ssh-agent
+Imported STC modules: `cogitator-enginseer` (CLI tools, SSH multiplexing),
+`cogitator-desktop`, `relics-yubikey-user`, `relics-plasma-manager`.
 
-ssh-agent is activated via Home Manager (`services.ssh-agent.enable = true`).
-Socket: `/run/user/1000/ssh-agent` (exported in fish via `shellInitLast`).
+## Secrets
 
-All SSH private keys live in sops (`secrets/kuri_exampleHost.yaml` under `ssh/keys/`). They are unsealed to `/run/user/1000/secrets/`.
+System age key `/etc/sops/age/keys.txt`, file `secrets/kuri_exampleHost.yaml`,
+decrypted to `/run/user/1000/secrets/`.
 
-## Fish — The Shell Rite
+| sops key | Use |
+|---|---|
+| `workspace` | Environment variables, loaded by fish |
+| `rbw/server`, `mail/address` | `rbw-wrapper` (alias `rbw`) |
+| `ssh/keys/*` | guillaume@clochette, weechat@clochette, guillaume@skitarii, kuri@storage2, root@rogueleader, github |
+| `mail/password`, `mail/tags/*` | Mail account, notmuch tag rules |
 
-Environment variables are loaded from the secret `workspace` file at each shell invocation:
+## SSH
 
-```fish
-envsource /run/user/1000/secrets/workspace
+ssh-agent on `/run/user/1000/ssh-agent`. One key per host:
+
+```nix
+"skitarii.friloux.me" = {
+  HostName = "skitarii";   # Tailscale name
+  User = "guillaume";
+  IdentityFile = config.sops.secrets."ssh/keys/guillaume@skitarii".path;
+  IdentitiesOnly = true;   # one refused key = 1 h ban (PerSourcePenalties)
+};
 ```
 
-Alias: `rbw` → `rbw-wrapper` (injects email and server URL from sops).
+Other hosts: `clochette.friloux.me`, `irc.friloux.me` (weechat), `rogueleader.home`,
+`storage2.friloux.me`, `github.com`, `arthur.home`, `baptiste.home`.
 
-## Git
+## Shell and git
 
-Default GPG signature with key `52381C92A5071464F3160D257D4216D8BDDA9A09`.
+```nix
+programs.fish.shellInitLast = ''
+  envsource /run/user/1000/secrets/workspace
+  set -gx SSH_AUTH_SOCK "/run/user/1000/ssh-agent"
+'';
+programs.git.signing = {
+  key = "52381C92A5071464F3160D257D4216D8BDDA9A09";
+  signByDefault = true;
+};
+home.sessionVariables.EDITOR = "micro";
+```
 
-## Deployment
+## Mail
 
-Home Manager is anointed via `just install` (`nh os switch .`), which also activates the Home Manager configuration.
+`imapnotify` runs `offlineimap` on every new message (INBOX and Sent only),
+then `notmuch new` tags. Read with aerc (views on tags) or alot, send with
+msmtp. Server `mx.friloux.me`.
+
+## Software
+
+| Use | Packages |
+|---|---|
+| Games | Steam (system), Heroic, Wine staging, winetricks, protonup-ng, PCSX2, Ryubing, ScummVM, DOSBox-X |
+| Desktop | Ghostty, kitty, Zen, GIMP, VLC, Vesktop, Transmission, Flameshot, Kooha, GParted |
+| YubiKey | yubikey-manager, Yubico Authenticator, age-plugin-yubikey, pgpilot |
+| Dev | claude-code, rustup, gcc, nodejs 22, gh, git-workspace, helix, micro, nixd |
+
+The rest (CLI tools, fonts) comes from the STC modules.

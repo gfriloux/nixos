@@ -1,180 +1,120 @@
 ---
-title: Rite of Resurrection — RogueLeader
-description: Complete reinstallation guide for the domestic dedicated server.
+title: "Reinstall RogueLeader"
+description: From the NixOS ISO to the first deploy, with nixos-anywhere from exampleHost.
 ---
 
-Complete guide to resurrect the RogueLeader home-shrine.
-
-:::caution[Ward]
-This rite is irreversible at certain steps. Execute each command exactly as written.
+:::danger
+Step 4 wipes RogueLeader's disk. The services its newt publishes are down
+until the Borg restore (step 7).
 :::
 
-## Reference Information
-
-| Parameter | Value |
+| | |
 |---|---|
-| Local network | `192.168.0.10` (alias `rogueleader.home`) |
-| Disk | `/dev/sda` (BIOS/GPT via disko) |
-| Architecture | x86_64, Intel KVM |
-| SSH | Directly accessible (public key only, no Tailscale) |
-| sops | Age key derived from `/etc/ssh/ssh_host_ed25519_key` |
+| Network | DHCP, `192.168.0.10` (`rogueleader.home`) |
+| Disk | `/dev/sda`, BIOS, GPT + EF02 (`disko.nix`) |
+| sops | age key derived from `/etc/ssh/ssh_host_ed25519_key` |
+| SSH | LAN, `guillaume`, key `root@rogueleader` |
 
-## Prerequisites
+## Before
 
-- [ ] Physical or console access to the server
-- [ ] NixOS ISO USB ready
-- [ ] Local network connectivity (DHCP)
-- [ ] exampleHost age key available (for re-encrypting secrets after install)
-      See [Reliquary Backup & Restoration](secrets-backup.md)
-- [ ] Recent Borg backup verified:
-      `BORG_PASSPHRASE=... borg list ssh://backup@storage2.friloux.me/~/rogueleader.friloux.me`
+- Physical access (screen, keyboard), a USB stick with the minimal NixOS ISO.
+- The YubiKey (`sops`).
+- A recent Borg archive: [Restore from Borg](/nixos/operations/restore/).
 
-## Partitioning Summary (disko)
+## 1. Generate the host key
 
-Single disk `/dev/sda`, GPT:
-
-| Partition | Size | Role |
-|---|---|---|
-| part1 | 1 MB | GRUB BIOS boot |
-| part2 | 4 GB | swap |
-| part3 | remainder | `/` ext4 |
-
-Unlike clochette, disko manages the NixOS `fileSystems` — no manual UUID updates needed after reinstall.
-
-## Step 1 — Boot on NixOS ISO
-
-Plug in USB, boot from NixOS ISO.
-
-Verify network connectivity (DHCP LAN):
+Without it, the new machine cannot read its sops file: no password, no sudo,
+no deploy possible.
 
 ```bash
-ip addr show
-ping -c3 192.168.0.1
+mkdir -p /tmp/rogueleader-extra/etc/ssh
+ssh-keygen -q -t ed25519 -N "" -C root@RogueLeader -f /tmp/rogueleader-extra/etc/ssh/ssh_host_ed25519_key
+nix shell nixpkgs#ssh-to-age -c ssh-to-age < /tmp/rogueleader-extra/etc/ssh/ssh_host_ed25519_key.pub
+ssh-keygen -lf /tmp/rogueleader-extra/etc/ssh/ssh_host_ed25519_key.pub   # fingerprint to check at step 5
 ```
 
-## Step 2 — Fetch Repository
+Put the age key in `&server_rogueleader` (`.sops.yaml`), then:
 
 ```bash
-git clone https://github.com/gfriloux/nixos /tmp/nixos
-cd /tmp/nixos
+sops updatekeys secrets/RogueLeader.yaml   # YubiKey
 ```
 
-## Step 3 — Disk Partitioning with disko
+## 2. Boot the ISO
 
-:::danger[Interdict]
-Destructive and irreversible. Erases `/dev/sda` entirely.
-:::
+On RogueLeader's console:
 
 ```bash
-sudo nix run github:nix-community/disko/latest -- \
-  --mode destroy,format,mount \
-  --flake /tmp/nixos#RogueLeader
+passwd                # throwaway password for the nixos user
+ip -4 addr            # the ISO's IP
+lsblk                 # the internal disk, not the USB stick
 ```
 
-disko partitions `/dev/sda`, formats as ext4, and mounts everything under `/mnt`.
+If the internal disk is not `sda` (the USB stick took it), put its name in
+`disko.nix` for the install, then go back to `/dev/sda` (as for
+[skitarii](/nixos/operations/reinstall-skitarii/)).
 
-Verify:
+## 3. Copy the key
 
 ```bash
-df -h /mnt
-mount | grep /mnt
+ssh-copy-id -o PubkeyAuthentication=no -i ~/.ssh/id_ed25519 nixos@<iso-ip>
 ```
 
-## Step 4 — NixOS Installation
+## 4. Install
+
+The ISO is already NixOS: no `kexec` phase. The `nixos` user has
+passwordless sudo.
 
 ```bash
-sudo nixos-install --flake /tmp/nixos#RogueLeader --no-root-passwd
+ssh-add ~/.ssh/id_ed25519
+nix run github:nix-community/nixos-anywhere -- \
+  --flake .#RogueLeader \
+  --target-host nixos@<iso-ip> \
+  --ssh-option IdentitiesOnly=yes \
+  --ssh-option IdentityFile=$HOME/.ssh/id_ed25519.pub \
+  --phases disko,install \
+  --extra-files /tmp/rogueleader-extra
 ```
 
-:::note[Marginalia]
-Unlike exampleHost, **no age key to place manually** before install.
-sops-nix derives the age key from the SSH host key auto-generated at first boot — secrets are only decryptable after the first complete boot.
+Expected: `Imported /etc/ssh/ssh_host_ed25519_key as age key`, then
+`### Done! ###`. The age fingerprint must match `.sops.yaml`.
 
-Consequently, the user password (`neededForUsers = true`) is only available after first boot completes. Initial access is via SSH key.
-:::
+## 5. First boot
 
-## Step 5 — First Boot
+Remove the USB stick, reboot. Then:
 
 ```bash
-reboot
+ssh-keygen -R 192.168.0.10
+ssh -t rogueleader.home sudo true
 ```
 
-Remove the USB. System boots into GRUB → NixOS.
+Accept only the fingerprint noted at step 1.
 
-SSH is directly accessible from the local network via the public key declared in `users.nix`:
-
-```bash
-# From exampleHost
-ssh guillaume@rogueleader.home
-```
-
-## Step 6 — Update Age Key in sops
-
-The new install generated a new SSH host key → new age key.
-Without this update, sops cannot decrypt secrets from RogueLeader.
-
-**From RogueLeader** (connected via SSH):
+## 6. Deploy
 
 ```bash
-nix run nixpkgs#ssh-to-age -- -i /etc/ssh/ssh_host_ed25519_key.pub
-```
-
-**From exampleHost**, update `.sops.yaml` with the new public key:
-
-```bash
-cd ~/Apps/github/gfriloux/nixos
-nano .sops.yaml
-# Replace &server_rogueleader value with the new age key
-```
-
-Re-encrypt `secrets/RogueLeader.yaml`:
-
-```bash
-sops updatekeys secrets/RogueLeader.yaml
-# Confirm with 'y'
-
-# Verify
-sops -d secrets/RogueLeader.yaml
-```
-
-Commit and push:
-
-```bash
-git add .sops.yaml secrets/RogueLeader.yaml
-git commit -m "chore(secrets): rotate RogueLeader age key after reinstall"
-git push
-```
-
-## Step 7 — Full Deployment from exampleHost
-
-```bash
-just install_rogueleader --ask-sudo-password
-```
-
-This deploys the complete configuration with secrets now decryptable by the new SSH host key.
-
-To deploy Home Manager:
-
-```bash
+just install_rogueleader
 just home_rogueleader
 ```
 
-## Step 8 — Data Restoration from Borg (if needed)
+Commit `.sops.yaml` and `secrets/RogueLeader.yaml`, then
+`rm -r /tmp/rogueleader-extra`.
 
-Follow [Rite of Restoration](restore.md). The archive holds no live
-database: after extracting it, BookStack's database must be loaded from its
-dump and the SQLite services' databases put back from `sqlite-snapshots/`,
-or they start empty.
+## 7. Restore
 
-## Step 9 — Final Verification
+The archives hold no live database:
+
+- BookStack: reload the MariaDB dump,
+  [BookStack (RogueLeader)](/nixos/operations/restore/#bookstack-rogueleader).
+- Uptime Kuma, Papra, Mealie: put the `sqlite-snapshots/` copies back,
+  [SQLite services (RogueLeader)](/nixos/operations/restore/#sqlite-services-rogueleader).
+
+## 8. Check
 
 ```bash
-# Daemons are running
-docker ps --format "table {{.Names}}\t{{.Status}}"
-
-# Secrets decrypted
-ls /run/secrets/
-
-# Borg backup
-systemctl status borgbackup-job-remote
+docker ps --format "table {{.Names}}\t{{.Status}}"   # all healthy
+docker logs newt --tail 20                           # tunnel to skitarii
+systemctl start borgbackup-job-remote && systemctl status borgbackup-job-remote
 ```
+
+`https://status.friloux.me`, `wow-cp`, `docs`, `cuisine` and `borg-ui`
+answer.

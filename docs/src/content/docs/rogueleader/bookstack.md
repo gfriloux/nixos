@@ -1,62 +1,38 @@
 ---
-title: BookStack — The Personal Wiki
-description: Wiki service at wow-cp.friloux.me with MariaDB backend and automated backups.
+title: "BookStack"
+description: "Wiki at wow-cp.friloux.me: BookStack, MariaDB, nightly SQL dump."
 ---
 
-BookStack is the personal wiki, a chronicle of lore and knowledge. Runs on RogueLeader, exposed publicly at <https://wow-cp.friloux.me> through the pangolin gateway on skitarii (newt tunnel, no SSO). BookStack throttles sign-in itself (5 tries per minute per account and IP); `APP_PROXIES=*` in its env makes it read the visitor's IP.
+<https://wow-cp.friloux.me>, through the gateway, no SSO. BookStack throttles sign-in itself (5 tries per minute per account and IP); `APP_PROXIES=*` makes it see the visitor's IP. Nix: `docker-wow-cp.nix`.
 
-## Stack
+| Container | Image | Role |
+|---|---|---|
+| `wow-cp-bookstack` | `linuxserver/bookstack` | app, networks `wow-cp` + `web` |
+| `wow-cp-mariadb` | `linuxserver/mariadb:10.5.15` | database, network `wow-cp` |
+| `wow-cp-mysqldump` | `fradelg/mysql-cron-backup` | dumps into `dumps/` (own healthcheck) |
 
-| Daemon | Role |
-|---|---|
-| `wow-cp-bookstack` | BookStack application (linuxserver image) |
-| `wow-cp-mariadb` | MariaDB database |
-| `wow-cp-mysqldump` | Automated SQL backup cron |
+| Path under `/srv/docker/wow-cp.friloux.me/` | Content | Borg |
+|---|---|---|
+| `data/` | uploads, linuxserver config | yes |
+| `db/` | live MariaDB | no |
+| `dumps/` | SQL dumps | yes |
 
-Dedicated internal network `wow-cp` + `web` network, where newt reaches it.
+Secrets (sops): `services/wow-cp/env_bookstack`, `env_mariadb`, `env_mysqldump`.
 
-## Data Vault
-
-```text
-/srv/docker/wow-cp.friloux.me/
-├── data/    # BookStack files (uploads, linuxserver config)
-├── db/      # MariaDB data
-└── dumps/   # SQL dumps (mysqldump cron)
-```
-
-## Health Checks
+## Commands
 
 ```bash
-# BookStack — verifies DB is reachable
+# Health
 docker exec wow-cp-bookstack curl -fs http://localhost/status | grep '"database":true'
-
-# MariaDB
 docker exec wow-cp-mariadb mysqladmin ping -h localhost --silent
+
+# Manual dump
+docker exec wow-cp-mariadb mysqldump -u root --all-databases \
+  > /srv/docker/wow-cp.friloux.me/dumps/manual_$(date +%Y%m%d).sql
 ```
 
-## Database Backup
+Restore: [BookStack](/nixos/operations/restore/#bookstack-rogueleader) (drop the dump's first line for the 10.5 client, create the database first).
 
-The `wow-cp-mysqldump` daemon automatically dumps the database into `/srv/docker/wow-cp.friloux.me/dumps/`.
-These dumps are included in Borg backup.
-
-Manual dump:
-
-```bash
-docker exec wow-cp-mariadb mysqldump \
-  -u root \
-  --all-databases > /srv/docker/wow-cp.friloux.me/dumps/manual_$(date +%Y%m%d).sql
-```
-
-## Database Restoration
-
-See [Rite of Restoration](../operations/restore.md#bookstack-rogueleader):
-the dump needs its first line dropped before a 10.5 client accepts it, and the
-database must be created first.
-
-## Secrets
-
-Three separate env files:
-
-- `services/wow-cp/env_bookstack`: BookStack config (APP_KEY, DB_HOST, DB_PASSWORD, etc.)
-- `services/wow-cp/env_mariadb`: MYSQL_ROOT_PASSWORD, MYSQL_DATABASE, etc.
-- `services/wow-cp/env_mysqldump`: mysqldump credentials
+:::caution
+The mysqldump image requires TLS by default, MariaDB 10.5 does not offer it: dumps failed silently while the container stayed healthy. `MYSQL_SSL_OPTS = "--skip-ssl"` (private `wow-cp` network only). Check that `dumps/` gets new files.
+:::

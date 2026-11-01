@@ -1,42 +1,22 @@
 ---
-title: GPU AMD
-description: Configuration du GPU AMD — amdgpu, ROCM, accélération vidéo.
+title: "GPU AMD"
+description: amdgpu via la relic amdGpu de STC, vérifications.
 ---
 
-GPU AMD configuré avec support complet pour l'accélération vidéo et l'affichage Wayland.
-
-## Configuration
+`stc.relics.amdGpu.initrd = true;` dans `default.nix`. Ce que la relic pose (évalué) :
 
 ```nix
+boot.initrd.kernelModules = [ "amdgpu" ];   # affichage dès le début du boot
 hardware.graphics = {
   enable = true;
   enable32Bit = true;
-  extraPackages = with pkgs; [
-    libvdpau
-    libva-vdpau-driver
-  ];
+  extraPackages = with pkgs; [ libvdpau libva-vdpau-driver ];
 };
+services.xserver.enable = false;   # Plasma sous Wayland (KMS), SDDM en mode Wayland
 ```
-
-Le module kernel `amdgpu` est chargé dès l'initrd pour l'affichage au boot.
-
-## Vérification
 
 ```bash
-# Renderer actif
-glxinfo | grep "OpenGL renderer"
-# Exemple : AMD Radeon RX 6700 XT (navi22, LLVM ...)
-
-# Accélération vidéo VA-API
-vainfo
-
-# Informations GPU
-clinfo | head -20  # si opencl disponible
+glxinfo | grep "OpenGL renderer"   # moteur de rendu actif
+vainfo                             # accélération vidéo VA-API
+clinfo | head -20                  # OpenCL, si disponible
 ```
-
-## Plasma 6 & Wayland
-
-L'affichage Wayland utilise nativement `amdgpu` via KMS.
-Pas de configuration Xorg nécessaire (`services.xserver.enable = false`).
-
-KWin (Plasma) tourne en mode Wayland natif via SDDM Wayland.
