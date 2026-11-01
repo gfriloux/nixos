@@ -1,77 +1,29 @@
 ---
 title: "Storage"
-description: ZFS configuration on exampleHost, ext4 on clochette, RogueLeader and skitarii, backup strategies.
+description: Disks and backups of the four machines, exampleHost's ZFS datasets.
 ---
 
-The Forge's data is inscribed across four shrines in accordance with the machine-spirit's demands: ZFS mirrors on the workstation, ext4 on the VPSes and home-shrine, and the sacred snapshots guard against loss.
+| Machine | Disk | Swap | Backup |
+|---|---|---|---|
+| exampleHost | ZFS mirror, 2× NVMe 980 PRO 1 TB (disko) | 4 GB per disk, encrypted | zrepl pulls `storage2.retrohive.fr`, see [ZFS](/nixos/examplehost/zfs/) |
+| clochette | `/dev/sda` MBR: `/boot` ext2, `/` ext4 | encrypted | Borg 03:00 |
+| skitarii | `/dev/sda` GPT/BIOS (disko): `/` ext4 | 2 GB | Borg 04:00 |
+| RogueLeader | `/dev/sda` GPT/BIOS (disko): `/` ext4 | 4 GB | Borg 06:00 |
 
-## exampleHost — The Mirror Pool
+Container data: `/srv/docker/<domain>/`. Borg sends to
+`ssh://backup@storage2.friloux.me/~/<machine>.friloux.me`; storage2 prunes on its own.
+Restore: [Restore](/nixos/operations/restore/).
 
-Two Samsung SSD 980 PRO 1 TB NVMe in ZFS mirror.
+## exampleHost datasets
 
-### Pools
-
-**bpool** (mirror, grub2 mode):
-
-| Dataset | Mountpoint |
-|---|---|
-| `bpool/nixos/root` | `/boot` |
-
-Options: `ashift=12`, `autotrim=on`, grub2-compatible.
-
-**rpool** (mirror):
-
-| Dataset | Mountpoint |
-|---|---|
-| `rpool/nixos/root` | `/` |
-| `rpool/nixos/home` | `/home` |
-| `rpool/nixos/var/lib` | `/var/lib` |
-| `rpool/nixos/var/log` | `/var/log` |
-| `rpool/backup/storage2` | (zrepl pulls snapshots here) |
-
-Options: `ashift=12`, `autotrim=on`.
-
-All datasets carry `mountpoint = "legacy"` — mounting is orchestrated by `boot.nix`.
-
-### Swap
-
-4 GB per disk, encrypted with random keys (`randomEncryption = true`).
-
-### Data Vault
-
-`/data2`: external HDD mounted as ext4 with `nofail` (absence does not block boot).
-
-### Automatic Tending
-
-```nix
-services.zfs.autoScrub.enable = true;
-services.zfs.trim.enable = true;
-```
-
-### Snapshot Guard (zrepl)
-
-exampleHost pulls snapshots from `storage2.retrohive.fr` into `rpool/backup/storage2`.
-Retention: 7 days × 1 day + 3 months × 30 days.
-
-## clochette — The Single Vault
-
-Disks: `/dev/sda`, partitioned MBR:
-
-| Partition | Mountpoint | Filesystem |
+| Pool | Dataset | Mount |
 |---|---|---|
-| `/dev/sda1` | `/boot` | ext2 |
-| `/dev/sda2` | swap | — |
-| `/dev/sda3` | `/` | ext4 |
+| bpool (grub2) | `nixos/root` | `/boot` |
+| rpool | `nixos/root` | `/` |
+| rpool | `nixos/home` | `/home` |
+| rpool | `nixos/var/lib` | `/var/lib` |
+| rpool | `nixos/var/log` | `/var/log` |
+| rpool | `backup/storage2` | none (received by zrepl) |
 
-Bound daemon data resides in `/srv/docker/` (on `/`).
-Daily Borg backup to `storage2.friloux.me`.
-
-## RogueLeader — The Home Vault
-
-Disk: `/dev/sda`, partitioned GPT via disko:
-
-| Partition | Purpose |
-|---|---|
-| 1 MB | GRUB BIOS boot |
-| 4 GB | swap |
-| remainder | `/` ext4 |
+Both pools use `ashift=12`, `autotrim=on`. Datasets are `mountpoint=legacy`,
+mounted by `boot.nix`. `/data2`: ext4 HDD with `nofail`, boot goes on without it.
