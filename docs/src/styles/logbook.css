@@ -116,6 +116,7 @@ h1, h2, h3, h4,
 .hero h1 { color: var(--lb-gold); }
 .hero .tagline { font-style: italic; color: var(--sl-color-gray-2); }
 .hero { padding-block: clamp(2rem, 6vw, 4rem); }
+.hero-html img { width: 100%; height: auto; border: 1px solid var(--lb-gold-dim); }
 
 /* Starlight caps the content column at 45rem; widen it on large screens,
    where tables, diagrams and command blocks gain more than prose loses. */

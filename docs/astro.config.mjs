@@ -9,7 +9,8 @@ export default defineConfig({
   integrations: [
     starlight({
       title: 'KURI',
-      logo: { src: './src/assets/kuri-seal.svg', alt: 'Kuri seal' },
+      logo: { src: './src/assets/kuri-emblem.png', alt: 'Kuri seal' },
+      favicon: '/favicon.png',
       customCss: ['./src/styles/logbook.css'],
       components: {
         Header: './src/components/Header.astro',
@@ -20,6 +21,8 @@ export default defineConfig({
         fr:   { label: 'Français', lang: 'fr' },
       },
       head: [
+        { tag: 'link', attrs: { rel: 'icon', href: `${base}/favicon.ico`, sizes: '32x32' } },
+        { tag: 'link', attrs: { rel: 'apple-touch-icon', href: `${base}/apple-touch-icon.png` } },
         { tag: 'link', attrs: { rel: 'preconnect', href: 'https://fonts.googleapis.com' } },
         { tag: 'link', attrs: { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: true } },
         { tag: 'link', attrs: { rel: 'stylesheet',
