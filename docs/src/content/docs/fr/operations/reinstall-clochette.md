@@ -1,274 +1,186 @@
 ---
 title: "Réinstaller clochette"
-description: Guide complet de réinstallation du VPS Scaleway — mode rescue, partitionnement, secrets, vérification.
+description: Du rescue Dedibox au premier déploiement, par nixos-anywhere depuis exampleHost.
 ---
 
-:::caution[Garde]
-Guide de réinstallation complète du serveur clochette (VPS Scaleway).
-
-**Avant de commencer** : garder un shell root ouvert pendant toute l'opération.
-Ne jamais couper la session active sans avoir vérifié qu'un accès de secours reste disponible.
+:::danger
+L'étape 5 efface le disque de clochette. Immich est injoignable jusqu'à la
+restauration Borg (étape 9).
 :::
 
-## Informations de Référence
-
-| Paramètre | Valeur |
+| | |
 |---|---|
-| IP publique | `51.159.34.135` |
-| Passerelle | `51.159.34.1` |
-| DNS | `51.159.47.28`, `51.159.47.26` |
-| Disque | `/dev/sda` (BIOS/MBR, pas d'EFI) |
-| Architecture | x86_64, Intel KVM |
-| SSH public | **Fermé** — accessible uniquement via Tailscale (`100.64.0.0/10`) |
+| IP | `51.159.34.135`, passerelle `51.159.34.1` |
+| Disque | `/dev/sda`, BIOS, GPT + EF02 (`disko.nix`) |
+| Console | série Dedibox, noyau sur `ttyS1` |
+| sops | clé age dérivée de `/etc/ssh/ssh_host_ed25519_key` |
+| SSH | Tailscale seulement (`100.64.0.0/10`) |
 
-## Pré-Requis
+## Avant
 
-Avant de démarrer :
+- Accès à la console Dedibox (mode rescue, console série).
+- La YubiKey (`sops`) et la console d'admin Tailscale.
+- Une archive Borg récente : [Restaurer depuis Borg](/nixos/fr/operations/restore/).
 
-- [ ] Accès à la console série Scaleway (ou KVM panel)
-- [ ] Connexion réseau disponible depuis le serveur
-- [ ] Dépôt `nixos` accessible (GitHub ou USB)
-- [ ] Clé age de exampleHost disponible (pour re-chiffrer les secrets après install)
-      Voir [Sauvegarde & Restauration des Secrets](/nixos/fr/operations/secrets-backup/)
-- [ ] Sauvegarde Borg vérifiée et récente
-      `BORG_PASSPHRASE=... borg list ssh://backup@storage2.friloux.me/~/clochette.friloux.me`
-- [ ] Passerelle notée : `photos.friloux.me` passe par skitarii ; tant que `newt` ne s'est pas reconnecté, Immich est injoignable
+## 1. Basculer sur disko (définitif)
 
-## Étape 1 — Accès au Mode Rescue Scaleway
+`disko.nix` existe mais n'est pas importé : l'installation actuelle est en MBR,
+sans partlabel. À faire une seule fois, à la première réinstallation.
 
-Depuis le panel Scaleway :
-
-1. Aller dans **Instances → clochette → Actions → Démarrer en mode rescue**
-2. Sélectionner une image rescue (Debian ou Ubuntu)
-3. Copier le mot de passe rescue affiché
-4. Se connecter en SSH (en mode rescue, SSH public est ouvert) :
-
-```bash
-ssh root@51.159.34.135
-```
-
-## Étape 2 — Partitionnement du Disque
-
-:::danger[Interdit]
-**Destructif.** Toutes les données sur `/dev/sda` sont perdues.
-:::
-
-```bash
-# Vérifier le disque disponible
-lsblk
-
-# Partitionner (MBR/BIOS)
-parted /dev/sda --script mklabel msdos
-parted /dev/sda --script mkpart primary ext2 1MiB 513MiB    # /boot
-parted /dev/sda --script mkpart primary linux-swap 513MiB 4609MiB  # swap
-parted /dev/sda --script mkpart primary ext4 4609MiB 100%   # /
-```
-
-Formater :
-
-```bash
-mkfs.ext2 -L boot /dev/sda1
-mkswap -L swap /dev/sda2
-mkfs.ext4 -L root /dev/sda3
-```
-
-**Noter les UUIDs** — ils seront nécessaires pour mettre à jour `hardware-configuration.nix` :
-
-```bash
-blkid /dev/sda1 /dev/sda2 /dev/sda3
-```
-
-Exemple de sortie :
-
-```text
-/dev/sda1: LABEL="boot" UUID="AAAA-BBBB-..." TYPE="ext2"
-/dev/sda2: LABEL="swap" UUID="CCCC-DDDD-..." TYPE="swap"
-/dev/sda3: LABEL="root" UUID="EEEE-FFFF-..." TYPE="ext4"
-```
-
-## Étape 3 — Monter les Partitions
-
-```bash
-mount /dev/sda3 /mnt
-mkdir /mnt/boot
-mount /dev/sda1 /mnt/boot
-swapon /dev/sda2
-```
-
-## Étape 4 — Récupérer le Dépôt et Mettre à Jour les UUIDs
-
-```bash
-# Installer git dans le rescue (si absent)
-apt-get install -y git nix  # ou utiliser le nix du rescue
-
-git clone https://github.com/gfriloux/nixos /tmp/nixos
-cd /tmp/nixos
-```
-
-Mettre à jour `systems/x86_64-linux/clochette/hardware-configuration.nix` avec les nouveaux UUIDs :
-
-```bash
-nano systems/x86_64-linux/clochette/hardware-configuration.nix
-```
-
-Remplacer les trois UUIDs :
+Dans `systems/x86_64-linux/clochette/default.nix` :
 
 ```nix
-fileSystems."/" = {
-  device = "/dev/disk/by-uuid/NOUVEAU-UUID-ROOT";  # UUID de /dev/sda3
-  fsType = "ext4";
-};
-
-fileSystems."/boot" = {
-  device = "/dev/disk/by-uuid/NOUVEAU-UUID-BOOT";  # UUID de /dev/sda1
-  fsType = "ext2";
-};
-
-swapDevices = [
-  { device = "/dev/disk/by-uuid/NOUVEAU-UUID-SWAP"; }  # UUID de /dev/sda2
+imports = [
+  inputs.disko.nixosModules.disko
+  ./disko.nix
+  # …
 ];
+
+boot.loader.grub.enable = true;   # remplace le bloc avec device = "/dev/sda" : disko le fournit
 ```
 
-Committer la modification :
+Dans `hardware-configuration.nix`, supprimer `fileSystems."/"`,
+`fileSystems."/boot"` et `swapDevices`. Vérifier :
 
 ```bash
-git config user.email "guillaume@friloux.me"
-git config user.name "Guillaume Friloux"
-git add systems/x86_64-linux/clochette/hardware-configuration.nix
-git commit -m "chore(clochette): update disk UUIDs after reinstall"
+nix eval '.#nixosConfigurations.clochette.config.fileSystems."/".device'   # /dev/disk/by-partlabel/disk-main-root
 ```
 
-:::note[Marginalia]
-Cette modification peut aussi être faite depuis exampleHost avant l'install si les UUIDs
-sont connus à l'avance — et poussée sur GitHub pour que le rescue puisse cloner directement.
-:::
+Retirer ensuite le commentaire « Pas encore importé » de `disko.nix`.
 
-## Étape 5 — Installation NixOS
+## 2. Ouvrir le SSH public (temporaire)
+
+La machine neuve n'est pas sur le tailnet. Dans `default.nix` :
+
+```nix
+openFirewall = true; # TEMPORAIRE : pas encore sur le tailnet
+```
+
+Ne pas commiter.
+
+## 3. Générer la clé hôte
 
 ```bash
-# Depuis le rescue, avec nix disponible
-sudo nixos-install \
-  --flake /tmp/nixos#clochette \
-  --no-root-passwd \
-  --root /mnt
+mkdir -p /tmp/clochette-extra/etc/ssh
+ssh-keygen -q -t ed25519 -N "" -C root@clochette -f /tmp/clochette-extra/etc/ssh/ssh_host_ed25519_key
+nix shell nixpkgs#ssh-to-age -c ssh-to-age < /tmp/clochette-extra/etc/ssh/ssh_host_ed25519_key.pub
+ssh-keygen -lf /tmp/clochette-extra/etc/ssh/ssh_host_ed25519_key.pub   # empreinte à vérifier à l'étape 6
 ```
 
-L'installation télécharge les paquets et configure le système.
-Si une erreur réseau interrompt le téléchargement, relancer la même commande.
-
-## Étape 6 — Premier Démarrage
+Mettre la clé age dans `&server_clochette` (`.sops.yaml`), puis :
 
 ```bash
-reboot
+sops updatekeys secrets/clochette.yaml   # YubiKey
 ```
 
-Le serveur redémarre sur le système NixOS fraîchement installé.
+## 4. Démarrer le rescue
 
-**Accès post-reboot** : SSH public est fermé par la configuration (`openFirewall = false`,
-règle firewall limitée à `100.64.0.0/10`). Utiliser la **console série Scaleway** pour
-les étapes suivantes jusqu'à ce que Tailscale soit opérationnel.
-
-## Étape 7 — Ré-enrôlement Tailscale (Console Série)
-
-Depuis la console série Scaleway :
+Console Dedibox → clochette → **Rescue**. Le login et le mot de passe
+s'affichent sur la page du serveur. Le rescue ouvre un utilisateur normal ;
+nixos-anywhere veut root.
 
 ```bash
-sudo tailscale up
+ssh-keygen -R 51.159.34.135
+ssh-copy-id -o PubkeyAuthentication=no -i ~/.ssh/id_ed25519 <login>@51.159.34.135
+ssh <login>@51.159.34.135 'sudo mkdir -p /root/.ssh && sudo cp ~/.ssh/authorized_keys /root/.ssh/ && lsblk'
+ssh root@51.159.34.135 true
 ```
 
-Un lien d'authentification s'affiche. L'ouvrir dans un navigateur, approuver la machine.
-
-Vérifier l'accès :
+Si root est refusé, donner à `<login>` un sudo sans mot de passe et viser
+`<login>@` à l'étape 5 :
 
 ```bash
-tailscale status
-# clochette doit apparaître avec une adresse 100.x.x.x
+ssh -t <login>@51.159.34.135 'echo "<login> ALL=(ALL) NOPASSWD: ALL" | sudo tee /etc/sudoers.d/anywhere'
 ```
 
-Depuis exampleHost, vérifier la connectivité :
+Si le disque n'est pas `sda` en rescue, mettre son nom dans `disko.nix` le
+temps de l'installation, puis revenir à `/dev/sda` (comme pour
+[skitarii](/nixos/fr/operations/reinstall-skitarii/)).
+
+## 5. Installer
 
 ```bash
-tailscale ping clochette
-ssh guillaume@clochette.friloux.me
+ssh-add ~/.ssh/id_ed25519
+nix run github:nix-community/nixos-anywhere -- \
+  --flake .#clochette \
+  --target-host root@51.159.34.135 \
+  --ssh-option IdentitiesOnly=yes \
+  --ssh-option IdentityFile=$HOME/.ssh/id_ed25519.pub \
+  --phases kexec,disko,install \
+  --extra-files /tmp/clochette-extra
 ```
 
-## Étape 8 — Mise à Jour de la Clé Age dans sops
+Pas de phase `reboot` : la machine repartirait en rescue. Après `Shared
+connection closed`, attendre, nixos-anywhere reprend seul. Attendu :
 
-La nouvelle installation a généré une nouvelle clé SSH host, donc une nouvelle clé age.
-Sans cette mise à jour, sops ne pourra plus déchiffrer les secrets depuis clochette.
+```text
+sops-install-secrets: Imported /etc/ssh/ssh_host_ed25519_key as age key with fingerprint age1…
+installing the GRUB 2 boot loader on /dev/sda...
+### Done! ###
+```
 
-**Depuis clochette** (maintenant accessible via SSH Tailscale) :
+L'empreinte age doit être celle de `.sops.yaml`.
+
+## 6. Premier boot
+
+Console Dedibox → sortir du rescue, redémarrer. La console série montre
+`clochette login:`. Puis :
 
 ```bash
-# Obtenir la nouvelle clé age dérivée de la clé SSH host
-nix run nixpkgs#ssh-to-age -- -i /etc/ssh/ssh_host_ed25519_key.pub
+ssh-keygen -R 51.159.34.135
+ssh -t -o HostName=51.159.34.135 -o IdentitiesOnly=yes clochette.friloux.me sudo true
 ```
 
-**Depuis exampleHost**, mettre à jour `.sops.yaml` avec la nouvelle clé publique :
+N'accepter que l'empreinte notée à l'étape 3.
+
+## 7. Tailscale
+
+Console d'admin Tailscale : **supprimer l'ancienne entrée clochette** d'abord,
+sinon le nœud devient `clochette-1` et le bloc ssh vise un nom mort.
 
 ```bash
-cd ~/Apps/github/gfriloux/nixos  # ou chemin habituel du dépôt
-nano .sops.yaml
-# Remplacer la valeur de &server_clochette par la nouvelle clé age
+sudo tailscale up            # sur clochette, ouvrir l'URL
 ```
 
-Re-chiffrer `secrets/clochette.yaml` avec la nouvelle clé :
+Puis **⋯ → Disable key expiry**. Depuis exampleHost :
 
 ```bash
-sops updatekeys secrets/clochette.yaml
-# Confirmer avec 'y'
+ssh-keygen -R clochette
+ssh clochette.friloux.me true
 ```
 
-Vérifier que le fichier est bien mis à jour :
+## 8. Refermer le SSH public
+
+Remettre `openFirewall = false;` dans `default.nix`, puis :
 
 ```bash
-sops -d secrets/clochette.yaml  # doit s'exécuter sans erreur
+just install_clochette
+nc -zv -w 5 51.159.34.135 22    # doit échouer en timeout
 ```
 
-Committer et pousser :
+Commiter la bascule disko, `.sops.yaml` et `secrets/clochette.yaml`, puis
+`rm -r /tmp/clochette-extra`.
+
+## 9. Restaurer
+
+Depuis Borg : `/srv/docker/photos.friloux.me` et `/home/weechat/.config/weechat`.
+La base Immich se recharge depuis son dump, sinon elle démarre vide :
+[Immich (clochette)](/nixos/fr/operations/restore/#immich-clochette).
+
+## 10. Vérifier
 
 ```bash
-git add .sops.yaml secrets/clochette.yaml
-git commit -m "chore(secrets): rotate clochette age key after reinstall"
-git push
+docker ps --format "table {{.Names}}\t{{.Status}}"   # newt, immich-* healthy
+docker logs newt --tail 20                           # tunnel vers skitarii
+systemctl start borgbackup-job-remote && systemctl status borgbackup-job-remote
 ```
 
-## Étape 9 — Déploiement Complet depuis exampleHost
+`https://photos.friloux.me` répond, et `irc.friloux.me` ouvre la session weechat.
 
-```bash
-just install_clochette --ask-sudo-password
-```
+## Dépannage
 
-Cette commande déploie la configuration complète, démarre tous les containers
-et active la surveillance de santé Docker.
-
-## Étape 10 — Restauration des Données depuis Borg
-
-Si les données des services doivent être restaurées (cas d'une vraie perte),
-suivre [Restauration des Données depuis Borg](/nixos/fr/operations/restore/). L'archive ne contient
-aucune base vivante : l'extraire ne suffit pas, la base d'Immich doit ensuite
-être chargée depuis son dump, sinon elle démarre vide.
-
-## Étape 11 — Vérification Finale
-
-```bash
-# Tous les containers sont en cours d'exécution et sains
-docker ps --format "table {{.Names}}\t{{.Status}}"
-
-# Santé de chaque container
-docker inspect --format='{{.Name}} → {{.State.Health.Status}}' \
-  newt immich-server immich-postgres immich-redis
-
-# Tunnel vers la passerelle pangolin (les certificats sont sur skitarii)
-docker logs newt --tail 20
-
-# Logs récents sans erreur critique
-journalctl -u docker-immich-server --since "10 minutes ago" | tail -20
-
-# Backup Borg — dernier statut
-systemctl status borgbackup-job-remote
-```
-
-Vérification externe : accéder depuis un navigateur à :
-
-- `https://photos.friloux.me` (Immich)
+| Symptôme | Cause, remède |
+|---|---|
+| `Connection reset by peer` après un login raté | Ban d'une heure (`PerSourcePenalties`). Redémarrer depuis la console Dedibox, reprendre avec `IdentitiesOnly=yes`. |
+| `sudo` refuse le mot de passe | Hash cassé dans sops, voir [skitarii](/nixos/fr/operations/reinstall-skitarii/#sudo-refuse-le-mot-de-passe). |
+| Pas de SSH du tout | Console série Dedibox, login `guillaume`. |
