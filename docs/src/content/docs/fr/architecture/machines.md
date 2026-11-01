@@ -1,84 +1,18 @@
 ---
 title: "Machines"
-description: Spécifications des quatre sanctuaires-machines — exampleHost, clochette, RogueLeader, skitarii.
+description: Les quatre machines en un tableau, avec un lien vers la page de chacune.
 ---
 
-L'infrastructure consiste en quatre hôtes consacrés, chacun ayant un rôle distinct et une configuration propre.
+| | exampleHost | clochette | skitarii | RogueLeader |
+|---|---|---|---|---|
+| Rôle | Poste de travail | Immich | Passerelle web | Services perso |
+| Où | Maison | Scaleway | OVH VPS-1 | Maison |
+| IP publique | | `51.159.34.135` | `5.196.4.180`, `2001:41d0:404:200::487d` | |
+| Disque | ZFS miroir (2× NVMe 980 PRO), `/data2` ext4 | ext4, MBR | ext4, disko, GPT/BIOS | ext4, disko, GPT |
+| Clé sops | `/etc/sops/age/keys.txt` | clé SSH d'hôte | clé SSH d'hôte | clé SSH d'hôte |
+| SSH | local | Tailscale | Tailscale | LAN |
+| stateVersion | `24.11` | `26.05` | `26.05` | `25.11` |
+| Détail | [exampleHost](/nixos/fr/examplehost/overview/) | [clochette](/nixos/fr/clochette/overview/) | [skitarii](/nixos/fr/skitarii/overview/) | [RogueLeader](/nixos/fr/rogueleader/overview/) |
 
-## exampleHost
-
-| Paramètre | Valeur |
-|---|---|
-| Rôle | Sanctuaire de travail principal |
-| OS | NixOS, kernel 6.18 |
-| CPU | x86_64 |
-| GPU | AMD (pilote `amdgpu`, ROCM) |
-| Disques système | 2× Samsung SSD 980 PRO 1 To NVMe (miroir ZFS) |
-| Disque données | 1× HDD `/data2` ext4 (nofail) |
-| Affichage | KDE Plasma 6, Wayland, SDDM |
-| hostId ZFS | `21ed29b1` |
-| stateVersion | `24.11` |
-
-Services système notables :
-
-- Docker (storage driver ZFS)
-- zrepl (tir de backups depuis storage2.retrohive.fr)
-- Tailscale
-- pcscd (YubiKey)
-- pipewire
-
-## clochette
-
-| Paramètre | Valeur |
-|---|---|
-| Rôle | VPS exposé — services web personnels |
-| Hébergeur | Scaleway |
-| IP publique | `51.159.34.135` |
-| OS | NixOS |
-| CPU | x86_64, Intel KVM |
-| Disque | `/dev/sda`, ext4 (MBR) |
-| SSH | Uniquement via Tailscale (`100.64.0.0/10`) |
-| stateVersion | `26.05` |
-
-Services Docker :
-
-| Container | Domaine | Rôle |
-|---|---|---|
-| newt | — | Tunnel sortant vers la passerelle pangolin de skitarii |
-| immich-server | photos.friloux.me | Galerie photos |
-| immich-postgres | — | Base de données Immich |
-| immich-redis | — | Cache Immich |
-
-## RogueLeader
-
-| Paramètre | Valeur |
-|---|---|
-| Rôle | Serveur dédié domestique |
-| OS | NixOS |
-| CPU | x86_64 |
-| Disque | `/dev/sda`, ext4 (disko, GPT) |
-| sops | Clé age dérivée de la clé SSH host |
-| stateVersion | `25.11` |
-
-Services Docker : borg-ui, mealie, uptime-kuma, papra
-(docs.friloux.me), ainsi que la stack BookStack wow-cp (wow-cp.friloux.me —
-bookstack + mariadb + mysqldump). Chaque service web est publié par la passerelle
-pangolin de skitarii à travers le tunnel `newt` de RogueLeader ; aucune
-redirection de port sur la box.
-
-## skitarii
-
-| Paramètre | Valeur |
-|---|---|
-| Rôle | Passerelle (pangolin, POC) |
-| Hébergeur | OVH VPS-1 |
-| IP publique | `5.196.4.180`, `2001:41d0:404:200::487d` |
-| OS | NixOS |
-| Disque | `/dev/sda`, ext4 (disko, GPT, BIOS) |
-| SSH | Uniquement via Tailscale |
-| sops | Clé age dérivée de la clé SSH host |
-| stateVersion | `26.05` |
-
-Services Docker : pangolin (pangolin.friloux.me), gerbil, traefik, crowdsec,
-crowdsec-manager (crowdsec.friloux.me, derrière le SSO pangolin). Voir
-[La Porte](/nixos/fr/skitarii/gateway/).
+Conteneurs : sur la page de chaque machine.
+Flux web : [Passerelle](/nixos/fr/skitarii/gateway/).
