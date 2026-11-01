@@ -3,13 +3,9 @@ title: "Restore from Borg"
 description: What each Borg archive holds, what it deliberately leaves out, and how to bring every database back.
 ---
 
-Borg archives never contain a live database. A database copied file by file
-while it is being written to is not restorable, so each one is backed up
-through a consistent copy instead, and the live files are excluded.
-
-**Restoring therefore takes two steps**: extract the files, then load each
-database from its copy. Starting a database container on the extracted files
-alone gives an empty database.
+No archive holds a live database: each one is backed up through a consistent
+copy, its live files are excluded. **Restoring = extract, then load each
+database from its copy**, otherwise it starts empty.
 
 ## What the archives hold
 
