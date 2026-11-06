@@ -646,6 +646,29 @@
         "type": "github"
       }
     },
+    "notmuch-tv": {
+      "inputs": {
+        "home-manager": [
+          "home-manager"
+        ],
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1794005411,
+        "narHash": "sha256-AO63xeNIXseWdkg+1nSBgfXxylOigg7c1Px6SNHICT8=",
+        "owner": "gfriloux",
+        "repo": "notmuch-tv",
+        "rev": "5dbcebc9a9aee494f27ba612d2c0d55672c24f39",
+        "type": "github"
+      },
+      "original": {
+        "owner": "gfriloux",
+        "repo": "notmuch-tv",
+        "type": "github"
+      }
+    },
     "pgpilot": {
       "inputs": {
         "nixpkgs": [
@@ -701,6 +724,7 @@
         "home-manager": "home-manager",
         "nixpkgs": "nixpkgs",
         "noosphere": "noosphere",
+        "notmuch-tv": "notmuch-tv",
         "pgpilot": "pgpilot",
         "snowfall-lib": "snowfall-lib_2",
         "sops-nix": "sops-nix",

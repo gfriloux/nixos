@@ -214,6 +214,8 @@ in {
         };
       };
     };
+    television.enable = true;
+    notmuch-tv.enable = true;
     msmtp.enable = true;
     offlineimap.enable = true;
     notmuch = {

@@ -35,6 +35,11 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     noosphere.url = "github:gfriloux/noosphere";
+    notmuch-tv = {
+      url = "github:gfriloux/notmuch-tv";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.home-manager.follows = "home-manager";
+    };
   };
 
   outputs = inputs:

@@ -13,6 +13,7 @@
     inputs.pgpilot.homeModules.pgpilot
     inputs.stc.homeModules.relics-plasma-manager
     inputs.noosphere.homeModules.default
+    inputs.notmuch-tv.homeManagerModules.default
     ./ssh.nix
     ./mail.nix
   ];
