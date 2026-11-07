@@ -10,6 +10,7 @@
     inputs.stc.nixosModules.relics-docker-crowdsec
     inputs.stc.nixosModules.relics-docker-notify
     inputs.stc.nixosModules.relics-hardening-ssh
+    inputs.stc.nixosModules.relics-heartbeat
     inputs.stc.nixosModules.relics-nix-housekeeping
     ./hardware-configuration.nix
     ./disko.nix
@@ -43,6 +44,11 @@
 
     nixHousekeeping.enable = true;
     hardening.ssh.enable = true;
+
+    # Success-only pings to Uptime Kuma push monitors: Kuma alerts when a
+    # scheduled job stops succeeding, which nothing else here can see (#87).
+    # Units are declared next to the jobs, in backup.nix.
+    heartbeat.enable = true;
   };
 
   sops = {
