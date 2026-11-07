@@ -11,7 +11,16 @@
     secrets = {
       "services/borg/passphrase" = {};
       "services/borg/key/private" = {};
+      "services/kuma/borg" = {};
+      "services/kuma/borg-check" = {};
     };
+  };
+
+  # Kuma push monitors: 36 h window for the nightly job, 8 days for the
+  # weekly check. A silent job reads as "nothing to report" otherwise (#87).
+  stc.relics.heartbeat.units = {
+    "borgbackup-job-remote".urlFile = config.sops.secrets."services/kuma/borg".path;
+    "borgbackup-check".urlFile = config.sops.secrets."services/kuma/borg-check".path;
   };
 
   programs.ssh.knownHostsFiles = [

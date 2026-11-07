@@ -9,6 +9,7 @@
     inputs.disko.nixosModules.disko
     inputs.stc.nixosModules.relics-docker-notify
     inputs.stc.nixosModules.relics-hardening-ssh
+    inputs.stc.nixosModules.relics-heartbeat
     inputs.stc.nixosModules.relics-nix-housekeeping
     ./hardware-configuration.nix
     ./disko.nix
@@ -43,6 +44,11 @@
     # No fail2ban: SSH is LAN-only here, and the relic's PerSourcePenalties
     # already blocks sources that fail auth, inside sshd itself.
     hardening.ssh.enable = true;
+
+    # Success-only pings to Uptime Kuma push monitors: Kuma alerts when a
+    # scheduled job stops succeeding, which nothing else here can see (#87).
+    # Units are declared next to the jobs, in backup.nix and docker-wow-cp.nix.
+    heartbeat.enable = true;
   };
 
   sops = {
