@@ -22,6 +22,18 @@ just test          # pre-commit: statix, deadnix, alejandra
 nix flake check    # STC purity seals: nix, gitleaks, markdown
 ```
 
+## Deployment record
+
+Every `just install*` goes through [tabularium](https://github.com/gfriloux/tabularium):
+it refuses a dirty tree, runs the deploy, and on success writes an in-toto record
+(host, commit, system path, date) to `~/.tabularium/nixos/deployments/<host>/`.
+That directory is never committed.
+
+| Command | Effect |
+|---|---|
+| `tabularium last <host>` | Commit and date of the last deploy (`dirty` if forced) |
+| `tabularium record <host> --allow-dirty -- <command>` | Deploy from a dirty tree anyway, recorded as `dirty` |
+
 ## Roll back
 
 ```bash

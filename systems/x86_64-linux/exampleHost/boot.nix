@@ -63,6 +63,10 @@ in {
 
     boot = {
       initrd.availableKernelModules = availableKernelModules;
+      # ZFS 2.4.4 + kernel 6.18: finit_module fails with EFAULT on a .ko.xz of
+      # exactly 4096 bytes read from ZFS. xt_addrtype is one; Docker needs it.
+      # Loaded from the initrd, which is not on ZFS.
+      initrd.kernelModules = ["xt_addrtype"];
       # Hardening sysctls and blacklistedKernelModules are now provided by the
       # stc cogitator-workstation profile (hardening kernel/network/module
       # relics). Only fs.file-max remains here — capacity tuning, not hardening.

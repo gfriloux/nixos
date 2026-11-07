@@ -728,7 +728,8 @@
         "pgpilot": "pgpilot",
         "snowfall-lib": "snowfall-lib_2",
         "sops-nix": "sops-nix",
-        "stc": "stc"
+        "stc": "stc",
+        "tabularium": "tabularium"
       }
     },
     "snowfall-lib": {
@@ -988,6 +989,29 @@
       "original": {
         "owner": "nix-systems",
         "repo": "default",
+        "type": "github"
+      }
+    },
+    "tabularium": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ],
+        "stc": [
+          "stc"
+        ]
+      },
+      "locked": {
+        "lastModified": 1794066291,
+        "narHash": "sha256-/lST8lnixThyGDYmkuq9FLM+0I9wKHSfFCoBi8Omx1k=",
+        "owner": "gfriloux",
+        "repo": "tabularium",
+        "rev": "d84783dd1f5abe65f4fee5b6615efa7c18d2c9f9",
+        "type": "github"
+      },
+      "original": {
+        "owner": "gfriloux",
+        "repo": "tabularium",
         "type": "github"
       }
     },
