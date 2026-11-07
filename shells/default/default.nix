@@ -19,6 +19,7 @@ in
       tokei
       trivy
       nodejs
+      inputs.tabularium.packages.${stdenv.hostPlatform.system}.tabularium
     ];
 
     shellHook = ''

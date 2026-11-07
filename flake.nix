@@ -35,6 +35,11 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     noosphere.url = "github:gfriloux/noosphere";
+    tabularium = {
+      url = "github:gfriloux/tabularium";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.stc.follows = "stc";
+    };
     notmuch-tv = {
       url = "github:gfriloux/notmuch-tv";
       inputs.nixpkgs.follows = "nixpkgs";

@@ -10,7 +10,7 @@ build:
 
 install:
 	rm -f home/kuri/.gtkrc-2.0.backup /home/kuri/.gtkrc-2.0
-	nh os switch .
+	tabularium record exampleHost -- nh os switch .
 
 test:
 	pre-commit run --all-files
@@ -19,7 +19,7 @@ build_clochette:
 	nh os build .#clochette -d never
 
 install_clochette:
-	nixos-rebuild switch --flake .#clochette --target-host guillaume@clochette.friloux.me --sudo --ask-sudo-password
+	tabularium record clochette -- nixos-rebuild switch --flake .#clochette --target-host guillaume@clochette.friloux.me --sudo --ask-sudo-password
 
 secrets_clochette:
 	sops secrets/clochette.yaml
@@ -28,7 +28,7 @@ build_rogueleader:
 	nh os build .#RogueLeader -d never
 
 install_rogueleader:
-	nixos-rebuild switch --flake .#RogueLeader --target-host guillaume@rogueleader.home --use-remote-sudo --ask-sudo-password
+	tabularium record RogueLeader -- nixos-rebuild switch --flake .#RogueLeader --target-host guillaume@rogueleader.home --use-remote-sudo --ask-sudo-password
 
 home_rogueleader:
 	nix run nixpkgs#home-manager -- switch --flake .#"guillaume@RogueLeader" -b backup --target-host guillaume@rogueleader.home
@@ -40,7 +40,7 @@ build_skitarii:
 	nh os build .#skitarii -d never
 
 install_skitarii:
-	nixos-rebuild switch --flake .#skitarii --target-host guillaume@skitarii.friloux.me --sudo --ask-sudo-password
+	tabularium record skitarii -- nixos-rebuild switch --flake .#skitarii --target-host guillaume@skitarii.friloux.me --sudo --ask-sudo-password
 
 secrets_skitarii:
 	sops secrets/skitarii.yaml

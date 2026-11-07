@@ -22,6 +22,18 @@ just test          # pre-commit : statix, deadnix, alejandra
 nix flake check    # purity seals STC : nix, gitleaks, markdown
 ```
 
+## Registre de déploiement
+
+Chaque `just install*` passe par [tabularium](https://github.com/gfriloux/tabularium) :
+il refuse un arbre sale, lance le déploiement et, s'il réussit, écrit un registre
+in-toto (hôte, commit, chemin du système, date) dans `~/.tabularium/nixos/deployments/<hôte>/`.
+Ce dossier n'est jamais commité.
+
+| Commande | Effet |
+|---|---|
+| `tabularium last <hôte>` | Commit et date du dernier déploiement (`dirty` si forcé) |
+| `tabularium record <hôte> --allow-dirty -- <commande>` | Déployer quand même depuis un arbre sale, enregistré `dirty` |
+
 ## Revenir en arrière
 
 ```bash
