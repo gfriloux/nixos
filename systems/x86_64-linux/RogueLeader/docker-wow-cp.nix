@@ -9,8 +9,14 @@
       "services/wow-cp/env_bookstack" = {};
       "services/wow-cp/env_mariadb" = {};
       "services/wow-cp/env_mysqldump" = {};
+      "services/kuma/wow-cp-dumps" = {};
     };
   };
+
+  # The dump cron runs inside the container: a dead cron leaves it healthy
+  # (mid-July SSL failures went unseen for weeks). Check the effect instead,
+  # a dump file younger than 26 h, and let Kuma alert when the pings stop.
+  stc.relics.heartbeat.units."wow-cp-dump-age".urlFile = config.sops.secrets."services/kuma/wow-cp-dumps".path;
 
   virtualisation.oci-containers.containers = {
     "wow-cp-bookstack" = {
@@ -107,6 +113,32 @@
           "wow-cp-mysqldump.service"
         ];
       };
+
+    services.wow-cp-dump-age = {
+      description = "Âge du dernier dump wow-cp";
+      unitConfig.OnFailure = "stc-notify-failure@%p.service";
+      serviceConfig = {
+        Type = "oneshot";
+        User = "wow-cp";
+        ExecStart = pkgs.writeShellScript "wow-cp-dump-age" ''
+          recent=$(${pkgs.findutils}/bin/find /srv/docker/wow-cp.friloux.me/dumps \
+            -maxdepth 1 -type f -name '*.sql*' -mmin -1560 -print -quit)
+          if [ -z "$recent" ]; then
+            echo "Aucun dump wow-cp de moins de 26 h"
+            exit 1
+          fi
+        '';
+      };
+    };
+
+    # The dump runs at 03:00 UTC, i.e. 04:00 or 05:00 here; borg at 06:00.
+    timers.wow-cp-dump-age = {
+      wantedBy = ["timers.target"];
+      timerConfig = {
+        OnCalendar = "*-*-* 05:30:00";
+        Persistent = true;
+      };
+    };
 
     tmpfiles.rules = [
       "d /srv/docker/wow-cp.friloux.me 0750 wow-cp wow-cp -"
