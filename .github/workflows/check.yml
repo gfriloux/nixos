@@ -53,6 +53,8 @@ jobs:
             homes: guillaume@RogueLeader
           - host: exampleHost
             homes: kuri@exampleHost
+          - host: skitarii
+            homes: guillaume@skitarii
     steps:
       # exampleHost's closure unpacks to ~21 GiB, more than the runner has
       # free. These preinstalled toolchains are unused here.
