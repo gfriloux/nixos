@@ -1142,11 +1142,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1794133242,
-        "narHash": "sha256-DPog1+oz7cVbKHm/1idvNJy4/LNsiReShjCpCL+ywqw=",
+        "lastModified": 1794154999,
+        "narHash": "sha256-FXiq+OduBU7ZR4VXfEM6bFR1sZshY1sDh2szWL3AGKA=",
         "owner": "gfriloux",
         "repo": "tabularium",
-        "rev": "0fa567457cfc30ac50be9b08180b1dec5a50f0e6",
+        "rev": "02d520c6caf4b27d31d02d822a2483a86fd9862a",
         "type": "github"
       },
       "original": {
