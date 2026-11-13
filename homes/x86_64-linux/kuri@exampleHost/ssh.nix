@@ -16,6 +16,16 @@
     };
   };
 
+  # yubikey-touch-detector (stc relic) proxies the agent: it renames its
+  # socket to ssh-agent.original and listens on ssh-agent itself. Restarted
+  # alone at a switch, ssh-agent then failed with "Address already in use"
+  # and ssh-add hung. Tie the two: the detector stops before the agent and
+  # comes back after it (#134).
+  systemd.user.services.yubikey-touch-detector.Unit = {
+    After = ["ssh-agent.service"];
+    PartOf = ["ssh-agent.service"];
+  };
+
   # Connection multiplexing (Host *) and enable/enableDefaultConfig come from
   # stc cogitator-enginseer. Only host-specific blocks remain here.
   programs.ssh = {
