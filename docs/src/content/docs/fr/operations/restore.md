@@ -124,9 +124,9 @@ Pièges :
 
 ## Services SQLite (RogueLeader)
 
-Chaque copie a passé `PRAGMA quick_check` le 2026-10-25, sauf celle de
-borg-ui (ajoutée après, pas encore vérifiée). Une copie est une base
-complète : la restaurer, c'est remettre le fichier en place.
+Chaque copie a passé `PRAGMA quick_check` le 2026-10-25 (celle de borg-ui
+le 2026-11-13). Une copie est une base complète : la restaurer, c'est
+remettre le fichier en place.
 
 | Service | Unité | Copie | Chemin vivant | Propriétaire |
 |---|---|---|---|---|

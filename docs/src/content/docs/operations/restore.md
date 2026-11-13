@@ -122,9 +122,9 @@ Pitfalls:
 
 ## SQLite services (RogueLeader)
 
-Each snapshot passed `PRAGMA quick_check` on 2026-10-25, except borg-ui's
-(added later, not checked yet). A snapshot is a complete database: restoring
-it means putting the file back.
+Each snapshot passed `PRAGMA quick_check` on 2026-10-25 (borg-ui's on
+2026-11-13). A snapshot is a complete database: restoring it means putting
+the file back.
 
 | Service | Unit | Snapshot | Live path | Owner |
 |---|---|---|---|---|
