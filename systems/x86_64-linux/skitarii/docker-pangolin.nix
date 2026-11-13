@@ -198,6 +198,9 @@ in {
     };
   };
 
+  # Pour gerbil, qui n'a pas SYS_MODULE et ne peut donc pas le charger.
+  boot.kernelModules = ["wireguard"];
+
   virtualisation.oci-containers.containers = {
     pangolin = {
       # Édition Enterprise : licence gratuite pour usage personnel, saisie dans
@@ -234,10 +237,11 @@ in {
         "443:443/udp"
         "80:80"
       ];
-      capabilities = {
-        NET_ADMIN = true;
-        SYS_MODULE = true;
-      };
+      # NET_ADMIN : gerbil crée et configure l'interface WireGuard. Pas de
+      # SYS_MODULE : sur le seul conteneur exposé à internet, il donnerait le
+      # chargement de modules noyau à qui s'en échappe. Le module est chargé
+      # par l'hôte (boot.kernelModules plus haut) (#137).
+      capabilities.NET_ADMIN = true;
       networks = ["pangolin"];
       # Le serveur HTTP de --reachableAt, par lequel pangolin le pilote.
       extraOptions = inputs.stc.lib.docker.mkHealthCheck {
