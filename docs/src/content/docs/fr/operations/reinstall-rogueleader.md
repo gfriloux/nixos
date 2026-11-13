@@ -105,7 +105,7 @@ Les archives ne contiennent aucune base vivante :
 
 - BookStack : recharger le dump MariaDB,
   [BookStack (RogueLeader)](/nixos/fr/operations/restore/#bookstack-rogueleader).
-- Uptime Kuma, Papra, Mealie : remettre les copies de
+- Uptime Kuma, Papra, Mealie, borg-ui : remettre les copies de
   `sqlite-snapshots/`,
   [Services SQLite (RogueLeader)](/nixos/fr/operations/restore/#services-sqlite-rogueleader).
 

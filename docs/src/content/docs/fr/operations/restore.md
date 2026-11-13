@@ -16,6 +16,7 @@ puis charger chaque base depuis sa copie**, sinon elle démarre vide.
 | RogueLeader | Uptime Kuma (SQLite) | `status.friloux.me/data/kuma.db*` | `sqlite-snapshots/uptime-kuma.db` |
 | RogueLeader | Papra (SQLite) | `docs.friloux.me/data/db/db.sqlite*` | `sqlite-snapshots/papra.db` |
 | RogueLeader | Mealie (SQLite) | `cuisine.home.friloux.me/data/mealie.db*` | `sqlite-snapshots/mealie.db` |
+| RogueLeader | borg-ui (SQLite) | `borg-ui.friloux.me/data/borg.db*` | `sqlite-snapshots/borg-ui.db` |
 | skitarii | pangolin (SQLite) | `pangolin.friloux.me/config/db/db.sqlite*` | `sqlite-snapshots/pangolin.db` |
 | skitarii | crowdsec (SQLite) | `crowdsec.skitarii.friloux.me/data/crowdsec.db*` | `sqlite-snapshots/crowdsec.db` |
 | skitarii | crowdsec-manager (SQLite) | `crowdsec-manager/data/settings.db*`, `history.db*` | `sqlite-snapshots/crowdsec-manager-settings.db`, `crowdsec-manager-history.db` |
@@ -123,14 +124,16 @@ Pièges :
 
 ## Services SQLite (RogueLeader)
 
-Chaque copie a passé `PRAGMA quick_check` le 2026-10-25. Une copie est une
-base complète : la restaurer, c'est remettre le fichier en place.
+Chaque copie a passé `PRAGMA quick_check` le 2026-10-25 (celle de borg-ui
+le 2026-11-13). Une copie est une base complète : la restaurer, c'est
+remettre le fichier en place.
 
 | Service | Unité | Copie | Chemin vivant | Propriétaire |
 |---|---|---|---|---|
 | Uptime Kuma | `uptime-kuma` | `uptime-kuma.db` | `status.friloux.me/data/kuma.db` | `root:root` |
 | Papra | `papra` | `papra.db` | `docs.friloux.me/data/db/db.sqlite` | `papra:papra` |
 | Mealie | `mealie` | `mealie.db` | `cuisine.home.friloux.me/data/mealie.db` | `911:911` |
+| borg-ui | `borg-ui` | `borg-ui.db` | `borg-ui.friloux.me/data/borg.db` | `borg-ui:borg-ui` |
 
 Pour chacun, après l'extraction de l'archive :
 
@@ -145,6 +148,9 @@ systemctl start uptime-kuma
 
 Supprimer les fichiers `-wal` et `-shm` avant la copie : un WAL périmé à côté
 d'une base restaurée serait rejoué dedans.
+
+Les `ssh_keys/`, `borg_keys/` et `.secret_key` de borg-ui reviennent avec
+l'archive elle-même, sous `borg-ui.friloux.me/data/`.
 
 ## Services SQLite (skitarii)
 

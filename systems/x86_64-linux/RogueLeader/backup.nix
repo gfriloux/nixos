@@ -33,6 +33,8 @@
       "/srv/docker/cuisine.home.friloux.me"
       "/srv/docker/docs.friloux.me"
       "/srv/docker/wow-cp.friloux.me"
+      # data/ only: cache/ is Borg's local cache, rebuilt on demand.
+      "/srv/docker/borg-ui.friloux.me/data"
       "/srv/docker/sqlite-snapshots"
     ];
     # Live databases are not restorable from a file-by-file copy, and borg
@@ -41,11 +43,18 @@
     #   nightly, last 15 kept), not from db/.
     # - SQLite (-wal/-shm included): restore from sqlite-snapshots/, taken by
     #   preHook below.
+    # - borg-ui: borg_bak.db is its own copy of borg.db, logs/ changes while
+    #   an operation runs, mounts/ only holds mount points. What a reinstall
+    #   needs is borg.db, ssh_keys/, borg_keys/ and .secret_key (#114).
     exclude = [
       "/srv/docker/wow-cp.friloux.me/db"
       "/srv/docker/status.friloux.me/data/kuma.db*"
       "/srv/docker/docs.friloux.me/data/db/db.sqlite*"
       "/srv/docker/cuisine.home.friloux.me/data/mealie.db*"
+      "/srv/docker/borg-ui.friloux.me/data/borg.db*"
+      "/srv/docker/borg-ui.friloux.me/data/borg_bak.db*"
+      "/srv/docker/borg-ui.friloux.me/data/logs"
+      "/srv/docker/borg-ui.friloux.me/data/mounts"
     ];
     # sqlite3's .backup goes through SQLite's backup API: a consistent copy of
     # a database that is being written to, WAL included. set -e in the job
@@ -57,13 +66,15 @@
       "/srv/docker/status.friloux.me/data"
       "/srv/docker/docs.friloux.me/data/db"
       "/srv/docker/cuisine.home.friloux.me/data"
+      "/srv/docker/borg-ui.friloux.me/data"
     ];
     preHook = ''
       snapshots=/srv/docker/sqlite-snapshots
       for db in \
         uptime-kuma:/srv/docker/status.friloux.me/data/kuma.db \
         papra:/srv/docker/docs.friloux.me/data/db/db.sqlite \
-        mealie:/srv/docker/cuisine.home.friloux.me/data/mealie.db; do
+        mealie:/srv/docker/cuisine.home.friloux.me/data/mealie.db \
+        borg-ui:/srv/docker/borg-ui.friloux.me/data/borg.db; do
         ${pkgs.sqlite}/bin/sqlite3 -cmd ".timeout 30000" "''${db#*:}" \
           ".backup '$snapshots/''${db%%:*}.db'"
       done
