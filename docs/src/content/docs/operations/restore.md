@@ -16,6 +16,7 @@ database from its copy**, otherwise it starts empty.
 | RogueLeader | Uptime Kuma (SQLite) | `status.friloux.me/data/kuma.db*` | `sqlite-snapshots/uptime-kuma.db` |
 | RogueLeader | Papra (SQLite) | `docs.friloux.me/data/db/db.sqlite*` | `sqlite-snapshots/papra.db` |
 | RogueLeader | Mealie (SQLite) | `cuisine.home.friloux.me/data/mealie.db*` | `sqlite-snapshots/mealie.db` |
+| RogueLeader | borg-ui (SQLite) | `borg-ui.friloux.me/data/borg.db*` | `sqlite-snapshots/borg-ui.db` |
 | skitarii | pangolin (SQLite) | `pangolin.friloux.me/config/db/db.sqlite*` | `sqlite-snapshots/pangolin.db` |
 | skitarii | crowdsec (SQLite) | `crowdsec.skitarii.friloux.me/data/crowdsec.db*` | `sqlite-snapshots/crowdsec.db` |
 | skitarii | crowdsec-manager (SQLite) | `crowdsec-manager/data/settings.db*`, `history.db*` | `sqlite-snapshots/crowdsec-manager-settings.db`, `crowdsec-manager-history.db` |
@@ -121,14 +122,16 @@ Pitfalls:
 
 ## SQLite services (RogueLeader)
 
-Each snapshot passed `PRAGMA quick_check` on 2026-10-25. A snapshot is a
-complete database: restoring it means putting the file back.
+Each snapshot passed `PRAGMA quick_check` on 2026-10-25, except borg-ui's
+(added later, not checked yet). A snapshot is a complete database: restoring
+it means putting the file back.
 
 | Service | Unit | Snapshot | Live path | Owner |
 |---|---|---|---|---|
 | Uptime Kuma | `uptime-kuma` | `uptime-kuma.db` | `status.friloux.me/data/kuma.db` | `root:root` |
 | Papra | `papra` | `papra.db` | `docs.friloux.me/data/db/db.sqlite` | `papra:papra` |
 | Mealie | `mealie` | `mealie.db` | `cuisine.home.friloux.me/data/mealie.db` | `911:911` |
+| borg-ui | `borg-ui` | `borg-ui.db` | `borg-ui.friloux.me/data/borg.db` | `borg-ui:borg-ui` |
 
 For each one, after extracting the archive:
 
@@ -143,6 +146,9 @@ systemctl start uptime-kuma
 
 Remove the `-wal` and `-shm` files before copying: a stale WAL next to a
 restored database would be replayed into it.
+
+borg-ui's `ssh_keys/`, `borg_keys/` and `.secret_key` come back with the
+archive itself, under `borg-ui.friloux.me/data/`.
 
 ## SQLite services (skitarii)
 

@@ -105,7 +105,7 @@ The archives hold no live database:
 
 - BookStack: reload the MariaDB dump,
   [BookStack (RogueLeader)](/nixos/operations/restore/#bookstack-rogueleader).
-- Uptime Kuma, Papra, Mealie: put the `sqlite-snapshots/` copies back,
+- Uptime Kuma, Papra, Mealie, borg-ui: put the `sqlite-snapshots/` copies back,
   [SQLite services (RogueLeader)](/nixos/operations/restore/#sqlite-services-rogueleader).
 
 ## 8. Check
