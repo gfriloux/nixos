@@ -1,5 +1,6 @@
 {
   pkgs,
+  config,
   inputs,
   ...
 }: {
@@ -7,6 +8,7 @@
     inputs.sops-nix.nixosModules.sops
     inputs.disko.nixosModules.disko
     inputs.stc.nixosModules.relics-zfs
+    inputs.stc.nixosModules.relics-smart
     inputs.stc.nixosModules.cogitator-workstation
     inputs.stc.nixosModules.cogitator-gaming
     ./boot.nix
@@ -18,7 +20,10 @@
   sops = {
     defaultSopsFile = ../../../secrets/kuri_exampleHost.yaml;
     age.keyFile = "/etc/sops/age/keys.txt";
-    secrets."users/kuri/hashed-password".neededForUsers = true;
+    secrets = {
+      "users/kuri/hashed-password".neededForUsers = true;
+      "services/ntfy/topic" = {};
+    };
   };
 
   systemd.tmpfiles.rules = [
@@ -61,6 +66,20 @@
         sddmTheme = "catppuccin-mocha-mauve";
       };
       amdGpu.initrd = true;
+
+      # The pool only turns DEGRADED once a disk has already failed; SMART
+      # warns before that (#74). Short self-test daily at 02:00, long one
+      # Saturday at 03:00; a standing problem is re-sent every day until fixed.
+      smart = {
+        enable = true;
+        notifyCommand = ''
+          ${pkgs.curl}/bin/curl -s \
+            --max-time 10 \
+            -H "Title: [$STC_SMART_HOSTNAME] SMART $STC_SMART_FAILTYPE sur $STC_SMART_DEVICE" \
+            -d "$STC_SMART_MESSAGE" \
+            "https://ntfy.sh/$(cat ${config.sops.secrets."services/ntfy/topic".path})"
+        '';
+      };
     };
     # Workstation profile: Plasma desktop + hardening (kernel/network/modules) +
     # YubiKey. Filesystem hardening stays off — hidepid=2 / /tmp noexec would

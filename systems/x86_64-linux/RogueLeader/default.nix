@@ -11,6 +11,7 @@
     inputs.stc.nixosModules.relics-hardening-ssh
     inputs.stc.nixosModules.relics-heartbeat
     inputs.stc.nixosModules.relics-nix-housekeeping
+    inputs.stc.nixosModules.relics-smart
     ./hardware-configuration.nix
     ./disko.nix
     ./backup.nix
@@ -49,6 +50,20 @@
     # scheduled job stops succeeding, which nothing else here can see (#87).
     # Units are declared next to the jobs, in backup.nix and docker-wow-cp.nix.
     heartbeat.enable = true;
+
+    # No mirror here: SMART is the only warning before a disk dies (#74).
+    # Short self-test daily at 02:00, long one Saturday at 03:00; a standing
+    # problem is re-sent every day until fixed.
+    smart = {
+      enable = true;
+      notifyCommand = ''
+        ${pkgs.curl}/bin/curl -s \
+          --max-time 10 \
+          -H "Title: [$STC_SMART_HOSTNAME] SMART $STC_SMART_FAILTYPE sur $STC_SMART_DEVICE" \
+          -d "$STC_SMART_MESSAGE" \
+          "https://ntfy.sh/$(cat ${config.sops.secrets."services/ntfy/topic".path})"
+      '';
+    };
   };
 
   sops = {
