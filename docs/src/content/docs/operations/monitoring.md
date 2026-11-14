@@ -11,6 +11,7 @@ description: What watches what, and the commands to check by hand.
 | A scheduled job that stops succeeding | STC `heartbeat` relic: ping on success only → Uptime Kuma push monitor | ntfy, once the window passes without a ping |
 | Web services from outside | Uptime Kuma on RogueLeader, page `status.friloux.me` | ntfy |
 | pangolin nodes and resources | pangolin alert rules | ntfy, see [Gateway](/nixos/skitarii/gateway/) |
+| Disks (SMART) | STC `smart` relic: `smartd` on RogueLeader and exampleHost | ntfy, re-sent daily while the problem stands |
 
 Uptime Kuma runs at home: if skitarii goes down, the public page goes down, alerts keep coming.
 
@@ -38,6 +39,32 @@ Not covered:
 - skitarii down: pings reach Kuma through the gateway, so every push monitor
   alerts after its window.
 - exampleHost: off most days, silence is normal there.
+
+## Disks (#74)
+
+`stc.relics.smart` in each host's `default.nix`, same ntfy topic as the
+containers. Not on clochette or skitarii: virtual disks, no SMART.
+
+| Setting | Value |
+|---|---|
+| Disks | autodetected when `smartd` starts; new disk → `systemctl restart smartd` |
+| Self-tests | short daily at 02:00, long Saturday at 03:00 |
+| Temperature | logged at 45 °C, ntfy at 55 °C |
+
+```bash
+systemctl status smartd                           # disks monitored, next check
+journalctl -u smartd --since today
+journalctl -t stc-smart-notify -n 5               # what notifyCommand printed
+sudo nix run nixpkgs#smartmontools -- -a /dev/sda # attributes, self-test log
+```
+
+Send a test alert (expect `SMART EmailTest sur test` on ntfy):
+
+```bash
+systemctl cat smartd | grep -o '/nix/store/[^ ]*smartd.conf' \
+  | xargs grep -om1 '/nix/store/[^ ]*stc-smart-notify' \
+  | sudo xargs env SMARTD_DEVICESTRING=test SMARTD_FAILTYPE=EmailTest SMARTD_MESSAGE=test
+```
 
 ## Containers
 
