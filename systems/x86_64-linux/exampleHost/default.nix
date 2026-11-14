@@ -19,6 +19,9 @@
 
   sops = {
     defaultSopsFile = ../../../secrets/kuri_exampleHost.yaml;
+    # On the root dataset. Not under /home or /var/lib: those are separate
+    # ZFS datasets, and sops-nix needs the key at activation to decrypt the
+    # user password (neededForUsers), before they can be relied on.
     age.keyFile = "/etc/sops/age/keys.txt";
     secrets = {
       "users/kuri/hashed-password".neededForUsers = true;

@@ -24,6 +24,8 @@
         device = dataset;
         fsType = "zfs";
         options = ["X-mount.mkdir"];
+        # On every dataset, /home included, on purpose: uniformity over the
+        # strict minimum. Not an oversight to trim per dataset.
         neededForBoot = true;
       };
     })
