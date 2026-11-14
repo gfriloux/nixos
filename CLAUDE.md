@@ -105,6 +105,8 @@ Container-specific `systemd.services` overrides (e.g. `after`/`requires` depende
 
 **Simplification principle**: for single-machine configurations, avoid `mkOption`/`cfg.*` abstraction layers — use direct NixOS options instead. Abstraction only makes sense when multiple machines share the same module with different values.
 
+**Comments**: a comment records the failure avoided or the constraint nobody could guess, next to the line it protects — never a paraphrase of the option. An obvious option gets no comment. Model: the `autoPrune` comment in each host's `default.nix`, which says what breaks if the option comes back. Same convention as STC (`relics/nixos/zfs.nix`). This file and the table under "Deliberate omissions" stay the index; the line of defence is in the code.
+
 ## Deployment
 
 ```text
