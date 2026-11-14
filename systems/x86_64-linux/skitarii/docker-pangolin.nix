@@ -251,7 +251,7 @@ in {
     };
 
     traefik = {
-      image = "traefik:v3.7.16"; # renovate
+      image = "traefik:v3.7.19"; # renovate
       dependsOn = ["gerbil" "crowdsec"];
       cmd = ["--configFile=/etc/traefik/traefik_config.yml"];
       volumes = [
