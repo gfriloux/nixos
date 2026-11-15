@@ -73,6 +73,26 @@ in `default.nix`, bouncer settings in `docker-pangolin.nix`.
 - crowdsec down means every request is blocked (fail closed, like the LAPI in `live` mode).
 - Only the first 10 MB of a body are inspected: large uploads (immich, papra) pass.
 
+## Blocklists
+
+Chosen in the console (app.crowdsec.net → Blocklists), not in this repo. Their bans reach
+the LAPI like any other decision and the traefik bouncer applies them. Free plan: 3 lists.
+
+| List | Why |
+|---|---|
+| Firehol cruzit.com | Compromised machines scanning for vulnerabilities |
+| Firehol greensnow.co | General attackers, short list |
+| CVE-2025-55182 – React2Shell Attackers | React/Next.js RCE, curated by CrowdSec |
+| CrowdSec Community Blocklist | Comes with enrollment, outside the quota |
+
+The parser whitelist does not cover imported decisions: a wrongly banned address
+needs a console allowlist.
+
+```bash
+# Is this address banned, and by which list
+sudo docker exec crowdsec cscli decisions list -a --ip <IP>
+```
+
 ## Checks
 
 ```bash
