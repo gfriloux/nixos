@@ -98,6 +98,8 @@
   };
 
   systemd = {
+    # The disk is SMR: throughput collapses while everything starts at boot,
+    # and postgres misses the default start timeout.
     services."docker-immich-postgres".serviceConfig.TimeoutStartSec = "300";
 
     services."docker-network-immich" =
@@ -116,6 +118,9 @@
     ];
   };
 
+  # 999 is postgres's uid/gid inside the image, which runs without a `user`
+  # override. This account only names that id so the tmpfiles rule can give
+  # it the datadir; another number locks postgres out of its own data.
   users.groups."immich-postgres" = {
     gid = 999;
   };
