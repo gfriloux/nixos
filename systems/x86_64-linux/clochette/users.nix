@@ -21,6 +21,8 @@
       shell = pkgs.fish;
     };
 
+    # Shell and SSH access on purpose: this account exists to attach to a
+    # persistent zellij/weechat IRC session. Not a service account to lock down.
     users.weechat = {
       createHome = true;
       isNormalUser = true;

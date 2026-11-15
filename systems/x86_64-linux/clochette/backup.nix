@@ -5,7 +5,7 @@
 }:
 # Using borg:
 # List backups:
-#   BORG_PASSPHRASE=$(cat /run/secrets/services/borg/passphrase) BORG_RSH="ssh -i /run/secrets/services/borg/key/private" borg list 'ssh://backup@friloux.me/~/clochette.friloux.me'
+#   BORG_PASSPHRASE=$(cat /run/secrets/services/borg/passphrase) BORG_RSH="ssh -i /run/secrets/services/borg/key/private" borg list 'ssh://backup@storage2.friloux.me/~/clochette.friloux.me'
 {
   sops = {
     secrets = {
@@ -43,6 +43,9 @@
     encryption.mode = "repokey-blake2";
     encryption.passCommand = "cat ${config.sops.secrets."services/borg/passphrase".path}";
     compression = "auto,zstd";
+
+    # No prune.keep: storage2 prunes the repository itself. A compromised
+    # client could otherwise rewrite its backup history through prune.
 
     # After Immich's 02:00 database dump, so each archive carries that night's
     # dump instead of the previous day's.

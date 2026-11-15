@@ -4,6 +4,7 @@
   inputs,
   ...
 }: let
+  # The rootless image ships neither curl nor wget: bash's /dev/tcp does the GET.
   healthCmd = "bash -c 'exec 3<>/dev/tcp/127.0.0.1/1221 && printf \"GET /api/health HTTP/1.0\\r\\n\\r\\n\" >&3 && cat <&3 | grep -q isEverythingOk'";
 in {
   sops = {

@@ -23,7 +23,8 @@
   };
 
   # Calqué sur le compose officiel (fosrl/pangolin, install/config/traefik/).
-  # Différences voulues : pas de dashboard traefik exposé, logs sur stdout.
+  # Différences voulues : pas de dashboard traefik exposé, log traefik sur
+  # stdout. L'access log, lui, va dans un fichier : crowdsec le lit.
   traefikConfig = yaml.generate "traefik_config.yml" {
     providers = {
       http = {
@@ -32,6 +33,8 @@
       };
       file.filename = "/etc/traefik/dynamic_config.yml";
     };
+    # Renovate only follows `image = "…"; # renovate` lines: these plugin
+    # versions never move on their own, bump them by hand.
     experimental.plugins = {
       badger = {
         moduleName = "github.com/fosrl/badger";

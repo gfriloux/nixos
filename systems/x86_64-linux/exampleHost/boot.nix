@@ -24,6 +24,8 @@
         device = dataset;
         fsType = "zfs";
         options = ["X-mount.mkdir"];
+        # On every dataset, /home included, on purpose: uniformity over the
+        # strict minimum. Not an oversight to trim per dataset.
         neededForBoot = true;
       };
     })
@@ -65,11 +67,13 @@ in {
       initrd.availableKernelModules = availableKernelModules;
       # ZFS 2.4.4 + kernel 6.18: finit_module fails with EFAULT on a .ko.xz of
       # exactly 4096 bytes read from ZFS. xt_addrtype is one; Docker needs it.
-      # Loaded from the initrd, which is not on ZFS.
+      # Loaded from the initrd, which is not on ZFS. Drop once ZFS is fixed.
       initrd.kernelModules = ["xt_addrtype"];
       # Hardening sysctls and blacklistedKernelModules are now provided by the
       # stc cogitator-workstation profile (hardening kernel/network/module
       # relics). Only fs.file-max remains here — capacity tuning, not hardening.
+      # Set after some applications ran out of open files; which ones is
+      # no longer known.
       kernel.sysctl = {
         "fs.file-max" = 640000;
       };
@@ -87,6 +91,8 @@ in {
           copyKernels = true;
           efiSupport = true;
           zfsSupport = true;
+          # GRUB only writes the first disk's ESP. Copy it to the second so
+          # the mirror still boots when the first disk is the one that died.
           extraInstallCommands = ''
             set -x
             ${pkgs.coreutils-full}/bin/cp -r ${efiSysMountPoint}/EFI /boot/efis/${builtins.elemAt bootDevices 1}-part1

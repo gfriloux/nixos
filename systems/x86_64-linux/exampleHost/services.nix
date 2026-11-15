@@ -30,6 +30,9 @@
               host = "storage2.retrohive.fr";
               user = "root";
               port = 22;
+              # Not managed by this repo or sops (#130): placed by hand, so
+              # it is gone after a reinstall and the pull job fails until it
+              # is put back.
               identity_file = "/root/.ssh/id_ed25519";
             };
             recv = {placeholder = {encryption = "inherit";};};

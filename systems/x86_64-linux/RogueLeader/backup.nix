@@ -85,6 +85,9 @@
     encryption.passCommand = "cat ${config.sops.secrets."services/borg/passphrase".path}";
     compression = "auto,zstd";
 
+    # No prune.keep: storage2 prunes the repository itself. A compromised
+    # client could otherwise rewrite its backup history through prune.
+
     # After wow-cp's dump, which runs at 03:00 UTC (04:00 or 05:00 here), so
     # each archive carries that night's dump instead of the previous day's.
     startAt = "*-*-* 06:00:00";

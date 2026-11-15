@@ -31,6 +31,8 @@
       ];
       extraOptions = inputs.stc.lib.docker.mkHealthCheck {
         cmd = "curl -fs http://localhost/status | grep -q '\"database\":true'";
+        # Sized for clochette's SMR disk, where wow-cp first ran. Kept: the
+        # disk here is over ten years old and not fast either.
         startPeriod = "300s";
       };
       # Publié par la passerelle pangolin (wow-cp.friloux.me), via newt sur
@@ -45,6 +47,8 @@
       ];
     };
     "wow-cp-mariadb" = {
+      # No `# renovate` yet: 10.5 is end of life and the jump to 11.8 is a
+      # manual major upgrade (#118). Add the tag once on 11.8.
       image = "linuxserver/mariadb:10.5.15";
       serviceName = "wow-cp-mariadb";
       environmentFiles = [
