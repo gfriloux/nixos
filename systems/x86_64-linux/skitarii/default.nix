@@ -26,7 +26,7 @@
     # qui branche aussi crowdsec sur son réseau et ses logs.
     docker.crowdsec = {
       enable = true;
-      image = "crowdsecurity/crowdsec:v1.8.1"; # renovate
+      image = "crowdsecurity/crowdsec:v1.8.2@sha256:65b74942f7e7ed5c60fde4ac15fc4ba715904c398c8b16dd451f4907d90347d4"; # renovate
       dataDir = "/srv/docker/crowdsec.skitarii.friloux.me";
       envFile = config.sops.templates."crowdsec.env".path;
     };
