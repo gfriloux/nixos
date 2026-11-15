@@ -26,7 +26,7 @@ in {
   # ici. Sur le réseau web, newt joint les conteneurs par leur nom
   # (immich-server:2283), sans passer par le traefik local.
   virtualisation.oci-containers.containers.newt = {
-    image = "docker.io/fosrl/newt:1.19.1"; # renovate
+    image = "docker.io/fosrl/newt:1.19.1@sha256:c89f01cb387bf6c598959036cbf56306b068a43e8784345bee7398b7af8ee2e1"; # renovate
     environmentFiles = [config.sops.templates."newt.env".path];
     # Écrit quand le ping vers la passerelle passe, supprimé quand le tunnel
     # tombe : le healthcheck suit l'état du tunnel, pas seulement le process.

@@ -208,7 +208,7 @@ in {
     pangolin = {
       # Édition Enterprise : licence gratuite pour usage personnel, saisie dans
       # l'UI (/admin/license) et liée au host ID du serveur.
-      image = "docker.io/fosrl/pangolin:ee-1.25.3"; # renovate
+      image = "docker.io/fosrl/pangolin:ee-1.25.3@sha256:f2c0fc54e1b59efcd23b8685e8df84350f363e14ebe1c13ce88a681f181ca49e"; # renovate
       volumes = [
         "${dataDir}/config:/app/config"
         "${config.sops.templates."pangolin-config.yml".path}:/app/config/config.yml:ro"

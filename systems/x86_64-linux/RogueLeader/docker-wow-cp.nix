@@ -20,7 +20,7 @@
 
   virtualisation.oci-containers.containers = {
     "wow-cp-bookstack" = {
-      image = "linuxserver/bookstack:26.09.20260929"; # renovate
+      image = "linuxserver/bookstack:26.09.20260929@sha256:7a6779d345d4d678614aa1a0a8a4d8456aeb98de10dfae700b839c3140c89f39"; # renovate
       serviceName = "wow-cp-bookstack";
       dependsOn = ["wow-cp-mariadb"];
       environmentFiles = [
@@ -69,7 +69,7 @@
       ];
     };
     "wow-cp-mysqldump" = {
-      image = "fradelg/mysql-cron-backup:1.15.0"; # renovate
+      image = "fradelg/mysql-cron-backup:1.15.0@sha256:3ec2114ac516be0bc514ad8a1ec2b36afb8d52c865d58dd9f45e9bef5b623c16"; # renovate
       serviceName = "wow-cp-mysqldump";
       dependsOn = ["wow-cp-mariadb"];
       environmentFiles = [
