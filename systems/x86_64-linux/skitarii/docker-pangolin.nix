@@ -223,7 +223,7 @@ in {
     };
 
     gerbil = {
-      image = "docker.io/fosrl/gerbil:1.5.2"; # renovate
+      image = "docker.io/fosrl/gerbil:1.6.0@sha256:420f5210b6d1a6d3035f15c3938b5289fee5aeff51ffdcb9b217838338908885"; # renovate
       dependsOn = ["pangolin"];
       cmd = [
         "--reachableAt=http://gerbil:3004"
