@@ -73,6 +73,9 @@
     encryption.passCommand = "cat ${config.sops.secrets."services/borg/passphrase".path}";
     compression = "auto,zstd";
 
+    # No prune.keep: storage2 prunes the repository itself. A compromised
+    # client could otherwise rewrite its backup history through prune.
+
     startAt = "*-*-* 04:00:00";
 
     environment.BORG_RSH = "ssh -i ${config.sops.secrets."services/borg/key/private".path}";
