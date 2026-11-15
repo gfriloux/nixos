@@ -17,7 +17,7 @@ in {
   };
 
   virtualisation.oci-containers.containers."papra" = {
-    image = "ghcr.io/papra-hq/papra:26.7.1-rootless"; # renovate
+    image = "ghcr.io/papra-hq/papra:26.7.1-rootless@sha256:d1f596a35332ad04d8a69d88a5e19bc82acd47f2bc2fe687dd2145b1ef5a8b19"; # renovate
     serviceName = "papra";
     user = "${toString config.users.users.papra.uid}:${toString config.users.groups.papra.gid}";
 

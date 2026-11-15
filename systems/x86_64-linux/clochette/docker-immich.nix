@@ -80,7 +80,7 @@
     };
 
     "immich-redis" = {
-      image = "redis:8-alpine"; # renovate
+      image = "redis:8-alpine@sha256:7958cfbb9d152f87dadfbc89f1b0b15938f0b81ff8982feb327476f4911935c3"; # renovate
       serviceName = "immich-redis";
 
       extraOptions = inputs.stc.lib.docker.mkHealthCheck {
