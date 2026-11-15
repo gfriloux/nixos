@@ -18,11 +18,15 @@
     };
 
     volumes = [
+      # Old hostname: every service here lived under home.friloux.me before
+      # the pangolin gateway. Kept, the data is there and backup.nix names it.
       "/srv/docker/cuisine.home.friloux.me/data:/app/data"
     ];
 
     extraOptions =
       [
+        # Public resolvers on purpose, instead of the ones Docker inherits
+        # from the host.
         "--dns=8.8.8.8"
         "--dns=1.1.1.1"
       ]
