@@ -147,14 +147,15 @@ in {
       "services/pangolin/secret" = {};
       # Le dépôt est public : l'IP de la box ne doit pas y apparaître.
       "network/box-ip" = {};
+      "network/clochette-ip" = {};
     };
     # Écartées dès le parsing : ni alerte, ni ban, ni signal envoyé à CAPI.
     # La whitelist par défaut ne couvre que les plages privées IPv4 et ::1.
     templates."crowdsec-whitelist.yaml".content = builtins.toJSON {
       name = "friloux/skitarii-whitelist";
-      description = "tailnet, skitarii, réseau docker pangolin, box";
+      description = "tailnet, skitarii, réseau docker pangolin, box, clochette";
       whitelist = {
-        reason = "tailnet, skitarii, réseau docker pangolin, box";
+        reason = "tailnet, skitarii, réseau docker pangolin, box, clochette";
         cidr = [
           "100.64.0.0/10" # tailnet
           "fd7a:115c:a1e0::/48" # tailnet
@@ -162,6 +163,10 @@ in {
           "2001:41d0:404:200::487d/128" # skitarii
           "fd49:e7d1:9e38::/64" # réseau docker pangolin (ULA)
           "${config.sops.placeholder."network/box-ip"}/32" # box
+          # Sans elle, une panne de la passerelle fait bannir clochette : son
+          # newt réessaie toutes les 3 s, les 403 déclenchent http-generic-403-bf,
+          # et le ban entretient les 403.
+          "${config.sops.placeholder."network/clochette-ip"}/32" # clochette
         ];
       };
     };
