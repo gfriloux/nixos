@@ -73,6 +73,26 @@ dans `default.nix`, réglages du bouncer dans `docker-pangolin.nix`.
 - crowdsec tombé, toute requête est bloquée (fermé par défaut, comme la LAPI en mode `live`).
 - Seuls les 10 premiers Mo d'un corps sont inspectés : les gros envois (immich, papra) passent.
 
+## Blocklists
+
+Choisies dans la console (app.crowdsec.net → Blocklists), pas dans ce dépôt. Leurs bans arrivent
+dans la LAPI comme n'importe quelle décision et le bouncer traefik les applique. Plan gratuit : 3 listes.
+
+| Liste | Pourquoi |
+|---|---|
+| Firehol cruzit.com | Machines compromises qui scannent des vulnérabilités |
+| Firehol greensnow.co | Attaquants généralistes, liste courte |
+| CVE-2025-55182 – React2Shell Attackers | RCE React/Next.js, liste tenue par CrowdSec |
+| CrowdSec Community Blocklist | Fournie avec l'enrôlement, hors quota |
+
+La whitelist du parsing ne couvre pas les décisions importées : une adresse bannie à tort
+demande une allowlist dans la console.
+
+```bash
+# Cette adresse est-elle bannie, et par quelle liste
+sudo docker exec crowdsec cscli decisions list -a --ip <IP>
+```
+
 ## Vérifications
 
 ```bash
