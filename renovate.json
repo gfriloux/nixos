@@ -9,9 +9,17 @@
       "customType": "regex",
       "managerFilePatterns": ["/.*\\.nix$/"],
       "matchStrings": [
-        "image = \"(?<depName>[^:\"]+):(?<currentValue>[^\"]+)\";\\s*# renovate"
+        "image = \"(?<depName>[^:\"]+):(?<currentValue>[^@\"]+)(?:@(?<currentDigest>sha256:[a-f0-9]+))?\";\\s*# renovate"
       ],
+      "autoReplaceStringTemplate": "image = \"{{{depName}}}:{{{newValue}}}{{#if newDigest}}@{{{newDigest}}}{{/if}}\"; # renovate",
       "datasourceTemplate": "docker"
+    }
+  ],
+  "packageRules": [
+    {
+      "matchManagers": ["custom.regex"],
+      "matchDatasources": ["docker"],
+      "pinDigests": true
     }
   ]
 }
