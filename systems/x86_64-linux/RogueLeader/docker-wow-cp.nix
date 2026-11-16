@@ -69,7 +69,7 @@
       ];
     };
     "wow-cp-mysqldump" = {
-      image = "fradelg/mysql-cron-backup:1.15.0@sha256:3ec2114ac516be0bc514ad8a1ec2b36afb8d52c865d58dd9f45e9bef5b623c16"; # renovate
+      image = "fradelg/mysql-cron-backup:1.15.1@sha256:88acfb6bd74c107569f8f5538fbe73ab589c4d004b56a1115612413db2e2a789"; # renovate
       serviceName = "wow-cp-mysqldump";
       dependsOn = ["wow-cp-mariadb"];
       environmentFiles = [
