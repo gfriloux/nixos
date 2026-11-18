@@ -47,9 +47,8 @@
       ];
     };
     "wow-cp-mariadb" = {
-      # No `# renovate` yet: 10.5 is end of life and the jump to 11.8 is a
-      # manual major upgrade (#118). Add the tag once on 11.8.
-      image = "linuxserver/mariadb:10.5.15";
+      # No `# renovate` yet: add it once BookStack is validated on 11.8 (#118).
+      image = "linuxserver/mariadb:11.8.9@sha256:cc9c523dead7690487d5892419b5c513c78bf398fe03b115e43a652ab75a237c";
       serviceName = "wow-cp-mariadb";
       environmentFiles = [
         config.sops.secrets."services/wow-cp/env_mariadb".path
@@ -58,7 +57,7 @@
         "/srv/docker/wow-cp.friloux.me/db:/config"
       ];
       extraOptions = inputs.stc.lib.docker.mkHealthCheck {
-        cmd = "mysqladmin ping -h localhost --silent";
+        cmd = "mariadb-admin ping -h localhost --silent";
       };
       labels = {
         "traefik.enable" = "false";
