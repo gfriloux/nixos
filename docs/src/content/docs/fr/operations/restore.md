@@ -90,7 +90,8 @@ Pièges :
 
 Testé le 2026-10-25 : un dump restauré dans un `linuxserver/mariadb:10.5.15`
 jetable avait les mêmes 41 tables, 289 entités, 185 pages et 202 images que la
-production.
+production. La production tourne en 11.8.9 depuis le 2026-11-18 (#118) ; la
+restauration n'a pas été rejouée dessus.
 
 1. Arrêter BookStack et le job de dump :
    `systemctl stop wow-cp-bookstack wow-cp-mysqldump`
@@ -102,9 +103,9 @@ production.
    ```bash
    DUMP=/srv/docker/wow-cp.friloux.me/dumps/latest.bookstackapp.sql.gz
    docker exec wow-cp-mariadb sh -c \
-     'mysql -uroot -p"$MYSQL_ROOT_PASSWORD" -e "create database if not exists bookstackapp"'
+     'mariadb -uroot -p"$MYSQL_ROOT_PASSWORD" -e "create database if not exists bookstackapp"'
    gunzip -c "$DUMP" | sed '1{/999999.*sandbox/d}' \
-     | docker exec -i wow-cp-mariadb sh -c 'mysql -uroot -p"$MYSQL_ROOT_PASSWORD" bookstackapp'
+     | docker exec -i wow-cp-mariadb sh -c 'mariadb -uroot -p"$MYSQL_ROOT_PASSWORD" bookstackapp'
    ```
 
 4. Vérifier que l'utilisateur MariaDB de BookStack (dans
@@ -115,8 +116,10 @@ production.
 Pièges :
 
 - Le dump commence par `/*M!999999\- enable the sandbox mode */`, écrit par
-  le `mariadb-dump` récent de l'image de dump. Le client `mysql` 10.5 s'arrête
+  le `mariadb-dump` récent de l'image de dump. Le client 10.5 s'arrêtait
   dessus avec `Unknown command '\-'` : le `sed` ne retire que cette ligne.
+  Gardé parce qu'il est sans effet de bord et que la restauration n'a pas été
+  rejouée en 11.8.
 - Le dump ne crée pas la base. Pendant le test, `linuxserver/mariadb:10.5.15`
   ne l'a pas créée non plus depuis `MYSQL_DATABASE`.
 - BookStack range pages, chapitres et livres dans une seule table `entities` :
