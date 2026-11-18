@@ -47,9 +47,7 @@
       ];
     };
     "wow-cp-mariadb" = {
-      # No `# renovate` yet: 10.5 is end of life and the jump to 11.8 is a
-      # manual major upgrade (#118). Add the tag once on 11.8.
-      image = "linuxserver/mariadb:10.5.15";
+      image = "linuxserver/mariadb:11.8.9@sha256:cc9c523dead7690487d5892419b5c513c78bf398fe03b115e43a652ab75a237c"; # renovate
       serviceName = "wow-cp-mariadb";
       environmentFiles = [
         config.sops.secrets."services/wow-cp/env_mariadb".path
@@ -58,7 +56,7 @@
         "/srv/docker/wow-cp.friloux.me/db:/config"
       ];
       extraOptions = inputs.stc.lib.docker.mkHealthCheck {
-        cmd = "mysqladmin ping -h localhost --silent";
+        cmd = "mariadb-admin ping -h localhost --silent";
       };
       labels = {
         "traefik.enable" = "false";
@@ -75,12 +73,6 @@
       environmentFiles = [
         config.sops.secrets."services/wow-cp/env_mysqldump".path
       ];
-      # The image's MariaDB client requires TLS by default, which
-      # linuxserver/mariadb 10.5 does not offer: every dump since mid-July
-      # failed with "SSL is required, but the server does not support it"
-      # while the container stayed healthy. Plain TCP stays on the private
-      # wow-cp network.
-      environment.MYSQL_SSL_OPTS = "--skip-ssl";
       volumes = [
         "/srv/docker/wow-cp.friloux.me/dumps:/backup"
       ];

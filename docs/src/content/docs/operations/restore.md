@@ -90,6 +90,8 @@ Pitfalls:
 
 Tested on 2026-10-25: a dump restored into a scratch `linuxserver/mariadb:10.5.15`
 had the same 41 tables, 289 entities, 185 pages and 202 images as production.
+Production has run 11.8.9 since 2026-11-18 (#118); the restore has not been
+replayed on it.
 
 1. Stop BookStack and the dump job:
    `systemctl stop wow-cp-bookstack wow-cp-mysqldump`
@@ -100,9 +102,9 @@ had the same 41 tables, 289 entities, 185 pages and 202 images as production.
    ```bash
    DUMP=/srv/docker/wow-cp.friloux.me/dumps/latest.bookstackapp.sql.gz
    docker exec wow-cp-mariadb sh -c \
-     'mysql -uroot -p"$MYSQL_ROOT_PASSWORD" -e "create database if not exists bookstackapp"'
+     'mariadb -uroot -p"$MYSQL_ROOT_PASSWORD" -e "create database if not exists bookstackapp"'
    gunzip -c "$DUMP" | sed '1{/999999.*sandbox/d}' \
-     | docker exec -i wow-cp-mariadb sh -c 'mysql -uroot -p"$MYSQL_ROOT_PASSWORD" bookstackapp'
+     | docker exec -i wow-cp-mariadb sh -c 'mariadb -uroot -p"$MYSQL_ROOT_PASSWORD" bookstackapp'
    ```
 
 4. Check that the MariaDB user BookStack logs in with (from
@@ -113,8 +115,9 @@ had the same 41 tables, 289 entities, 185 pages and 202 images as production.
 Pitfalls:
 
 - The dump starts with `/*M!999999\- enable the sandbox mode */`, written by
-  the recent `mariadb-dump` of the dump image. The 10.5 `mysql` client stops
-  on it with `Unknown command '\-'`: the `sed` drops that line only.
+  the recent `mariadb-dump` of the dump image. The 10.5 client stopped on it
+  with `Unknown command '\-'`: the `sed` drops that line only. Kept because
+  it is harmless and the restore has not been replayed on 11.8.
 - The dump does not create the database. In the test,
   `linuxserver/mariadb:10.5.15` did not create it from `MYSQL_DATABASE` either.
 - BookStack keeps pages, chapters and books in a single `entities` table:
