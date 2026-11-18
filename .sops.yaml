@@ -18,13 +18,13 @@ creation_rules:
       - *desktop_examplehost
       - *admin_yubikey
       - *admin_rescue
-  - path_regex: secrets/clochette.yaml
+  - path_regex: secrets/clochette.yaml$
     key_groups:
     - age:
       - *server_clochette
       - *admin_yubikey
       - *admin_rescue
-  - path_regex: secrets/RogueLeader.yaml
+  - path_regex: secrets/RogueLeader.yaml$
     key_groups:
     - age:
       - *server_rogueleader
