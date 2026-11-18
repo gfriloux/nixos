@@ -138,6 +138,7 @@ Resource rule: `{{resourceName}}` instead of `site {{siteName}}`. Resource event
 | Symptom | Cause | Fix |
 |---|---|---|
 | Every dashboard route fails: `invalid middleware "badger@file"` | badger v1.8.0 fails traefik's integrity check, traefik disables all plugins | badger pinned to v1.7.0 (traefik/traefik#14115) |
+| Every public site is blocked for a moment | crowdsec restarting (image update, health-watch kill): the bouncer fails closed, on purpose (#124) | wait for crowdsec to be `healthy` again |
 | Ban test returns 200 | `live` bouncer caches a clean IP 60 s | wait |
 | IPv6 visitors logged as a private address | no IPv6 on the Docker network, `docker-proxy` in the path | ULA /64 on the network. Changing it: stop containers, `docker network rm pangolin` |
 | No ntfy notification, no error | ntfy.sh rate-limits IPv6 per /64, shared with OVH neighbours (`429`) | `curl -4 --fail` everywhere |
