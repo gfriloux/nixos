@@ -55,6 +55,8 @@ done
 
 ## Clé perdue
 
+Une clé que quelqu'un d'autre détient peut-être, plutôt qu'une clé perdue : [Clé age compromise](/nixos/fr/operations/key-compromise/).
+
 | Perdu | Remède |
 |---|---|
 | Clé de boot d'exampleHost | `age-keygen` vers `/etc/sops/age/keys.txt`, nouvelle clé dans `&desktop_examplehost`, `sops updatekeys` (YubiKey), `just install`. Pas de système : [Réinstaller exampleHost](/nixos/fr/operations/reinstall-examplehost/) |

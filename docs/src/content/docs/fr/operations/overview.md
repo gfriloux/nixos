@@ -30,5 +30,6 @@ Garder un shell root ouvert avant de toucher à sudo ou aux utilisateurs. Détai
 |---|---|
 | Restaurer des données | [Restaurer depuis Borg](/nixos/fr/operations/restore/) |
 | Récupérer les clés age | [Sauvegarde des clés age](/nixos/fr/operations/secrets-backup/) |
+| Remplacer une clé que quelqu'un d'autre détient peut-être | [Clé age compromise](/nixos/fr/operations/key-compromise/) |
 | Réinstaller | [exampleHost](/nixos/fr/operations/reinstall-examplehost/), [clochette](/nixos/fr/operations/reinstall-clochette/), [skitarii](/nixos/fr/operations/reinstall-skitarii/), [RogueLeader](/nixos/fr/operations/reinstall-rogueleader/) |
 | Ré-enrôler Tailscale | [Tailscale](/nixos/fr/operations/tailscale/) |

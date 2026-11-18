@@ -55,6 +55,8 @@ done
 
 ## Lost key
 
+A key someone else may hold, rather than a lost one: [Compromised age key](/nixos/operations/key-compromise/).
+
 | Lost | Fix |
 |---|---|
 | exampleHost boot key | `age-keygen` to `/etc/sops/age/keys.txt`, new key in `&desktop_examplehost`, `sops updatekeys` (YubiKey), `just install`. No system left: [Reinstall exampleHost](/nixos/operations/reinstall-examplehost/) |
