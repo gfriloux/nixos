@@ -47,8 +47,7 @@
       ];
     };
     "wow-cp-mariadb" = {
-      # No `# renovate` yet: add it once BookStack is validated on 11.8 (#118).
-      image = "linuxserver/mariadb:11.8.9@sha256:cc9c523dead7690487d5892419b5c513c78bf398fe03b115e43a652ab75a237c";
+      image = "linuxserver/mariadb:11.8.9@sha256:cc9c523dead7690487d5892419b5c513c78bf398fe03b115e43a652ab75a237c"; # renovate
       serviceName = "wow-cp-mariadb";
       environmentFiles = [
         config.sops.secrets."services/wow-cp/env_mariadb".path
