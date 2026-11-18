@@ -138,6 +138,7 @@ Règle des ressources : `{{resourceName}}` au lieu de `site {{siteName}}`. Les �
 | Symptôme | Cause | Correctif |
 |---|---|---|
 | Toutes les routes du dashboard tombent : `invalid middleware "badger@file"` | badger v1.8.0 échoue au contrôle d'intégrité, traefik coupe tous les plugins | badger figé en v1.7.0 (traefik/traefik#14115) |
+| Tous les sites publics sont bloqués un moment | crowdsec redémarre (mise à jour d'image, health-watch qui le tue) : le bouncer ferme tout, c'est voulu (#124) | attendre que crowdsec repasse `healthy` |
 | Le test de ban renvoie 200 | le bouncer `live` garde une IP propre 60 s en cache | attendre |
 | Visiteurs IPv6 vus avec une adresse privée | pas d'IPv6 sur le réseau Docker, `docker-proxy` sur le chemin | /64 ULA sur le réseau. Pour le changer : arrêter les conteneurs, `docker network rm pangolin` |
 | Pas de notification ntfy, pas d'erreur | ntfy.sh limite l'IPv6 par /64, partagé avec les voisins OVH (`429`) | `curl -4 --fail` partout |
