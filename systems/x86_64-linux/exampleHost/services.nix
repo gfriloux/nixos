@@ -34,6 +34,9 @@
             connect = {
               type = "ssh+stdinserver";
               host = "storage2.retrohive.fr";
+              # root, but no shell: storage2's authorized_keys pins this key
+              # to `command="zrepl stdinserver desktop",restrict` (checked
+              # 2026-11-20). Without that line the key is root on storage2.
               user = "root";
               port = 22;
               identity_file = config.sops.secrets."services/zrepl/ssh-key".path;
