@@ -73,10 +73,6 @@
         http = {
           middlewares = ["crowdsec@file"];
           tls.certResolver = "letsencrypt";
-          encodedCharacters = {
-            allowEncodedSlash = true;
-            allowEncodedQuestionMark = true;
-          };
         };
       };
     };

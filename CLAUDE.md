@@ -143,6 +143,7 @@ row.
 | Secrets in GitHub Actions | `check.yml` runs on `pull_request` only, with `contents: read` | A pull request could exfiltrate them |
 | Outbound SMTP (465, 587) on clochette | Blocked by Scaleway; direct Gmail sending does not work. ntfy.sh over HTTPS is the only notification channel | Mails silently never leave |
 | crowdsec-manager on a bare route | Published only as a pangolin resource behind SSO + 2FA — never a bare traefik route or a published port | The WAF admin UI, and through the raw socket root on the host, exposed to the internet |
+| `encodedCharacters.allowEncoded*` on skitarii's `websecure` entrypoint | Came with the POC, no backend needs it; traefik's default rejects `%2F` and `%3F` in paths (#156) | An encoded path can be read differently by traefik and the backend, and slip past `crowdsec@file` |
 
 Not an omission but a deliberate choice that looks like one:
 `neededForBoot = true` on every ZFS dataset, `/home` included, on exampleHost.
