@@ -1,5 +1,11 @@
-{pkgs, ...}: {
+{
+  config,
+  pkgs,
+  ...
+}: {
   environment.systemPackages = [pkgs.catppuccin-sddm];
+
+  sops.secrets."services/zrepl/ssh-key" = {};
 
   virtualisation.docker = {
     enable = true;
@@ -30,10 +36,7 @@
               host = "storage2.retrohive.fr";
               user = "root";
               port = 22;
-              # Not managed by this repo or sops (#130): placed by hand, so
-              # it is gone after a reinstall and the pull job fails until it
-              # is put back.
-              identity_file = "/root/.ssh/id_ed25519";
+              identity_file = config.sops.secrets."services/zrepl/ssh-key".path;
             };
             recv = {placeholder = {encryption = "inherit";};};
             pruning = {
