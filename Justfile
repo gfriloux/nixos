@@ -40,7 +40,7 @@ build_skitarii:
 	nh os build .#skitarii -d never
 
 install_skitarii:
-	tabularium record skitarii -- nixos-rebuild switch --flake .#skitarii --target-host guillaume@skitarii.friloux.me --sudo --ask-sudo-password
+	tabularium record skitarii -- nh os switch . -H skitarii --target-host guillaume@skitarii.friloux.me --diff always --ask
 
 secrets_skitarii:
 	sops secrets/skitarii.yaml
