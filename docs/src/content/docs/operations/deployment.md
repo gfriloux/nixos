@@ -12,8 +12,8 @@ From the repository root, on exampleHost.
 | skitarii | `just build_skitarii` | `just install_skitarii` | Tailscale |
 | RogueLeader | `just build_rogueleader` | `just install_rogueleader`, `just home_rogueleader` (HM only) | LAN |
 
-Remote deploys use `nixos-rebuild --target-host guillaume@<host>` and ask for the
-sudo password (`--ask-sudo-password` is already in the recipe).
+Remote deploys use `nh os switch --target-host guillaume@<host>`: they print the
+package diff, wait for a confirmation, then ask for the sudo password of the target.
 
 ## Before
 

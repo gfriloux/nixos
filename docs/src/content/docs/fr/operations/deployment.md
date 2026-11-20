@@ -12,8 +12,9 @@ Depuis la racine du dépôt, sur exampleHost.
 | skitarii | `just build_skitarii` | `just install_skitarii` | Tailscale |
 | RogueLeader | `just build_rogueleader` | `just install_rogueleader`, `just home_rogueleader` (HM seul) | LAN |
 
-Les déploiements distants passent par `nixos-rebuild --target-host guillaume@<hôte>` et
-demandent le mot de passe sudo (`--ask-sudo-password` est déjà dans la recette).
+Les déploiements distants passent par `nh os switch --target-host guillaume@<hôte>` : ils
+affichent le diff de paquets, attendent une confirmation, puis demandent le mot de passe
+sudo de la cible.
 
 ## Avant
 
