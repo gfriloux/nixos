@@ -111,8 +111,8 @@ Container-specific `systemd.services` overrides (e.g. `after`/`requires` depende
 
 ```text
 just install             # exampleHost (local, nh os switch)
-just install_clochette   # requires --ask-sudo-password
-just install_rogueleader # requires --ask-sudo-password
+just install_clochette   # nh: package diff, confirmation, then sudo password
+just install_rogueleader # same
 just home_rogueleader    # Home Manager only for RogueLeader
 just install_skitarii    # through the tailnet, ssh block pins the key
 ```

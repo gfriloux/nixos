@@ -83,7 +83,8 @@ just test                     # pre-commit run --all-files
 just update                   # nix flake update
 ```
 
-Deployment goes over SSH as `guillaume`, using `--ask-sudo-password`.
+Deployment goes over SSH as `guillaume`: `nh` shows the package diff, asks for a
+confirmation, then for the sudo password of the target.
 `clochette` is only reachable through Tailscale.
 
 ## Secrets

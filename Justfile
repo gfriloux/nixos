@@ -19,7 +19,7 @@ build_clochette:
 	nh os build .#clochette -d never
 
 install_clochette:
-	tabularium record clochette -- nixos-rebuild switch --flake .#clochette --target-host guillaume@clochette.friloux.me --sudo --ask-sudo-password
+	tabularium record clochette -- nh os switch . -H clochette --target-host guillaume@clochette.friloux.me --diff always --ask
 
 secrets_clochette:
 	sops secrets/clochette.yaml
@@ -28,7 +28,7 @@ build_rogueleader:
 	nh os build .#RogueLeader -d never
 
 install_rogueleader:
-	tabularium record RogueLeader -- nixos-rebuild switch --flake .#RogueLeader --target-host guillaume@rogueleader.home --sudo --ask-sudo-password
+	tabularium record RogueLeader -- nh os switch . -H RogueLeader --target-host guillaume@rogueleader.home --diff always --ask
 
 home_rogueleader:
 	nix run nixpkgs#home-manager -- switch --flake .#"guillaume@RogueLeader" -b backup --target-host guillaume@rogueleader.home
