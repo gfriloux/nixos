@@ -47,7 +47,7 @@
       ];
     };
     "wow-cp-mariadb" = {
-      image = "linuxserver/mariadb:11.8.9@sha256:cc9c523dead7690487d5892419b5c513c78bf398fe03b115e43a652ab75a237c"; # renovate
+      image = "linuxserver/mariadb:11.8.10@sha256:4d9fb8985c06b2099d8421fb4070c4db0f61f3973e3b6828f6607cb0853f292d"; # renovate
       serviceName = "wow-cp-mariadb";
       environmentFiles = [
         config.sops.secrets."services/wow-cp/env_mariadb".path
