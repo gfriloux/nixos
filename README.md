@@ -42,7 +42,7 @@ them and pushes a notification to ntfy.sh.
 | [Uptime Kuma](https://github.com/louislam/uptime-kuma) — monitoring | `RogueLeader` | `status.friloux.me` |
 | [Papra](https://papra.app/) — document archive | `RogueLeader` | `docs.friloux.me` |
 | [Mealie](https://mealie.io/) — recipes | `RogueLeader` | `cuisine.friloux.me` |
-| Borg UI — backup browser | `RogueLeader` | `borg-ui.friloux.me` |
+| Borg UI — backup browser | `RogueLeader` | `borg-ui.friloux.me` (pangolin SSO + TOTP) |
 
 Image tags are pinned and bumped by Renovate, which reads the `# renovate`
 comment next to each `image =` line. `just scan` runs Trivy against every image

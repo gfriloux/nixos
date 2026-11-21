@@ -15,7 +15,7 @@ sidebar:
 | `papra` | `docs.friloux.me` | Documents ([Papra](/nixos/fr/rogueleader/papra/)) |
 | `mealie` | `cuisine.friloux.me` | Recettes |
 | `uptime-kuma` | `status.friloux.me` | Page de statut |
-| `borg-ui` | `borg-ui.friloux.me` | UI web Borg |
+| `borg-ui` | `borg-ui.friloux.me` | UI web Borg, derrière le SSO pangolin + TOTP |
 
 Chaque domaine est un CNAME vers `skitarii.friloux.me`. Ni traefik, ni crowdsec, aucun port ouvert, aucune redirection sur la box.
 
