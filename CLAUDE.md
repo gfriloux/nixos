@@ -73,7 +73,7 @@ publishes. On top of that:
 | RogueLeader | uptime-kuma | Status page (status.friloux.me, through the pangolin gateway) |
 | RogueLeader | papra | Documents (docs.friloux.me, through the pangolin gateway) |
 | RogueLeader | mealie | Recipes (cuisine.friloux.me, through the pangolin gateway) |
-| RogueLeader | borg-ui, borg-redis | Borg web UI (borg-ui.friloux.me, through the pangolin gateway) |
+| RogueLeader | borg-ui, borg-redis | Borg web UI (borg-ui.friloux.me, through the pangolin gateway, behind pangolin SSO + 2FA) |
 | RogueLeader | newt | Outbound tunnel to the pangolin gateway; serves every RogueLeader web service |
 
 ## Key patterns

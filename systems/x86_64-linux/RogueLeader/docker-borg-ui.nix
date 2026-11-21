@@ -26,8 +26,9 @@
       ];
 
       # Publié par la passerelle pangolin (borg-ui.friloux.me), via newt sur
-      # le réseau web : plus de route sur le traefik local. Pas de SSO
-      # pangolin, borg-ui a sa propre authentification.
+      # le réseau web : plus de route sur le traefik local. Derrière le SSO
+      # pangolin avec 2FA, en plus du login borg-ui : une faille dans son
+      # auth donnerait la main sur les archives hors-site (#120).
       labels = {
         # ainullcode/borg-ui declares its own HEALTHCHECK (curl on $PORT)
         "stc.docker/health-cmd-in-image" = "true";
