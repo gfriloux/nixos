@@ -31,5 +31,6 @@ Keep a root shell open before touching sudo or users. Details: [Deployment](/nix
 | Restore data | [Restore from Borg](/nixos/operations/restore/) |
 | Recover the age keys | [Age key backup](/nixos/operations/secrets-backup/) |
 | Replace a key someone else may hold | [Compromised age key](/nixos/operations/key-compromise/) |
+| Boot a machine that no longer boots | [Recover without reinstalling](/nixos/operations/recovery-live-usb/) |
 | Reinstall | [exampleHost](/nixos/operations/reinstall-examplehost/), [clochette](/nixos/operations/reinstall-clochette/), [skitarii](/nixos/operations/reinstall-skitarii/), [RogueLeader](/nixos/operations/reinstall-rogueleader/) |
 | Re-enroll Tailscale | [Tailscale](/nixos/operations/tailscale/) |
